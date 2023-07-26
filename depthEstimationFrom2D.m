@@ -1,4 +1,4 @@
-function [depth_points, perpendicular_distances] = depthEstimationFrom2D(savedImageFullPath)
+function [depth_points, perpendicular_distances, final_image] = depthEstimationFrom2D(savedImageFullPath)
     %% 1. Detect the ablate surface -> Binary, Dilate, Erode, edge, Contnour. 
     depthI = imread(savedImageFullPath);
 
@@ -30,7 +30,9 @@ function [depth_points, perpendicular_distances] = depthEstimationFrom2D(savedIm
 
     % Initialize a threshold for boundary size
     sizeThreshold = 1000; % You can adjust this value
-
+    sizeThreshold = 800; % You can adjust this value
+    
+    
     % Draw contours on a copy of the original frame
     frame_contours = depthI;
     surface_idx = 0; % Index to track contours added to surface
@@ -45,9 +47,9 @@ function [depth_points, perpendicular_distances] = depthEstimationFrom2D(savedIm
     surface = surface(1:surface_idx); % Remove unused cells
 
     % Visualize the image with contours
-    figure;
-    imshow(frame_contours, []);
-    title('Contour Image');
+%     figure;
+%     imshow(frame_contours, []);
+%     title('Contour Image');
 
 
     %% 2. Approximate contour points with Line Segments
@@ -83,12 +85,11 @@ function [depth_points, perpendicular_distances] = depthEstimationFrom2D(savedIm
     end
 
     % Visualize the image with reduced contours
-    figure;
-    imshow(frame_contours_with_reduced, []);
-    hold on;
+%     figure;
+%     imshow(frame_contours_with_reduced, []);
+%     hold on;
     
     % remove close points
-    ablate_surface_old = ablate_surface;
     minDistance = 3.6; % adjust this as needed
     for idx = 1:ablate_surface_idx
         ablate_surface{idx} = filterClosePoints(ablate_surface{idx}, minDistance);
@@ -127,7 +128,7 @@ function [depth_points, perpendicular_distances] = depthEstimationFrom2D(savedIm
     depth_points = depth_points(dX > threshold, :);
 
     % Combine these points back into one array
-    reduced_all_surfaces = [first_two_points; depth_points; last_two_points];
+    reduced_all_surfaces = [first_two_points; depth_points; last_two_points];   
 
     % Calculate the slope and intercept of the Top Layer line
     slope = (last_two_points(2,1) - first_two_points(1,1)) / (last_two_points(2,2) - first_two_points(1,2));
@@ -139,12 +140,17 @@ function [depth_points, perpendicular_distances] = depthEstimationFrom2D(savedIm
     % Find the intersection points on the green line
     x_intersect = (depth_points(:,2) + slope * depth_points(:,1) - slope * intercept) / (slope^2 + 1);
     y_intersect = slope * x_intersect + intercept;
-
+    
     % Create a copy of the original image to plot on
     overlay_image = depthI;
 
     % Overlay the original and reduced contours on the image
-    figure;
+%     figure;
+%     imshow(overlay_image, []);
+%     hold on;
+
+    % Save the figure as an image without displaying the figure
+    fig_invisible = figure('visible', 'off'); % Create an invisible figure
     imshow(overlay_image, []);
     hold on;
 
@@ -155,7 +161,7 @@ function [depth_points, perpendicular_distances] = depthEstimationFrom2D(savedIm
     line(top_layer_points(:,2), top_layer_points(:,1), 'color', 'g', 'LineWidth', 2);
 
     % Plot the shortest distances from depth_points to the Top Layer line
-    numDepthPoints = size(depth_points, 1); % Compute once outside loop
+    numDepthPoints = size(depth_points, 1); % Compute once outside lo
     for i = 1:numDepthPoints
         line([depth_points(i,2), x_intersect(i)], [depth_points(i,1), y_intersect(i)], 'color', 'y', 'LineWidth', 1);
     end
@@ -165,6 +171,15 @@ function [depth_points, perpendicular_distances] = depthEstimationFrom2D(savedIm
 
     % Keep the hold off
     hold off;
+    
+    % Save the figure as an image
+    fig = gcf; % Get current figure handle
+    final_image_filename = 'final_image.png'; % Define filename for final image
+    saveas(fig, final_image_filename); % Save figure as png image
+    close(fig); % Close figure window
+    
+    % Read the final image
+    final_image = imread(final_image_filename);
 end
 
 

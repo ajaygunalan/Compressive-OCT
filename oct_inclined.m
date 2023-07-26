@@ -1,43 +1,8 @@
-%% 1. Load the Data
-clear all;
-close all;
-clc;
-% Define the file path
-folderPath = 'data/oct_inclinded/line';  
-fileName = 'OCTLaserBot/3.oct';
-fullPath = fullfile(folderPath, fileName);
-% Load the OCT Data
-handle1 = OCTFileOpen(fullPath);
-Intensity1 = OCTFileGetIntensity(handle1);
-% Load depth image
-frame1 = Intensity1;
-figure; % Explicitly create a figure
-im_obj1 = imagesc(frame1);
-colormap gray;
-axis off;
-set(gca,'Position',[0 0 1 1]);
-firstFrameName = sprintf('octWYS.png', fileName);
-saveas(gcf, fullfile(folderPath, firstFrameName));
-savedImageFullPath1 = fullfile(folderPath, firstFrameName);
-close(gcf);
-
-folderPath = 'data/oct_inclinded/line';  
-fileName = 'GT/3.oct';
-fullPath = fullfile(folderPath, fileName);
-% Load the OCT Data
-handle1 = OCTFileOpen(fullPath);
-Intensity1 = OCTFileGetIntensity(handle1);
-% Load depth image
-frame1 = Intensity1;
-figure; % Explicitly create a figure
-im_obj1 = imagesc(frame1);
-colormap gray;
-axis off;
-set(gca,'Position',[0 0 1 1]);
-firstFrameName = sprintf('octTrue.png', fileName);
-saveas(gcf, fullfile(folderPath, firstFrameName));
-savedImageFullPath2 = fullfile(folderPath, firstFrameName);
-close(gcf);
+clear all; close all;  clc;
+%% 1. Load Data
+folders = {'data/oct_inclinded/line', 'data/oct_inclinded/line', 'data/oct_inclinded/line', 'data/oct_inclinded/line', 'data/oct_inclinded/line', 'data/oct_inclinded/line'};
+filenames = {'OCTLaserBot/1.oct', 'OCTLaserBot/2.oct', 'OCTLaserBot/3.oct', 'GT/1.oct', 'GT/2.oct', 'GT/3.oct'};
+data = loadOCTData(folders, filenames);
 %% 2. To find the angle roatted by WYS comapred to True
 % Read the image
 depthWYS = imread(savedImageFullPath1);
@@ -66,8 +31,44 @@ guidata(fig, handles);
 % Add a listener to the sliders
 addlistener(sliderCoarse, 'ContinuousValueChange', @(src, event) rotateImage(fig));
 addlistener(sliderFine, 'ContinuousValueChange', @(src, event) rotateImage(fig));
-%% Estimate the depth form True Image. 
+%% 2. Estimate the depth. 
 
-[depth_points, depth] = depthEstimationFrom2D(savedImageFullPath2);
+% Initialize structure to hold depth data
+for i = 1:numel(data)
+    [depth_points, depth, final_image] = depthEstimationFrom2D(data(i).imagePath);
+    depthData(i).depthPoints = depth_points;
+    depthData(i).depth = depth;
+    depthData(i).finalImage = final_image; % Add final image to the depthData structure
+end
+
+% Plotting all images
+figure;
+
+numOCTImages = sum(contains({data.imagePath}, 'OCTLaserBot'));
+numGTImages = sum(contains({data.imagePath}, 'GT'));
+
+numRows = max(numOCTImages, numGTImages); % Number of rows is based on the maximum of the two
+
+% Assuming depthData is ordered the same way as data
+OCTImages = depthData(contains({data.imagePath}, 'OCTLaserBot'));
+GTImages = depthData(contains({data.imagePath}, 'GT'));
+
+for i = 1:numRows
+    if i <= numOCTImages
+        % Plot OCTLaserBot images on left
+        subplot(numRows, 2, i * 2 - 1);
+        imshow(OCTImages(i).finalImage);
+        title(['OCTLaserBot Image ', num2str(i)]);
+    end
+
+    if i <= numGTImages
+        % Plot GT images on right
+        subplot(numRows, 2, i * 2);
+        imshow(GTImages(i).finalImage);
+        title(['GT Image ', num2str(i)]);
+    end
+end
+
+
 
 
