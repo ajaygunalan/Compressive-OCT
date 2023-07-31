@@ -132,14 +132,14 @@ int main(){
 	startY = 0.0;
 	stopX = 2.7;
 	stopY = 0.0;
-	//ExportDataAndImage("2", startX, startY, stopX, stopY);
+	ExportDataAndImage("2", startX, startY, stopX, stopY);
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	startX = -2.2;
 	startY = -2.0;
 	stopX = 2.7;
 	stopY = -2.0;
-	//ExportDataAndImage("3", startX, startY, stopX, stopY);
+	ExportDataAndImage("3", startX, startY, stopX, stopY);
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 	return 0;
 }
