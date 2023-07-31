@@ -67,14 +67,14 @@ set(simple_msgs_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(simple_msgs_SOURCE_PREFIX C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs)
-  set(simple_msgs_DEVEL_PREFIX C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/devel)
+  set(simple_msgs_SOURCE_PREFIX C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs)
+  set(simple_msgs_DEVEL_PREFIX C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/devel)
   set(simple_msgs_INSTALL_PREFIX "")
   set(simple_msgs_PREFIX ${simple_msgs_DEVEL_PREFIX})
 else()
   set(simple_msgs_SOURCE_PREFIX "")
   set(simple_msgs_DEVEL_PREFIX "")
-  set(simple_msgs_INSTALL_PREFIX C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/install)
+  set(simple_msgs_INSTALL_PREFIX C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/install)
   set(simple_msgs_PREFIX ${simple_msgs_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(simple_msgs_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/include;C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/include " STREQUAL " ")
+if(NOT "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/include;C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/include " STREQUAL " ")
   set(simple_msgs_INCLUDE_DIRS "")
-  set(_include_dirs "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/include;C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/include")
+  set(_include_dirs "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/include;C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/d
         message(FATAL_ERROR "Project 'simple_msgs' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'simple_msgs' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in 'C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'simple_msgs' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in 'C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/${idir}'.  ${_report}")
     endif()
     _list_append_unique(simple_msgs_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/lib;C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/lib;C:/Program Files/MATLAB/R2022b/toolbox/ros/mlroscpp/custom_messages/lib)
+    foreach(path C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/lib;C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/lib;C:/Program Files/MATLAB/R2022b/toolbox/ros/mlroscpp/custom_messages/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

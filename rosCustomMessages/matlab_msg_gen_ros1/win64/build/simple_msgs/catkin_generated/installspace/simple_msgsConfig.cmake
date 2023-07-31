@@ -67,14 +67,14 @@ set(simple_msgs_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(simple_msgs_SOURCE_PREFIX C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs)
-  set(simple_msgs_DEVEL_PREFIX C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/devel)
+  set(simple_msgs_SOURCE_PREFIX C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs)
+  set(simple_msgs_DEVEL_PREFIX C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/devel)
   set(simple_msgs_INSTALL_PREFIX "")
   set(simple_msgs_PREFIX ${simple_msgs_DEVEL_PREFIX})
 else()
   set(simple_msgs_SOURCE_PREFIX "")
   set(simple_msgs_DEVEL_PREFIX "")
-  set(simple_msgs_INSTALL_PREFIX C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/install)
+  set(simple_msgs_INSTALL_PREFIX C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/install)
   set(simple_msgs_PREFIX ${simple_msgs_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/install/lib;C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/lib;C:/Program Files/MATLAB/R2022b/toolbox/ros/mlroscpp/custom_messages/lib)
+    foreach(path C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/install/lib;C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/lib;C:/Program Files/MATLAB/R2022b/toolbox/ros/mlroscpp/custom_messages/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

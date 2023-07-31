@@ -1,7 +1,7 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
 messages_str = ""
-services_str = "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/oct_msgs/srv/Depth.srv"
+services_str = "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/oct_msgs/srv/Depth.srv"
 pkg_name = "oct_msgs"
 dependencies_str = "std_msgs;std_msgs"
 langs = "gencpp;genpy"

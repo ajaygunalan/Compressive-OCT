@@ -1,8 +1,8 @@
-# Install script for directory: C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs
+# Install script for directory: C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/install")
+  set(CMAKE_INSTALL_PREFIX "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,61 +33,61 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_msgs/msg" TYPE FILE FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_msgs/msg" TYPE FILE FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_msgs/srv" TYPE FILE FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_msgs/srv" TYPE FILE FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_msgs/cmake" TYPE FILE FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/build/simple_msgs/catkin_generated/installspace/simple_msgs-msg-paths.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_msgs/cmake" TYPE FILE FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/build/simple_msgs/catkin_generated/installspace/simple_msgs-msg-paths.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/include/simple_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/include/simple_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  execute_process(COMMAND "C:/Users/OCT/AppData/Roaming/MathWorks/MATLAB/R2022b/ros1/win64/venv/Scripts/python.exe" -m compileall "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs")
+  execute_process(COMMAND "C:/Users/OCT/AppData/Roaming/MathWorks/MATLAB/R2022b/ros1/win64/venv/Scripts/python.exe" -m compileall "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/site-packages" TYPE DIRECTORY FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/site-packages" TYPE DIRECTORY FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/build/simple_msgs/catkin_generated/installspace/simple_msgs.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/build/simple_msgs/catkin_generated/installspace/simple_msgs.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_msgs/cmake" TYPE FILE FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/build/simple_msgs/catkin_generated/installspace/simple_msgs-msg-extras.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_msgs/cmake" TYPE FILE FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/build/simple_msgs/catkin_generated/installspace/simple_msgs-msg-extras.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_msgs/cmake" TYPE FILE FILES
-    "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/build/simple_msgs/catkin_generated/installspace/simple_msgsConfig.cmake"
-    "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/build/simple_msgs/catkin_generated/installspace/simple_msgsConfig-version.cmake"
+    "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/build/simple_msgs/catkin_generated/installspace/simple_msgsConfig.cmake"
+    "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/build/simple_msgs/catkin_generated/installspace/simple_msgsConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_msgs" TYPE FILE FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_msgs" TYPE FILE FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/package.xml")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/include/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/include/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY OPTIONAL FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/lib/simple_msgs_matlab.lib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY OPTIONAL FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/lib/simple_msgs_matlab.lib")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE SHARED_LIBRARY FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/bin/simple_msgs_matlab.dll")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE SHARED_LIBRARY FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/bin/simple_msgs_matlab.dll")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/m/" TYPE DIRECTORY FILES "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/m/" FILES_MATCHING REGEX "/[^/]*\\.m$")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/m/" TYPE DIRECTORY FILES "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/m/" FILES_MATCHING REGEX "/[^/]*\\.m$")
 endif()
 

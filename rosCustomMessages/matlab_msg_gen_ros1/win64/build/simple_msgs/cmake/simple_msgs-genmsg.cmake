@@ -2,7 +2,7 @@
 
 message(STATUS "simple_msgs: 1 messages, 1 services")
 
-set(MSG_I_FLAGS "-Isimple_msgs:C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg;-Istd_msgs:C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/std_msgs/cmake/../msg")
+set(MSG_I_FLAGS "-Isimple_msgs:C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg;-Istd_msgs:C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/std_msgs/cmake/../msg")
 
 # Find all generators
 find_package(gencpp REQUIRED)
@@ -14,14 +14,14 @@ add_custom_target(simple_msgs_generate_messages ALL)
 
 
 
-get_filename_component(_filename "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg" NAME_WE)
+get_filename_component(_filename "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg" NAME_WE)
 add_custom_target(_simple_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "simple_msgs" "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "simple_msgs" "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg" ""
 )
 
-get_filename_component(_filename "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv" NAME_WE)
+get_filename_component(_filename "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv" NAME_WE)
 add_custom_target(_simple_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "simple_msgs" "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "simple_msgs" "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv" ""
 )
 
 #
@@ -31,7 +31,7 @@ add_custom_target(_simple_msgs_generate_messages_check_deps_${_filename}
 ### Section generating for lang: gencpp
 ### Generating Messages
 _generate_msg_cpp(simple_msgs
-  "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg"
+  "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/simple_msgs
@@ -39,7 +39,7 @@ _generate_msg_cpp(simple_msgs
 
 ### Generating Services
 _generate_srv_cpp(simple_msgs
-  "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv"
+  "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/simple_msgs
@@ -57,9 +57,9 @@ add_custom_target(simple_msgs_generate_messages_cpp
 add_dependencies(simple_msgs_generate_messages simple_msgs_generate_messages_cpp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg" NAME_WE)
+get_filename_component(_filename "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg" NAME_WE)
 add_dependencies(simple_msgs_generate_messages_cpp _simple_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv" NAME_WE)
+get_filename_component(_filename "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv" NAME_WE)
 add_dependencies(simple_msgs_generate_messages_cpp _simple_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -72,7 +72,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS simple_msgs_generate_messages_cpp)
 ### Section generating for lang: genpy
 ### Generating Messages
 _generate_msg_py(simple_msgs
-  "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg"
+  "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/simple_msgs
@@ -80,7 +80,7 @@ _generate_msg_py(simple_msgs
 
 ### Generating Services
 _generate_srv_py(simple_msgs
-  "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv"
+  "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/simple_msgs
@@ -98,9 +98,9 @@ add_custom_target(simple_msgs_generate_messages_py
 add_dependencies(simple_msgs_generate_messages simple_msgs_generate_messages_py)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg" NAME_WE)
+get_filename_component(_filename "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg" NAME_WE)
 add_dependencies(simple_msgs_generate_messages_py _simple_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv" NAME_WE)
+get_filename_component(_filename "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv" NAME_WE)
 add_dependencies(simple_msgs_generate_messages_py _simple_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility

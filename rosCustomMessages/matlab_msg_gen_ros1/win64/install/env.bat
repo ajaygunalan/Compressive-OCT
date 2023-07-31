@@ -6,6 +6,6 @@ if "%1"=="" (
   echo "Calling env.bat without arguments is not supported anymore. Instead spawn a subshell and source a setup file manually."
   exit 1
 ) else (
-  call "C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/install/setup.bat"
+  call "C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/install/setup.bat"
   %*
 )

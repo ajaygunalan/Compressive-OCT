@@ -6,6 +6,6 @@ REM it emulates the modifications of the setup script without recurring computat
 
 REM new environment variables
 set _PYTHON="C:/Users/OCT/AppData/Roaming/MathWorks/MATLAB/R2022b/ros1/win64/venv/Scripts/python.exe"
-set _SETUP_UTIL=C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/_setup_util.py
+set _SETUP_UTIL=C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/devel/_setup_util.py
 
 REM modified environment variables

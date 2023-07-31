@@ -7,7 +7,7 @@ REM Supported command line options:
 REM --extend: skips the undoing of changes from a previously sourced setup file
 REM --local: only considers this workspace but not the chained ones
 
-set _SETUP_UTIL=C:/Ajay_OCT/visualDepthMap/rosCustomMessages/matlab_msg_gen_ros1/win64/install/_setup_util.py
+set _SETUP_UTIL=C:/Ajay_OCT/OCTAssistedSurgicalLaserbot/rosCustomMessages/matlab_msg_gen_ros1/win64/install/_setup_util.py
 
 if NOT EXIST "%_SETUP_UTIL%" (
   echo "Missing Python script: %_SETUP_UTIL%"
