@@ -12,8 +12,11 @@ disp('Service Server running. CTRL+C to exit.');
 % Callback function
 function resp = serviceCallback(~,~,resp)
     % Perform imaging
-    % ... Imaging code goes here ...
-
+    system('"\\bin\\x64\\Debug\\OCTImageCapture.exe"'); % Call .exe file to capture image
+    
+    % User checks the image manually
+    input('Please check the images. Press any key to continue if the images are OK.');
+    
     % Estimate depth
     % ... Depth estimation code goes here ...
     estimatedDepth = 5.0; % placeholder, replace with actual depth calculation
@@ -22,6 +25,7 @@ function resp = serviceCallback(~,~,resp)
     resp.Depth.Data = estimatedDepth;
     disp("Depth estimated and sent: " + num2str(estimatedDepth));
 end
+
 
 
 
