@@ -18,7 +18,7 @@ function resp = serviceCallback(~,~,resp)
     % Perform imaging
     % system('".\bin\x64\Debug\OCTImageCapture.exe"'); % Call .exe file to capture image
 
-    User checks the image manually
+    % User checks the image manually
     userResponse = input('Please check the images. Type "ok" to continue if the images are OK, anything else to quit.', 's');
 
     if ~strcmp(userResponse, 'ok')
@@ -40,7 +40,13 @@ function resp = serviceCallback(~,~,resp)
         return;
     end
 
-    
-    resp.depth = 1.22; % directly assign the estimatedDepth to resp.depth
+    resp.Depth = rosmessage('std_msgs/Float64');
+    resp.Depth.Data = estimatedDepth;
+    disp("Depth estimated and sent: " + num2str(estimatedDepth));
 end
+
+
+
+
+
 
