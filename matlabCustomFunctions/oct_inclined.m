@@ -3,34 +3,7 @@ clear all; close all;  clc;
 folders = {'data/oct_inclinded/line', 'data/oct_inclinded/line', 'data/oct_inclinded/line', 'data/oct_inclinded/line', 'data/oct_inclinded/line', 'data/oct_inclinded/line'};
 filenames = {'OCTLaserBot/1.oct', 'OCTLaserBot/2.oct', 'OCTLaserBot/3.oct', 'GT/1.oct', 'GT/2.oct', 'GT/3.oct'};
 data = loadOCTData(folders, filenames);
-%% 2. To find the angle roatted by WYS comapred to True
-% Read the image
-depthWYS = imread(savedImageFullPath1);
 
-% Create a figure and an axes to hold the image
-fig = figure;
-ax = axes('Parent', fig);
-imgHandle = imshow(depthWYS, 'Parent', ax);
-
-% Create a coarse slider control
-sliderCoarse = uicontrol('Parent', fig, 'Style', 'slider', 'Position', [150, 5, 300, 20],...
-    'value', 0, 'min', -180, 'max', 180);
-
-% Create a fine slider control
-sliderFine = uicontrol('Parent', fig, 'Style', 'slider', 'Position', [150, 35, 300, 20],...
-    'value', 0, 'min', -1, 'max', 1);
-
-% Store the image data, handle, and sliders using guidata
-handles = guidata(fig);
-handles.depthWYS = depthWYS;
-handles.imgHandle = imgHandle;
-handles.sliderCoarse = sliderCoarse;
-handles.sliderFine = sliderFine;
-guidata(fig, handles);
-
-% Add a listener to the sliders
-addlistener(sliderCoarse, 'ContinuousValueChange', @(src, event) rotateImage(fig));
-addlistener(sliderFine, 'ContinuousValueChange', @(src, event) rotateImage(fig));
 %% 2. Estimate the depth. 
 
 % Initialize structure to hold depth data
@@ -68,7 +41,34 @@ for i = 1:numRows
         title(['GT Image ', num2str(i)]);
     end
 end
+%% To find the angle roatted by WYS comapred to True
+% Read the image
+depthWYS = imread(savedImageFullPath1);
 
+% Create a figure and an axes to hold the image
+fig = figure;
+ax = axes('Parent', fig);
+imgHandle = imshow(depthWYS, 'Parent', ax);
+
+% Create a coarse slider control
+sliderCoarse = uicontrol('Parent', fig, 'Style', 'slider', 'Position', [150, 5, 300, 20],...
+    'value', 0, 'min', -180, 'max', 180);
+
+% Create a fine slider control
+sliderFine = uicontrol('Parent', fig, 'Style', 'slider', 'Position', [150, 35, 300, 20],...
+    'value', 0, 'min', -1, 'max', 1);
+
+% Store the image data, handle, and sliders using guidata
+handles = guidata(fig);
+handles.depthWYS = depthWYS;
+handles.imgHandle = imgHandle;
+handles.sliderCoarse = sliderCoarse;
+handles.sliderFine = sliderFine;
+guidata(fig, handles);
+
+% Add a listener to the sliders
+addlistener(sliderCoarse, 'ContinuousValueChange', @(src, event) rotateImage(fig));
+addlistener(sliderFine, 'ContinuousValueChange', @(src, event) rotateImage(fig));
 
 
 

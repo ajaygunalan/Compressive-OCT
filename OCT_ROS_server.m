@@ -19,7 +19,7 @@ function resp = serviceCallback(~,~,resp)
     % system('".\bin\x64\Debug\OCTImageCapture.exe"'); % Call .exe file to capture image
 
     % User checks the image manually
-    userResponse = input('Please check the images. Type "ok" to continue if the images are OK, anything else to quit.', 's');
+    userResponse = input('\nPlease check the images. Type "ok" to continue if the images are OK, anything else to quit.', 's');
 
     if ~strcmp(userResponse, 'ok')
         fprintf('\nExecution cancelled by the user. Exiting...\n');
@@ -32,7 +32,7 @@ function resp = serviceCallback(~,~,resp)
     estimatedDepth = 5.0; % placeholder, replace with actual depth calculation
 
     % User checks the estimated depth manually
-    userResponse = input(['Estimated depth: ', num2str(estimatedDepth), '. Type "ok" to continue if the depth is OK, anything else to quit.'], 's');
+    userResponse = input(['\nEstimated depth: ', num2str(estimatedDepth), '. Type "ok" to continue if the depth is OK, anything else to quit.'], 's');
 
     if ~strcmp(userResponse, 'ok')
         fprintf('\nExecution cancelled by the user. Exiting...\n');
