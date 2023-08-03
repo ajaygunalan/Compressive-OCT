@@ -41,6 +41,47 @@ for i = 1:numRows
         title(['GT Image ', num2str(i)]);
     end
 end
+%% Calibrataion & Verfication
+% calibFactor = GT/OCTLaserBot;
+% calibFactor1 = depthData(4).depth/depthData(2).depth;
+% calibFactor2 = depthData(6).depth/depthData(3).depth;
+
+% Define pairs of depth data to calculate calibration factors
+depthPairs = [4 2; 6 3]; % Adjust this as needed
+
+% Calculate calibration factors in a loop
+calibFactors = zeros(size(depthPairs, 1), 1);
+for i = 1:size(depthPairs, 1)
+    calibFactors(i) = depthData(depthPairs(i, 1)).depth / depthData(depthPairs(i, 2)).depth;
+end
+
+% Calculate mean 
+meanCalib = mean(calibFactors);
+
+% Calculate median
+medianCalib = median(calibFactors);
+
+% Calculate standard deviation
+stdCalib = std(calibFactors);
+
+% Calculate and print individual errors
+errors = zeros(size(depthPairs, 1), 1);
+calculatedDepth = zeros(size(depthPairs, 1), 1);
+for i = 1:size(depthPairs, 1)
+    calculatedDepth(i) = depthData(depthPairs(i, 2)).depth * meanCalib;
+    actualDepth = depthData(depthPairs(i, 1)).depth;
+    errors(i) = calculatedDepth(i) - actualDepth;
+    fprintf('For WYS %d (depth: %f) and GT %d (depth: %f), Estimated depth: %f, Error: %f\n', depthPairs(i, 2), depthData(depthPairs(i, 2)).depth, depthPairs(i, 1), depthData(depthPairs(i, 1)).depth, calculatedDepth(i), errors(i));
+end
+
+% Calculate and print mean error
+meanError = mean(errors);
+fprintf('Mean error: %f\n', meanError);
+
+% Display results for calibration factors
+fprintf('Mean of Calibration Factors: %f\n', meanCalib);
+fprintf('Median of Calibration Factors: %f\n', medianCalib);
+fprintf('Standard Deviation of Calibration Factors: %f\n', stdCalib);
 %% To find the angle roatted by WYS comapred to True
 % Read the image
 % depthWYS = imread(savedImageFullPath1);
