@@ -1,0 +1,14 @@
+<launch>
+	<node
+		pkg="draw_pkg"
+		type="webcam_pub.py"
+		name="webcam_pub"
+		output="screen"
+	/>
+	<node
+		pkg="draw_pkg"
+		type="webcam_sub.py"
+		name="webcam_sub"
+		output="screen"
+	/>
+</launch>
