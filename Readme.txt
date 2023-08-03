@@ -8,6 +8,6 @@ Will be updated in the future!
 
 
 ### OCT Lenses
-1. [LSM04](https://www.thorlabs.com/thorproduct.cfm?partnumber=LSM04)
+1. [LSM03](https://www.thorlabs.com/thorproduct.cfm?partnumber=LSM03)
 2. [OCT-LK3](https://www.thorlabs.com/thorproduct.cfm?partnumber=OCT-LK3)
 
