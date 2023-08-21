@@ -40,7 +40,7 @@ def longLine(step, pause):
 
 
 def stop():
-    msg.buttons = 0 
+    msg.buttons = 1
     msg.deltax = 0
     msg.deltay = 0
         
@@ -90,17 +90,14 @@ shortPause = 0.1
 
 # Single Line. Multiple Pass.
 try:
-    for i in range(0, 12000):
-        if rospy.is_shutdown():
-            break
+    while not rospy.is_shutdown():
         longLine(step, pause)
         stop()
         longLine(-step, pause)
         stop()
-except rospy.ROSInterruptException:
-    pass
 finally:
-    stop()
+    for i in range(0, 5):
+        stop()
 
 
 # Rectangle
