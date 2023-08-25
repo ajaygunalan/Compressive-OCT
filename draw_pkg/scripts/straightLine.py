@@ -80,24 +80,33 @@ r = rospy.Rate(100) #100 hz
 msg = teensy_input()
 
 
-step = 0.4
+numberOfPass = 2  # 1 Pass is equal to fornt and back to the same point
 pause = 2
+step = 0.8
 shortStep = 0.4
 shortPause = 0.1
 
 # Arrow
 
 
-# Single Line. Multiple Pass.
-try:
-    while not rospy.is_shutdown():
-        longLine(step, pause)
-        stop()
-        longLine(-step, pause)
-        stop()
-finally:
-    for i in range(0, 5):
-        stop()
+# Single Line. Multiple Pass. Infinitle Pass
+# try:
+#     while not rospy.is_shutdown():
+#         longLine(step, pause)
+#         stop()
+#         longLine(-step, pause)
+#         stop()
+# finally:
+#     for i in range(0, 5):
+#         stop()
+
+# Finite Line
+for i in range(0, numberOfPass):
+    longLine(step, pause)
+    stop()
+    longLine(-step, pause)
+    stop()
+
 
 
 # Rectangle
