@@ -74,17 +74,17 @@ def circle():
     
 
 
-pub = rospy.Publisher('ralp_msgs/teensy_input', teensy_input, queue_size=10)
-rospy.init_node('ralp_msgs', anonymous=True)
-r = rospy.Rate(100) #100 hz
-msg = teensy_input()
+# pub = rospy.Publisher('ralp_msgs/teensy_input', teensy_input, queue_size=10)
+# rospy.init_node('ralp_msgs', anonymous=True)
+# r = rospy.Rate(100) #100 hz
+# msg = teensy_input()
 
 
-numberOfPass = 2  # 1 Pass is equal to fornt and back to the same point
-pause = 2
-step = 0.8
-shortStep = 0.4
-shortPause = 0.1
+# numberOfPass = 2  # 1 Pass is equal to fornt and back to the same point
+# pause = 2
+# step = 0.8
+# shortStep = 0.4
+# shortPause = 0.1
 
 # Arrow
 
@@ -101,11 +101,11 @@ shortPause = 0.1
 #         stop()
 
 # Finite Line
-for i in range(0, numberOfPass):
-    longLine(step, pause)
-    stop()
-    longLine(-step, pause)
-    stop()
+# for i in range(0, numberOfPass):
+    # longLine(step, pause)
+    # stop()
+    # longLine(-step, pause)
+    # stop()
 
 
 
@@ -126,4 +126,4 @@ for i in range(0, numberOfPass):
 # circle()
 # stop()
 
-r.sleep()
+# r.sleep()
