@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 import rospy
 import numpy as np
+import subprocess
 from ralp_msgs.msg import teensy_input
-import math
 
-def sinusoidal_line(scan_time):
-    max_velocity = 36.0
-    rate_hz = 1.0 / scan_time  # Calculate rate in Hz
+def shutdown_hook():
+    print("Inside Shutdown Hook - Interrupted by Ctrl+C, shutting down.")
+    subprocess.run(["rosrun", "draw_pkg", "calmStop.py"])
+
+def sinusoidal_line(scan_time, max_velocity):
+    rate_hz = 1.0 / scan_time
     rate = rospy.Rate(rate_hz)
     
     cord = np.arange(0, 2*np.pi, 0.1)
@@ -18,20 +21,23 @@ def sinusoidal_line(scan_time):
     
     try:
         while not rospy.is_shutdown():
-            for i in v_range:  
+            for i in v_range:
                 msg.deltax = i
                 rospy.loginfo(msg)
                 pub.publish(msg)
                 rate.sleep()
-    
     except rospy.ROSInterruptException:
         pass
 
 if __name__ == '__main__':
-    scan_time = 0.03 # seconds
+    max_velocity = 20
+    scan_time_ms = 10
+    scan_time = scan_time_ms / 1000
     pub = rospy.Publisher('ralp_msgs/teensy_input', teensy_input, queue_size=10)
     rospy.init_node('sinusoidal_publisher', anonymous=True)
-    sinusoidal_line(scan_time)
+    rospy.on_shutdown(shutdown_hook)
+    sinusoidal_line(scan_time, max_velocity)
+
 
 
 
