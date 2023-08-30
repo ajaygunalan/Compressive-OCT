@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 import rospy
 import time
+import os
+import signal
 from ralp_msgs.msg import teensy_input
 
 def shutdown_hook():
     print("Interrupted by Ctrl+C, shutting down.")
+    os.kill(os.getpid(), signal.SIGTERM)  # Killing the process
 
 def talker():
     pub = rospy.Publisher('ralp_msgs/teensy_input', teensy_input, queue_size=10)
