@@ -8,7 +8,7 @@ def shutdown_hook():
     print("Inside Shutdown Hook - Interrupted by Ctrl+C, shutting down.")
     subprocess.run(["rosrun", "draw_pkg", "calmStop.py"])
 
-def sinusoidal_line(scan_time, max_velocity):
+def singleScan(scan_time, max_velocity):
     rate_hz = 1.0 / scan_time
     rate = rospy.Rate(rate_hz)
     
@@ -30,7 +30,7 @@ def sinusoidal_line(scan_time, max_velocity):
         pass
 
 if __name__ == '__main__':
-    max_velocity = 20
+    max_velocity = 10
     scan_time_ms = 10
     scan_time = scan_time_ms / 1000
     pub = rospy.Publisher('ralp_msgs/teensy_input', teensy_input, queue_size=10)
