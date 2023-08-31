@@ -6,19 +6,22 @@ import serial
 import subprocess
 import threading
 import sched
+import math
 from ralp_msgs.msg import teensy_input
 
 # Initialize variables
 port, baud_rate = "/dev/ttyACM0", 115200
 ser = serial.Serial(port, baud_rate)
 time_on = 3
-scan_time_ms = 1000
+scan_time_ms = 100
 scan_time = scan_time_ms / 1000
-rate = 1000000  # Update velocity rate (Hz)
-VelocityFactor, offTimer = 0.01, 0.01
+rate = 1000  # Update velocity rate (Hz)
+VelocityFactor = 1/3
+offTimer = 0.01
 scanLength = 4.6
 averageVelocity = scanLength / scan_time
-CALMVelocity = averageVelocity * VelocityFactor
+peakVelocity =  (math.pi*averageVelocity)/2
+CALMVelocity = peakVelocity * VelocityFactor
 ScanNo = int(time_on/scan_time)
 
 # Initialize ROS & scheduler
@@ -36,8 +39,8 @@ def print_config():
     print("Velocity Factor:", VelocityFactor)
     print("Number of scans:", ScanNo)
     print("Average velocity:", averageVelocity, "mm/s")
-    print("Calculated CALM velocity:", CALMVelocity, "mm/s")
-    print("Actual CALM velocity:", CALMVelocity)
+    print("Peak velocity:", peakVelocity, "mm/s")
+    print("Peak CALM velocity:", CALMVelocity)
 
 def execute_at_time(func, args, exec_time):
     s.enterabs(exec_time, 1, func, args)
