@@ -11,3 +11,4 @@ Will be updated in the future!
 1. [LSM03](https://www.thorlabs.com/thorproduct.cfm?partnumber=LSM03)
 2. [LSM04](https://www.thorlabs.com/thorproduct.cfm?partnumber=LSM04)
 
+<img src="OCTLens.JPG"  width="800" height="400">
