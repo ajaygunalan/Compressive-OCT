@@ -8,6 +8,7 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#define PI 3.14159265358979323846
 
 using namespace cv;
 using namespace std;
@@ -21,7 +22,7 @@ void ProcessAndSaveImage(OCTDeviceHandle Dev, ProbeHandle Probe, ScanPatternHand
 
 
 
-void ExportDataAndImage(string n, double startX, double startY, double stopX, double stopY) {
+void ExportDataAndImage(string n, double BScanRangeMM, double ShiftX, double ShiftY, double Angle_rad) {
 	char message[1024];
 
 	OCTDeviceHandle Dev = initDevice();
@@ -47,7 +48,11 @@ void ExportDataAndImage(string n, double startX, double startY, double stopX, do
 	int NumberOfDevicePresets = getNumberOfDevicePresets(Dev, 0);
 	cout << getDevicePresetDescription(Dev, 0, 0) << endl;
 	setDevicePreset(Dev, 0, Probe, Proc, 0);
-	ScanPatternHandle Pattern = createBScanPatternManual(Probe, startX, startY, stopX, stopY, 1024);
+
+
+	ScanPatternHandle Pattern = createBScanPattern(Probe, BScanRangeMM , 1024);
+	shiftScanPattern(Pattern, ShiftX, ShiftY);
+	rotateScanPattern(Pattern, Angle_rad);
 
 	startMeasurement(Dev, Pattern, Acquisition_AsyncFinite);
 	getRawData(Dev, Raw);
@@ -118,28 +123,18 @@ void ExportDataAndImage(string n, double startX, double startY, double stopX, do
 	closeDevice(Dev);
 }
 
+int main(int argc, char* argv[]) {
+	if (argc < 5) {
+		cout << "Insufficient arguments. Usage: ./YourProgram <BScanRangeMM> <ShiftX> <ShiftY> <Angle_deg>" << endl;
+		return 1;
+	}
 
-int main(){
+	double BScanRangeMM = atof(argv[1]);
+	double ShiftX = atof(argv[2]);
+	double ShiftY = atof(argv[3]);
+	double Angle_deg = atof(argv[4]);
+	double Angle_rad = Angle_deg * (PI / 180);
 
-	double startX = -2.2;
-	double startY = -1.0;
-	double stopX = 2.7;
-	double stopY = -1.0;
-	ExportDataAndImage("1", startX, startY, stopX, stopY);
+	ExportDataAndImage("1", BScanRangeMM, ShiftX, ShiftY, Angle_rad);
 	std::this_thread::sleep_for(std::chrono::seconds(1));
-
-	startX = -2.2;
-	startY = 0.0;
-	stopX = 2.7;
-	stopY = 0.0;
-	ExportDataAndImage("2", startX, startY, stopX, stopY);
-	std::this_thread::sleep_for(std::chrono::seconds(1));
-
-	startX = -2.2;
-	startY = -2.0;
-	stopX = 2.7;
-	stopY = -2.0;
-	ExportDataAndImage("3", startX, startY, stopX, stopY);
-	std::this_thread::sleep_for(std::chrono::seconds(1));
-	return 0;
 }

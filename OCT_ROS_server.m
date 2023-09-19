@@ -26,8 +26,13 @@ function resp = serviceCallback(~,~,resp)
     end
   
     % Perform imaging
-    % system('".\bin\x64\Debug\OCTImageCapture.exe"'); % Call .exe file to capture image
-    % disp('OCT Server: Imaging done.');
+    BScanRangeMM = 5.22;
+    ShiftX = -0.24;
+    ShiftY = -0.34;
+    Angle_deg = -40.53;
+    cmd = sprintf('".\\bin\\x64\\Debug\\OCTImageCapture.exe" %f %f %f %f', BScanRangeMM, ShiftX, ShiftY, Angle_deg);
+    system(cmd);
+    disp('OCT Server: Imaging done.');
 
     % User checks the image manually
     userResponse = input('\nOCT Server: Please check the images. Type "ok" to continue if the images are OK, anything else to quit.', 's');
