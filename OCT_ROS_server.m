@@ -17,41 +17,54 @@ disp('OCT Server (ROS Service) running. CTRL+C to exit.');
 function resp = serviceCallback(~,~,resp)
     disp('OCT Server: CALM client is requestsing depth.');
 
-    userResponse = input('\nOCT Server: Type "ok" to perform imaging, anything else to quit.', 's');
+    userResponse = input('OCT Server: Kindly perform imagaing using GUI. Type "ok" when done, anything else to quit.', 's');
     
     if ~strcmp(userResponse, 'ok')
         fprintf('\nOCT Server: Execution cancelled by the user. Exiting...\n');
         rosshutdown;
         return;
     end
-  
+
     % Perform imaging
-    BScanRangeMM = 5.22;
-    ShiftX = -0.24;
-    ShiftY = -0.34;
-    Angle_deg = -40.53;
-    cmd = sprintf('".\\bin\\x64\\Debug\\OCTImageCapture.exe" %f %f %f %f', BScanRangeMM, ShiftX, ShiftY, Angle_deg);
-    system(cmd);
-    disp('OCT Server: Imaging done.');
-
-    % User checks the image manually
-    userResponse = input('\nOCT Server: Please check the images. Type "ok" to continue if the images are OK, anything else to quit.', 's');
-
-    if ~strcmp(userResponse, 'ok')
-        fprintf('\nOCT Server: Execution cancelled by the user. Exiting...\n');
-        rosshutdown;
-        return;
-    end
+%     BScanRangeMM = 6.81;
+%     ShiftX = 1.02;
+%     ShiftY = -0.87;
+%     Angle_deg = -51.37;
+%     cmd = sprintf('".\\bin\\x64\\Debug\\OCTImageCapture.exe" %f %f %f %f', BScanRangeMM, ShiftX, ShiftY, Angle_deg);
+%     system(cmd);
+%     disp('OCT Server: Imaging done.');
+%     User checks the image manually
+%     userResponse = input('\nOCT Server: Please check the images. Type "ok" to continue if the images are OK, anything else to quit.', 's');
+%     if ~strcmp(userResponse, 'ok')
+%         fprintf('\nOCT Server: Execution cancelled by the user. Exiting...\n');
+%         rosshutdown;
+%         return;
+%     end
 
     % Estimate depth
     % ... Depth estimation code goes here ...
-    estimatedDepth = 5.0; % placeholder, replace with actual depth calculation
+    disp('OCT Server: Estimating depth from OCT Images.');
+    [depth_points, depth, final_image] = depthEstimationFrom2D('data\oct1.jpg');
+
+    % Plotting the final_image
+    figure;
+    imshow(final_image);
+    title('Final Image for data\oct1.jpg');
+
+    % Print the calculated depth
+    fprintf('Calculated Depth: %f\n', depth);
+
+    % Ask user to enter their estimated depth
+    userEstimatedDepth = input('Please enter your estimated depth: ');
+
+    % Store the user's estimated depth in a variable
+    estimatedDepth = userEstimatedDepth;
 
     % User checks the estimated depth manually
-    userResponse = input(['\nOCT Server: Estimated depth: ', num2str(estimatedDepth), '. Type "ok" to continue if the depth is OK, anything else to quit.'], 's');
+    userResponse = input(['OCT Server: Estimated depth: ', num2str(estimatedDepth), '. Type "ok" to continue if the depth is OK, anything else to quit.'], 's');
 
     if ~strcmp(userResponse, 'ok')
-        fprintf('\nOCT Server: Execution cancelled by the user. Exiting...\n');
+        fprintf('OCT Server: Execution cancelled by the user. Exiting...\n');
         rosshutdown;
         return;
     end
