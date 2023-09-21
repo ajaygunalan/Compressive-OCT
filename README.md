@@ -5,6 +5,7 @@ Will be updated in the future!
 1. Abalted contour detection:
   - https://www.cvat.ai/annotation-service
   - https://www.makesense.ai/
+  - https://segment-anything.com/
 
 ### Known Bugs
 
