@@ -47,11 +47,9 @@ function [depth_points, perpendicular_distances, final_image] = depthEstimationF
     surface = surface(1:surface_idx); % Remove unused cells
 
     % Visualize the image with contours
-%     figure;
-%     imshow(frame_contours, []);
-%     title('Contour Image');
-
-
+    figure;
+    imshow(frame_contours, []);
+    title('Contour Image');
     %% 2. Approximate contour points with Line Segments
     % Initialize cell array to hold the reduced surfaces and the ablate surfaces
     surface_reduced = cell(1, surface_idx);
@@ -63,9 +61,6 @@ function [depth_points, perpendicular_distances, final_image] = depthEstimationF
         tolerance = 0.02; % you can adjust this
         surface_reduced{idx} = reducepoly(surface{idx}, tolerance);
     end
-    
-
-    
     
     % Overlay the reduced surfaces on the original image
     frame_contours_with_reduced = depthI;
@@ -105,79 +100,133 @@ function [depth_points, perpendicular_distances, final_image] = depthEstimationF
         text(ablate_surface{idx}(mid_point, 2), ablate_surface{idx}(mid_point, 1), num2str(idx), 'Color', 'yellow', 'FontSize', 14);
     end
     title('Original and Ablate Contour Image');
- %% 3. Combine the contour and find depth
-    % Filter out empty matrices
-    ablate_surface = ablate_surface(~cellfun(@isempty, ablate_surface));
-
-    % Concatenate all the ablate_surface into one list
-    all_surfaces = vertcat(ablate_surface{:});
-
-    % Apply reducepoly function
-    tolerance = 0.002;  % Set the tolerance
-    reduced_all_surfaces = reducepoly(all_surfaces, tolerance);
-
-    % Get the first two and last two points from reduced_all_surfaces
-    first_two_points = reduced_all_surfaces(1:2,:);
-    last_two_points = reduced_all_surfaces(end-1:end,:);
-    top_layer_points = [first_two_points; last_two_points];
-
-    % Define threshold and filter depth_points based on change in x-coordinate
-    threshold = 10; % Set your threshold
-    depth_points = reduced_all_surfaces(3:end-2,:);
-    dX = [threshold+1; abs(diff(depth_points(:, 2)))]; % Calculate dX, ensuring first point is kept
-    depth_points = depth_points(dX > threshold, :);
-
-    % Combine these points back into one array
-    reduced_all_surfaces = [first_two_points; depth_points; last_two_points];   
-
-    % Calculate the slope and intercept of the Top Layer line
-    slope = (last_two_points(2,1) - first_two_points(1,1)) / (last_two_points(2,2) - first_two_points(1,2));
-    intercept = first_two_points(1,1) - slope * first_two_points(1,2);
-
-    % Calculate the perpendicular distances from depth_points to the Top Layer line
-    perpendicular_distances = abs(slope * depth_points(:,2) - depth_points(:,1) + intercept) / sqrt(slope^2 + 1);
-
-    % Find the intersection points on the green line
-    x_intersect = (depth_points(:,2) + slope * depth_points(:,1) - slope * intercept) / (slope^2 + 1);
-    y_intersect = slope * x_intersect + intercept;
     
-    % Create a copy of the original image to plot on
-    overlay_image = depthI;
+    
+    ablate_surface_combined;
+    
+    % Plot the ablate_surface points for user selection
+    hold on; % Keep the current plot
+    for idx = 1:length(ablate_surface)
+        plot(ablate_surface{idx}(:,2), ablate_surface{idx}(:,1), 'mo', 'MarkerSize', 10);
+        text(ablate_surface{idx}(:,2), ablate_surface{idx}(:,1), num2str(idx), 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'Color', [1 1 1])
+    end
+    hold off;
 
-    % Overlay the original and reduced contours on the image
-%     figure;
+%% 3. Select the ablated contour and find the width and depth
+
+    % Ask the user to select points
+    disp('Please enter the numbers corresponding to the 3 points that form the ablate contour.');
+
+    % Get user input for point numbers
+    pointNum1 = input('Enter the number for ablation width start: ');
+    pointNum2 = input('Enter the number for ablation width end: ');
+    pointNum3 = input('Enter the number for ablation depth: ');
+    
+    selected_point = ablate_surface{1}(5, :);
+
+    % Store the selected points
+    point1 = [ablate_surface{pointNum1}(:,2), ablate_surface{pointNum1}(:,1)];
+    point2 = [ablate_surface{pointNum2}(:,2), ablate_surface{pointNum2}(:,1)];
+    point3 = [ablate_surface{pointNum3}(:,2), ablate_surface{pointNum3}(:,1)];
+
+
+    % Calculate the distance between the first two points
+    distance = sqrt((point2(1) - point1(1))^2 + (point2(2) - point1(2))^2);
+
+    % Find the equation of the line formed by the first two points
+    % Equation of line: y = mx + c
+    m = (point2(2) - point1(2)) / (point2(1) - point1(1));
+    c = point1(2) - m * point1(1);
+
+    % Find the equation of the perpendicular line passing through the third point
+    % Slope of perpendicular line: -1/m
+    m_perpendicular = -1 / m;
+    c_perpendicular = point3(2) - m_perpendicular * point3(1);
+
+    % Find the intersection point
+    x_intersection = (c_perpendicular - c) / (m - m_perpendicular);
+    y_intersection = m * x_intersection + c;
+
+    % Plot the lines and points
+    hold on;
+    plot([point1(1), point2(1)], [point1(2), point2(2)], 'b', 'LineWidth', 2); % Line between first two points
+    plot([point3(1), x_intersection], [point3(2), y_intersection], 'g', 'LineWidth', 2); % Perpendicular line
+    plot(x, y, 'ro', 'MarkerSize', 10); % Selected points
+    hold off;
+
+%  %% 3. Combine the contour and find depth
+%     % Filter out empty matrices
+%     ablate_surface = ablate_surface(~cellfun(@isempty, ablate_surface));
+% 
+%     % Concatenate all the ablate_surface into one list
+%     all_surfaces = vertcat(ablate_surface{:});
+% 
+%     % Apply reducepoly function
+%     tolerance = 0.002;  % Set the tolerance
+%     reduced_all_surfaces = reducepoly(all_surfaces, tolerance);
+% 
+%     % Get the first two and last two points from reduced_all_surfaces
+%     first_two_points = reduced_all_surfaces(1:2,:);
+%     last_two_points = reduced_all_surfaces(end-1:end,:);
+%     top_layer_points = [first_two_points; last_two_points];
+% 
+%     % Define threshold and filter depth_points based on change in x-coordinate
+%     threshold = 10; % Set your threshold
+%     depth_points = reduced_all_surfaces(3:end-2,:);
+%     dX = [threshold+1; abs(diff(depth_points(:, 2)))]; % Calculate dX, ensuring first point is kept
+%     depth_points = depth_points(dX > threshold, :);
+% 
+%     % Combine these points back into one array
+%     reduced_all_surfaces = [first_two_points; depth_points; last_two_points];   
+% 
+%     % Calculate the slope and intercept of the Top Layer line
+%     slope = (last_two_points(2,1) - first_two_points(1,1)) / (last_two_points(2,2) - first_two_points(1,2));
+%     intercept = first_two_points(1,1) - slope * first_two_points(1,2);
+% 
+%     % Calculate the perpendicular distances from depth_points to the Top Layer line
+%     perpendicular_distances = abs(slope * depth_points(:,2) - depth_points(:,1) + intercept) / sqrt(slope^2 + 1);
+% 
+%     % Find the intersection points on the green line
+%     x_intersect = (depth_points(:,2) + slope * depth_points(:,1) - slope * intercept) / (slope^2 + 1);
+%     y_intersect = slope * x_intersect + intercept;
+%     
+%     % Create a copy of the original image to plot on
+%     overlay_image = depthI;
+% 
+%     % Overlay the original and reduced contours on the image
+% %     figure;
+% %     imshow(overlay_image, []);
+% %     hold on;
+% 
+%     % Save the figure as an image without displaying the figure
+%     fig_invisible = figure('visible', 'off'); % Create an invisible figure
 %     imshow(overlay_image, []);
 %     hold on;
-
-    % Save the figure as an image without displaying the figure
-    fig_invisible = figure('visible', 'off'); % Create an invisible figure
-    imshow(overlay_image, []);
-    hold on;
-
-    % Plot the reduced all surfaces
-    line(reduced_all_surfaces(:,2), reduced_all_surfaces(:,1), 'color', 'r', 'marker', 'o');
-
-    % Draw the line representing the "Top Layer"
-    line(top_layer_points(:,2), top_layer_points(:,1), 'color', 'g', 'LineWidth', 2);
-
-    % Plot the shortest distances from depth_points to the Top Layer line
-    numDepthPoints = size(depth_points, 1); % Compute once outside lo
-    for i = 1:numDepthPoints
-        line([depth_points(i,2), x_intersect(i)], [depth_points(i,1), y_intersect(i)], 'color', 'y', 'LineWidth', 1);
-    end
-
-    % Set title
-    title('Ablated Surfaces (Red), Top Layer (Green), and Vertical Distances (Yellow) on Depth Image');
-
-    % Keep the hold off
-    hold off;
-    
-    % Save the figure as an image
-    fig = gcf; % Get current figure handle
-    final_image_filename = 'final_image.png'; % Define filename for final image
-    saveas(fig, final_image_filename); % Save figure as png image
-    close(fig); % Close figure window
-    
-    % Read the final image
-    final_image = imread(final_image_filename);
+% 
+%     % Plot the reduced all surfaces
+%     line(reduced_all_surfaces(:,2), reduced_all_surfaces(:,1), 'color', 'r', 'marker', 'o');
+% 
+%     % Draw the line representing the "Top Layer"
+%     line(top_layer_points(:,2), top_layer_points(:,1), 'color', 'g', 'LineWidth', 2);
+% 
+%     % Plot the shortest distances from depth_points to the Top Layer line
+%     numDepthPoints = size(depth_points, 1); % Compute once outside lo
+%     for i = 1:numDepthPoints
+%         line([depth_points(i,2), x_intersect(i)], [depth_points(i,1), y_intersect(i)], 'color', 'y', 'LineWidth', 1);
+%     end
+% 
+%     % Set title
+%     title('Ablated Surfaces (Red), Top Layer (Green), and Vertical Distances (Yellow) on Depth Image');
+% 
+%     % Keep the hold off
+%     hold off;
+%     
+%     % Save the figure as an image
+%     fig = gcf; % Get current figure handle
+%     final_image_filename = 'final_image.png'; % Define filename for final image
+%     saveas(fig, final_image_filename); % Save figure as png image
+%     close(fig); % Close figure window
+%     
+%     % Read the final image
+%     final_image = imread(final_image_filename);
 end
