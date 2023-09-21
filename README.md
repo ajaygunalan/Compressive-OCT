@@ -1,6 +1,11 @@
 
 Will be updated in the future!
 
+### To Do
+1. Abalted contour detection:
+  - https://www.cvat.ai/annotation-service
+  - https://www.makesense.ai/
+
 ### Known Bugs
 
 1. The first plot in `matlabCustomFunction\calibration.m` is skewed. Running it again resolves this issue.
