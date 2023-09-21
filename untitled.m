@@ -1,4 +1,4 @@
-[depth_points, edDstimateepth, final_image] = depthEstimationFrom2D('data\oct1.jpg')
+[depth_points, edDstimateepth, final_image] = depthEstimationFrom2D('data\oct1.jpg');
 
 % Plotting the final_image
 figure;
