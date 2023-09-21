@@ -79,7 +79,7 @@ function [depth_points, perpendicular_distances, final_image] = depthEstimationF
         ablate_surface{idx} = filterClosePoints(ablate_surface{idx}, minDistance);
     end
     
-    % combine multiple ablate surface if existed.
+    % combine multi
     for idx = 1:length(ablate_surface)
         ablate_surface_combined = ablate_surface{idx};
     end
@@ -97,7 +97,7 @@ function [depth_points, perpendicular_distances, final_image] = depthEstimationF
         mid_point = round(size(ablate_surface{idx}, 1)/2);
         text(ablate_surface{idx}(mid_point, 2), ablate_surface{idx}(mid_point, 1), num2str(idx), 'Color', 'yellow', 'FontSize', 14);
     end
-    title('Ablated Surfaces (Red), Top Layer (Green), and Depth (Yellow) on Depth Image');
+    title('Original and Ablate Contour Image');
 
        
     % Plot the ablate_surface points for user selection
@@ -154,12 +154,7 @@ function [depth_points, perpendicular_distances, final_image] = depthEstimationF
     
     % Assign output variables
     depth_points = point3;
-    % Capture only the content within the axes as an image
-    ax = gca; % Get handle to current axes
-    F = getframe(ax);
-    final_image = F.cdata;
-
-
+    final_image = frame_contours; % Or another image if you prefer
 
 %  %% 3. Combine the contour and find depth
 %     % Filter out empty matrices

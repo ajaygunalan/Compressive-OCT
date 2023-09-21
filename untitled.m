@@ -3,4 +3,4 @@
 % Plotting the final_image
 figure;
 imshow(final_image);
-title('Final Image for data\oct1.jpg');
+title('Ablated Surfaces (Red), Top Layer (Green), and Depth (Yellow) on Depth Image');
