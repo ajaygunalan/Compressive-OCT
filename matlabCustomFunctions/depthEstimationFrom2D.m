@@ -1,4 +1,4 @@
-function [depth_points, perpendicular_distances, final_image] = depthEstimationFrom2D(savedImageFullPath)
+function [depth_points, perpendicular_distances, final_image, T] = depthEstimationFrom2D(savedImageFullPath)
     %% 1. Detect the ablate surface -> Binary, Dilate, Erode, edge, Contnour. 
     depthI = imread(savedImageFullPath);
 
@@ -159,8 +159,18 @@ function [depth_points, perpendicular_distances, final_image] = depthEstimationF
     F = getframe(ax);
     final_image = F.cdata;
 
-
-
+    % Create a table to hold the points and their labels
+    pointLabels = cell(size(ablate_surface_combined, 1), 1);
+    pointLabels(:) = {'cp'}; % Initialize all labels as 'cp' (contour points)
+    
+    % Update labels for the selected points
+    pointLabels(pointNum1) = {'ws'}; % width start
+    pointLabels(pointNum2) = {'we'}; % width end
+    pointLabels(pointNum3) = {'depth'}; % depth
+    
+    % Create a table
+    T = table(ablate_surface_combined(:, 2), ablate_surface_combined(:, 1), pointLabels, ...
+        'VariableNames', {'X', 'Y', 'Label'});
 %  %% 3. Combine the contour and find depth
 %     % Filter out empty matrices
 %     ablate_surface_combined = ablate_surface_combined(~cellfun(@isempty, ablate_surface_combined));
