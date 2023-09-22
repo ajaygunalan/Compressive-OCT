@@ -139,8 +139,11 @@ function [depth_points, perpendicular_distances, final_image, T] = depthEstimati
     x_intersection = (c_perpendicular - c) / (m - m_perpendicular);
     y_intersection = m * x_intersection + c;
 
-    % Calculate the length of the perpendicular line)
+    % Calculate the length of the perpendicular line
     perpendicular_distances = sqrt((x_intersection - point3(1))^2 + (y_intersection - point3(2))^2);
+    perpendicular_distances = perpendicular_distances*0.25/54; %convertes from pixel into mm
+    % When you export OCT images, you get scale bar of 54 pixel and length
+    % 0.25 mm.
 
     % Plot ablate_surface points
     plot(ablate_surface_combined(:, 2), ablate_surface_combined(:, 1), 'mo', 'MarkerSize', 10);

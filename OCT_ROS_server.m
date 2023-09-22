@@ -1,5 +1,6 @@
 % Clear all variables, close all figures, clear command window
 clear all; close all; clc;
+global counter folderPath;
 rosshutdown;
 
 % Initialize ROS with a specific master IP
@@ -15,12 +16,14 @@ disp('OCT Server (ROS Service) running. CTRL+C to exit.');
 
 % Callback function
 function resp = serviceCallback(~,~,resp)
-    persistent counter folderPath;  % Declare counter and folderPath as persistent
+    global counter folderPath;
+       
     disp('OCT Server: CALM client is requestsing depth.');
     
     if isempty(counter)
         counter = 1;  % Initialize counter if empty
-        folderPath = input('Please enter the folder path (e.g., "data/salmone/"): ', 's');  % Ask for folder path
+        folderPath = input(['Please enter the folder path (e.g., "data/salmone/' ...
+            '"): '], 's');  % Ask for folder path
     else
         counter = counter + 1;  % Increment counter
     end
@@ -64,17 +67,12 @@ function resp = serviceCallback(~,~,resp)
     imshow(final_image);
     title('Final Image');
 
-    % Print the calculated depth
-    fprintf('Calculated Depth: %f\n', depth);
-
-    % Ask user to enter their estimated depth
-    userEstimatedDepth = input('Please enter your estimated depth: ');
 
     % Store the user's estimated depth in a variable
-    estimatedDepth = userEstimatedDepth;
+    estimatedDepth = depth;
 
     % User checks the estimated depth manually
-    userResponse = input(['OCT Server: Estimated depth: ', num2str(estimatedDepth), '. Type "ok" to continue if the depth is OK, anything else to quit.'], 's');
+    userResponse = input(['OCT Server: Estimated depth: ', num2str(estimatedDepth), ' mm. \nType "ok" to continue if the depth is OK, anything else to quit.'], 's');
 
     if ~strcmp(userResponse, 'ok')
         fprintf('OCT Server: Execution cancelled by the user. Exiting...\n');
