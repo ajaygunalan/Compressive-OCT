@@ -44,25 +44,21 @@ function resp = serviceCallback(~,~,resp)
     % Estimate depth
     % ... Depth estimation code goes here ...
     disp('OCT Server: Estimating depth from OCT Images.');
-    [depth_points, depth, final_image] = depthEstimationFrom2D('data\oct1.jpg');
+    [depth_points, depth, final_image] = depthEstimationFrom2D('data\salmone\oct1.jpg');
 
     % Plotting the final_image
     figure;
     imshow(final_image);
-    title('Final Image for data\oct1.jpg');
+    title('Final Image for data\salmone\oct1.jpg');
 
-% Print the calculated depth
-fprintf('Calculated Depth: %f\n', depth);
+    % Print the calculated depth
+    fprintf('Calculated Depth: %f\n', depth);
 
-% Ask user to enter their estimated depth
-userEstimatedDepth = input('Please enter your estimated depth: ');
+    % Ask user to enter their estimated depth
+    userEstimatedDepth = input('Please enter your estimated depth: ');
 
-% Store the user's estimated depth in a variable
-estimatedDepth = userEstimatedDepth;
-
-
-    estimatedDepth = 
-
+    % Store the user's estimated depth in a variable
+    estimatedDepth = userEstimatedDepth;
 
     % User checks the estimated depth manually
     userResponse = input(['OCT Server: Estimated depth: ', num2str(estimatedDepth), '. Type "ok" to continue if the depth is OK, anything else to quit.'], 's');

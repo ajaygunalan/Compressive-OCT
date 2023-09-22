@@ -15,8 +15,17 @@ disp('OCT Server (ROS Service) running. CTRL+C to exit.');
 
 % Callback function
 function resp = serviceCallback(~,~,resp)
+    persistent counter folderPath;  % Declare counter and folderPath as persistent
     disp('OCT Server: CALM client is requestsing depth.');
+    
+    if isempty(counter)
+        counter = 1;  % Initialize counter if empty
+        folderPath = input('Please enter the folder path (e.g., "data/salmone/"): ', 's');  % Ask for folder path
+    else
+        counter = counter + 1;  % Increment counter
+    end
 
+   
     userResponse = input('OCT Server: Kindly perform imagaing using GUI. Type "ok" when done, anything else to quit.', 's');
     
     if ~strcmp(userResponse, 'ok')
@@ -44,12 +53,16 @@ function resp = serviceCallback(~,~,resp)
     % Estimate depth
     % ... Depth estimation code goes here ...
     disp('OCT Server: Estimating depth from OCT Images.');
-    [depth_points, depth, final_image] = depthEstimationFrom2D('data\oct1.jpg');
+    % Generate the variable filename based on counter and folderPath
+    filename = [folderPath, 'oct', num2str(counter), '.jpg'];
+
+    % Perform imaging and depth estimation
+    [depth_points, depth, final_image] = depthEstimationFrom2D(filename);
 
     % Plotting the final_image
     figure;
     imshow(final_image);
-    title('Final Image for data\oct1.jpg');
+    title('Final Image');
 
     % Print the calculated depth
     fprintf('Calculated Depth: %f\n', depth);
