@@ -1,4 +1,4 @@
-function [depth_points, perpendicular_distances] = depthBounding(folderPath, filename)
+function [depth_points, perpendicular_distances] = depthEstimationFrom2D(folderPath, filename)
     %% 1. Detect the ablate surface -> Binary, Dilate, Erode, edge, Contnour. 
     fullPath = fullfile(folderPath, filename);
     % Separate the filename into name and extension
@@ -12,6 +12,10 @@ function [depth_points, perpendicular_distances] = depthBounding(folderPath, fil
     final_image_name = strcat(name, 'final', ext);
     final_image_filename = fullfile(folderPath, final_image_name);
 
+    % Create new filename for the corresponding text file
+    txt_name = strcat(name, 'middle', '.txt');
+    txt_filename = fullfile(folderPath, txt_name);
+
     depthI = imread(fullPath);
 
     % Check if the image is RGB
@@ -19,6 +23,8 @@ function [depth_points, perpendicular_distances] = depthBounding(folderPath, fil
         % Convert RGB to grayscale
         depthI = rgb2gray(depthI);
     end
+
+    [img_height, img_width, ] = size(depthI);
 
     % Convert the intensity data to binary image
     BW = imbinarize(depthI, 'adaptive');
@@ -135,7 +141,18 @@ function [depth_points, perpendicular_distances] = depthBounding(folderPath, fil
     ymin = position(2);
     xmax = xmin + position(3);
     ymax = ymin + position(4);
-    
+
+    % Normalize the coordinates and dimensions
+    center_x = (xmin + xmax) / 2 / img_width;
+    center_y = (ymin + ymax) / 2 / img_height;
+    width = (xmax - xmin) / img_width;
+    height = (ymax - ymin) / img_height;
+
+    class_id = 1;  % Replace with the actual class ID if needed
+    fileID = fopen(txt_filename, 'w');
+    fprintf(fileID, '%d %f %f %f %f\n', class_id, center_x, center_y, width, height);
+    fclose(fileID);
+  
     % Filter the contour points that are within the bounding box
     idx = ablate_surface_combined(:, 2) >= xmin & ablate_surface_combined(:, 2) <= xmax & ...
           ablate_surface_combined(:, 1) >= ymin & ablate_surface_combined(:, 1) <= ymax;

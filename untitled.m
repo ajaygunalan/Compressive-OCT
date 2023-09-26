@@ -11,4 +11,4 @@ final_image_filename = fullfile(folderPath, [name 'final' ext]);  % Use the dyna
 % Plotting the final_image
 figure;
 imshow(imread(final_image_filename));
-title('Ablated Surfaces (Red), Top Layer (Green), and Depth (Yellow) on Depth Image');
+title('Ablated Surfaces (Red), Top Layer (Green), and Depth (Yellow) on Depth Image')
