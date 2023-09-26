@@ -31,30 +31,50 @@ def depthEstimationFrom2D(folderPath, filename):
     
     # Read the image
     depthI = cv2.imread(f"{folderPath}/{filename}", cv2.IMREAD_GRAYSCALE)
-    
+    plt.imshow(depthI, cmap='gray')
+    plt.title('Original Image')
+    plt.show()
+ 
     # Get image dimensions
     img_height, img_width = depthI.shape
     
     # Adaptive Thresholding
     BW = cv2.adaptiveThreshold(depthI, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 2)
+    plt.imshow(BW, cmap='gray')
+    plt.title('After Adaptive Thresholding')
+    plt.show()
     
     # Structuring Element
     se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
     
-    # Dilation + Erosion
-    BW = cv2.dilate(BW, se)
-    BW = cv2.erode(BW, se)
+    # Dilation
+    BW_dilated = cv2.dilate(BW, se)
+    plt.imshow(BW_dilated, cmap='gray')
+    plt.title('After Dilation')
+    plt.show()
+    
+    # Erosion
+    BW_eroded = cv2.erode(BW_dilated, se)
+    plt.imshow(BW_eroded, cmap='gray')
+    plt.title('After Erosion')
+    plt.show()
     
     # Canny Edge Detection
-    lowerThreshold = 100  # Adjust as needed
-    upperThreshold = 200  # Adjust as needed
-    BW = cv2.Canny(BW, lowerThreshold, upperThreshold)
+    lowerThreshold = 100
+    upperThreshold = 200
+    BW_canny = cv2.Canny(BW_eroded, lowerThreshold, upperThreshold)
+    plt.imshow(BW_canny, cmap='gray')
+    plt.title('After Canny Edge Detection')
+    plt.show()
     
     # Find contours
-    contours, _ = cv2.findContours(BW, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(BW_canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     # Initialize a threshold for boundary size
-    sizeThreshold = 100  # Adjust as needed
+    sizeThreshold = 100
+    
+    # Convert the grayscale image to a 3-channel image
+    frame_contours_color = cv2.cvtColor(depthI.copy(), cv2.COLOR_GRAY2BGR)
     
     # Draw contours
     frame_contours = depthI.copy()
@@ -62,12 +82,13 @@ def depthEstimationFrom2D(folderPath, filename):
     for cnt in contours:
         if len(cnt) > sizeThreshold:
             surface.append(cnt)
-            cv2.drawContours(frame_contours, [cnt], 0, 255, 1)
-    
-    # Plotting
-    plt.figure()
-    plt.imshow(frame_contours, cmap='gray')
-    plt.title('Processed Image')
+            # Draw contours in cyan with a thickness of 3
+            cv2.drawContours(frame_contours, [cnt], 0, (255, 255, 0), 3)
+
+
+    # Final Processed Image
+    plt.imshow(frame_contours)
+    plt.title('Final Processed Image')
     plt.show()
 
 
