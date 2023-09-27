@@ -2,24 +2,19 @@ clear all; close all; clc;
 global counter folderPath;
 rosshutdown;
 
+folderPath = "data/plaster/";
 rosinit('10.240.23.63');
 service = rossvcserver('/estimate_depth', 'oct_msgs/Depth', @serviceCallback);
 cleanupObj = onCleanup(@()rosshutdown);
 
 disp('OCT Server (ROS Service) running. CTRL+C to exit.');
 
+counter = 1;
 function resp = serviceCallback(~,~,resp)
     global counter folderPath;
        
     disp('OCT Server: CALM client is requesting depth.');
     
-    if isempty(counter)
-        counter = 1;
-        folderPath = input('Please enter the folder path (e.g., "data/salmone/"): ', 's');
-    else
-        counter = counter + 1;
-    end
-
     while true
         userResponse = input('OCT Server: Kindly perform imaging using GUI. Type "ok" when done, anything else to quit.', 's');
         
@@ -28,6 +23,9 @@ function resp = serviceCallback(~,~,resp)
             rosshutdown;
             return;
         end
+
+         counterInput = input('OCT Server: Please enter the counter number: ', 's');
+        counter = str2double(counterInput);  % Convert string to double
 
         disp('OCT Server: Estimating depth from OCT Images.');
         filename = ['oct', num2str(counter), '.jpg'];
@@ -54,4 +52,6 @@ function resp = serviceCallback(~,~,resp)
     resp.Depth = rosmessage('std_msgs/Float64');
     resp.Depth.Data = estimatedDepth;
     disp("OCT Server: Depth estimated and sent: " + num2str(estimatedDepth));
+
+    counter = counter + 1;
 end
