@@ -54,19 +54,29 @@ void ExportAScanImage(string n, double NumOfAScan, double PosX, double PosY, con
 	int posXInt = static_cast<int>(PosX);
 	int posYInt = static_cast<int>(PosY);
 
-	// Construct the filename with the naming convention
-	std::string namePrefix = "oct";
-	if (posXInt < 0 || posYInt < 0) {
-		namePrefix += "_";
-	}
-	std::string fileName = namePrefix + std::to_string(std::abs(posXInt)) + std::to_string(std::abs(posYInt));
+	// Initialize filename string with 'oct'
+	std::string fileName = "oct";
+	// Add the X coordinate (with or without leading '-')
+	fileName += (posXInt < 0) ? "_" : "";
+	fileName += std::to_string(std::abs(posXInt));
+
+	// Add the Y coordinate (with or without leading '-')
+	fileName += (posYInt < 0) ? "_" : "";
+	fileName += std::to_string(std::abs(posYInt));
 
 	// Save .csv file
 	string csvPath = filepath + fileName + ".csv";
 	const char* cstrCSV = csvPath.c_str();
 	exportData(AScanDH, DataExport_CSV, cstrCSV);
 
+	clearScanPattern(Pattern);
+	clearData(AScanDH);
+	clearRawData(Raw);
+	clearProcessing(Proc);
+	closeProbe(Probe);
+	closeDevice(Dev);
 
+	/**
 	visualizeScanPatternOnDevice(Dev, Probe, Pattern, TRUE);
 
 	getCameraImage(Dev, VideoImg);
@@ -92,16 +102,7 @@ void ExportAScanImage(string n, double NumOfAScan, double PosX, double PosY, con
 	string jpgPath = filepath + "scan_pattern" + fileName + ".jpg";
 	const char* cstrJPG = jpgPath.c_str();
 	cv::imwrite(cstrJPG, videoImagecv);
-
-
-	cv::destroyAllWindows();
-
-	clearScanPattern(Pattern);
-	clearData(AScanDH);
-	clearRawData(Raw);
-	clearProcessing(Proc);
-	closeProbe(Probe);
-	closeDevice(Dev);
+	**/
 }
 
 void ExportBScanImage(string n, double BScanRangeMM, double ShiftX, double ShiftY, double Angle_rad, const string& filepath) {
@@ -230,7 +231,7 @@ int main(int argc, char* argv[]) {
 	{-1.0, -7.0}
 	};
 
-	std::vector<std::pair<double, double>> scanLocations = horizontalLine;
+	std::vector<std::pair<double, double>> scanLocations = verticalline;
 
 	for (const auto& location : scanLocations) {
 		double PosX = location.first;
@@ -239,4 +240,15 @@ int main(int argc, char* argv[]) {
 		ExportAScanImage(n, NumOfAScan, PosX, PosY, filepath);
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
+
+	scanLocations = horizontalLine;
+	for (const auto& location : scanLocations) {
+		double PosX = location.first;
+		double PosY = location.second;
+		string n = std::to_string(static_cast<int>(PosX));
+		ExportAScanImage(n, NumOfAScan, PosX, PosY, filepath);
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
+
+
 }
