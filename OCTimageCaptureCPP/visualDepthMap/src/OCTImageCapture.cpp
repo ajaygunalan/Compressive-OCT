@@ -15,66 +15,58 @@ using namespace std;
 
 
 
-void ExportAScanImage(string n, double NumOfAScan, double PosX, double PosY, const string& filepath) {
+void ExportAScanMultiLoc(const std::vector<std::pair<double, double>>& scanLocations, double NumOfAScan, const string& filepath) {
 	char message[1024];
 
 	OCTDeviceHandle Dev = initDevice();
 	ProbeHandle Probe = initProbe(Dev, "Probe_Standard_OCTG_LSM04.ini");
-	ProcessingHandle Proc = createProcessingForDevice(Dev);
 
-	RawDataHandle Raw = createRawData();
-	DataHandle AScanDH = createData();
-
-	ColoredDataHandle VideoImg = createColoredData();
-	ColoredDataHandle VideoImgCopy = createColoredData();
-
+	// Error handling
 	if (getError(message, 1024)) {
 		cout << "ERROR: " << message << endl;
-		(void)getchar();
 		return;
 	}
 
-	getNumberOfDevicePresetCategories(Dev);
-	// The scan speed of SD-OCT systems can be changed. A better image quality can be obtained with a longer integration time and therefore lower scan speed.
-	// Preset 0 is the default scan speed followed by the highest. Please note to adjust the reference intensity on your scanner manually.
-	// The number of available device presets can be obtained with #getNumberOfDevicePresets and the description of each preset with #getDevicePresetDescription
-	int NumberOfDevicePresets = getNumberOfDevicePresets(Dev, 0);
-	cout << getDevicePresetDescription(Dev, 0, 0) << endl;
+	ProcessingHandle Proc = createProcessingForDevice(Dev);
 	setDevicePreset(Dev, 0, Probe, Proc, 0);
 
-	ScanPatternHandle Pattern = createAScanPattern(Probe, NumOfAScan, PosX, PosY);
+	for (const auto& location : scanLocations) {
+		double PosX = location.first;
+		double PosY = location.second;
 
-	startMeasurement(Dev, Pattern, Acquisition_AsyncFinite);
-	getRawData(Dev, Raw);
-	setProcessedDataOutput(Proc, AScanDH);
-	executeProcessing(Proc, Raw);
-	stopMeasurement(Dev);
+		
+		RawDataHandle Raw = createRawData();
+		DataHandle AScanDH = createData();
 
-	// Convert PosX and PosY to integer to truncate any decimal portions
-	int posXInt = static_cast<int>(PosX);
-	int posYInt = static_cast<int>(PosY);
+		ScanPatternHandle Pattern = createAScanPattern(Probe, NumOfAScan, PosX, PosY);
+		startMeasurement(Dev, Pattern, Acquisition_AsyncFinite);
+		getRawData(Dev, Raw);
+		setProcessedDataOutput(Proc, AScanDH);
+		executeProcessing(Proc, Raw);
+		stopMeasurement(Dev);
 
-	// Initialize filename string with 'oct'
-	std::string fileName = "oct";
-	// Add the X coordinate (with or without leading '-')
-	fileName += (posXInt < 0) ? "_" : "";
-	fileName += std::to_string(std::abs(posXInt));
+		int posXInt = static_cast<int>(PosX);
+		int posYInt = static_cast<int>(PosY);
+		std::string fileName = "oct";
+		fileName += (posXInt < 0) ? "_" : "";
+		fileName += std::to_string(std::abs(posXInt));
+		fileName += (posYInt < 0) ? "_" : "";
+		fileName += std::to_string(std::abs(posYInt));
+		string csvPath = filepath + fileName + ".csv";
+		const char* cstrCSV = csvPath.c_str();
 
-	// Add the Y coordinate (with or without leading '-')
-	fileName += (posYInt < 0) ? "_" : "";
-	fileName += std::to_string(std::abs(posYInt));
+		exportData(AScanDH, DataExport_CSV, cstrCSV);
+		clearScanPattern(Pattern);
+		clearData(AScanDH);
+		clearRawData(Raw);
+		
+	}
 
-	// Save .csv file
-	string csvPath = filepath + fileName + ".csv";
-	const char* cstrCSV = csvPath.c_str();
-	exportData(AScanDH, DataExport_CSV, cstrCSV);
-
-	clearScanPattern(Pattern);
-	clearData(AScanDH);
-	clearRawData(Raw);
 	clearProcessing(Proc);
 	closeProbe(Probe);
 	closeDevice(Dev);
+}
+
 
 	/**
 	visualizeScanPatternOnDevice(Dev, Probe, Pattern, TRUE);
@@ -103,7 +95,6 @@ void ExportAScanImage(string n, double NumOfAScan, double PosX, double PosY, con
 	const char* cstrJPG = jpgPath.c_str();
 	cv::imwrite(cstrJPG, videoImagecv);
 	**/
-}
 
 void ExportBScanImage(string n, double BScanRangeMM, double ShiftX, double ShiftY, double Angle_rad, const string& filepath) {
 	char message[1024];
@@ -192,7 +183,7 @@ void ExportBScanImage(string n, double BScanRangeMM, double ShiftX, double Shift
 }
 
 int main(int argc, char* argv[]) {
-	string filepath = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\cs\\ablated_plaster\\";
+	string filepath = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\cs\\ablated_plaster\\1\\";
 	double NumOfAScan = 5;
 
 	std::vector<std::pair<double, double>> horizontalLine = {
@@ -233,22 +224,9 @@ int main(int argc, char* argv[]) {
 
 	std::vector<std::pair<double, double>> scanLocations = verticalline;
 
-	for (const auto& location : scanLocations) {
-		double PosX = location.first;
-		double PosY = location.second;
-		string n = std::to_string(static_cast<int>(PosX));
-		ExportAScanImage(n, NumOfAScan, PosX, PosY, filepath);
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-	}
+	ExportAScanMultiLoc(verticalline, NumOfAScan, filepath);
+	std::this_thread::sleep_for(std::chrono::seconds(1));
 
-	scanLocations = horizontalLine;
-	for (const auto& location : scanLocations) {
-		double PosX = location.first;
-		double PosY = location.second;
-		string n = std::to_string(static_cast<int>(PosX));
-		ExportAScanImage(n, NumOfAScan, PosX, PosY, filepath);
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-	}
-
-
+	ExportAScanMultiLoc(horizontalLine, NumOfAScan, filepath);
+	std::this_thread::sleep_for(std::chrono::seconds(1));
 }
