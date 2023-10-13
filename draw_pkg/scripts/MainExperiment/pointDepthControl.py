@@ -23,6 +23,7 @@ port = "/dev/ttyACM0"
 baud_rate = 115200
 Kp = 0.5
 Kd = 0.5
+tolerance = 0.1 # mm
 prev_error = 0.0
 max_time_on = 2.0
 
@@ -43,8 +44,8 @@ filename = f'/home/sli/OCTAssistedSurgicalLaserWS/src/data/ablation_data_{timest
 # Initialize CSV
 with open(filename, 'w') as csvfile:
     csvwriter = csv.writer(csvfile)
-    csvwriter.writerow(['Desired Depth', 'Initial Ablation Time', 'Kp', 'Kd', 'Laser Power', 'Laser Frequency'])
-    csvwriter.writerow([desired_depth, initial_ablation_time, Kp, Kd, laser_power, laser_frequency])
+    csvwriter.writerow(['Desired Depth', 'Initial Ablation Time', 'Kp', 'Kd', 'Laser Power', 'Laser Frequency', 'Tolerance'])
+    csvwriter.writerow([desired_depth, initial_ablation_time, Kp, Kd, laser_power, laser_frequency, tolerance])
     csvwriter.writerow([])
     csvwriter.writerow(['Timestamp', 'Current Depth', 'Error', 'Derivative Error', 'Calculated Time ON'])
 
@@ -57,17 +58,30 @@ try:
     with serial.Serial(port, baud_rate) as ser:
         print(ser.name)
         print("Press Ctrl+C to stop execution and turn off the laser.")
+        
+        # Perform initial ablation without checking depth
+        print("Performing Initial ablation...")
         send_continuous_command(ser, bytes([1]), initial_ablation_time)
         ser.write(bytes([0]))
 
-        while not rospy.is_shutdown():
-            resp = estimate_depth()
-            current_depth = resp.depth.data
-            error = desired_depth - current_depth
-            derivative = error - prev_error
-            time_on = min(Kp * error + Kd * derivative, max_time_on)
+        # Turn off laser
+        print("Laser OFF")
+        ser.write(bytes([0]))
 
-            print("Depth difference: ", error)
+    while not rospy.is_shutdown():
+        
+        # Check depth
+        print("Requested depth from OCT Server")
+        resp = estimate_depth()
+        current_depth = resp.depth.data
+        error = desired_depth - current_depth
+        derivative  = error - prev_error
+
+        print("Current depth: ", current_depth)
+        print("Depth Error difference: ", error)
+            
+        if abs(error) > tolerance:  
+            time_on = min(Kp * error + Kd * derivative, max_time_on)
             print("Calculated time_on: ", time_on)
             proceed = input('Type "ok" to proceed: ')
 
@@ -80,10 +94,17 @@ try:
 
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
             save_to_csv(filename, [timestamp, current_depth, error, derivative, time_on])
-
+        
+        else:
+            print("Desired depth reached. Exiting.")
             
-            prev_error = error
-            rospy.sleep(1)
+            timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+            save_to_csv(filename, [timestamp, current_depth, error, derivative, time_on])
+
+            break
+        
+        prev_error = error
+        rospy.sleep(1)
 
 except KeyboardInterrupt:
     ser.write(bytes([0]))
