@@ -2,7 +2,13 @@ clear all; close all; clc;
 global counter folderPath;
 rosshutdown;
 
-folderPath = "data/final/salmone/12oct2023/2/";
+% Ask user for the experimental trial number
+trial_number = input('Enter the experimental trial number: ', 's');
+
+% Construct the folder path dynamically
+folderPath = strcat('data/final/salmone/12oct2023/', trial_number, '/');
+
+
 rosinit('10.240.23.63');
 service = rossvcserver('/estimate_depth', 'oct_msgs/Depth', @serviceCallback);
 cleanupObj = onCleanup(@()rosshutdown);
