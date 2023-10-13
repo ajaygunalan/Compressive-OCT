@@ -69,7 +69,6 @@ try:
         ser.write(bytes([0]))
 
     while not rospy.is_shutdown():
-        
         # Check depth
         print("Requested depth from OCT Server")
         resp = estimate_depth()
@@ -80,7 +79,9 @@ try:
         print("Current depth: ", current_depth)
         print("Depth Error difference: ", error)
             
-        if abs(error) > tolerance:  
+        if abs(error) > tolerance:
+            ser = serial.Serial(port, baud_rate)
+
             time_on = min(Kp * error + Kd * derivative, max_time_on)
             print("Calculated time_on: ", time_on)
             proceed = input('Type "ok" to proceed: ')
@@ -91,6 +92,7 @@ try:
 
             print("Laser OFF")
             ser.write(bytes([0]))
+            ser.close()
 
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
             save_to_csv(filename, [timestamp, current_depth, error, derivative, time_on])
@@ -107,5 +109,6 @@ try:
         rospy.sleep(1)
 
 except KeyboardInterrupt:
-    ser.write(bytes([0]))
-    ser.close()
+    if 'ser' in locals():
+        ser.write(bytes([0]))
+        ser.close()
