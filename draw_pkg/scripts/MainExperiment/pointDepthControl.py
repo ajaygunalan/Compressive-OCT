@@ -31,6 +31,14 @@ initial_ablation_time = float(input("Enter initial ablation time (in seconds): "
 desired_depth = float(input("Enter desired depth (in mm): "))
 laser_power = float(input("Enter laser power (in W): "))
 laser_frequency = float(input("Enter laser frequency (in Hz): "))
+
+# Ask user for date and experiment trial number
+experiment_date = "13oct2023"
+experiment_trial = input("Enter the experiment trial number: ")
+
+# Create unique filename with date and trial number
+filename = f'/home/sli/OCTAssistedSurgicalLaserWS/src/data/{experiment_date}/log_{experiment_trial}.csv'
+
 proceed_experiment = input('Do you want to proceed with the experiment? (yes/no): ')
 
 if proceed_experiment.lower() != 'yes':
@@ -39,7 +47,7 @@ if proceed_experiment.lower() != 'yes':
 
 # Create unique filename with timestamp
 timestamp_str = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-filename = f'/home/sli/OCTAssistedSurgicalLaserWS/src/data/ablation_data_{timestamp_str}.csv'
+filename = f'/home/sli/OCTAssistedSurgicalLaserWS/src/data/13oct2023/ablation_data_{timestamp_str}.csv'
 
 # Initialize CSV
 with open(filename, 'w') as csvfile:

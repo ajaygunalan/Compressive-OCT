@@ -1,4 +1,0 @@
-Desired Depth,Initial Ablation Time,Kp,Kd,Laser Power,Laser Frequency,Tolerance
-1.0,1.0,0.5,0.5,3.0,100.0,0.1
-
-Timestamp,Current Depth,Error,Derivative Error,Calculated Time ON
