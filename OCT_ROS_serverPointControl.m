@@ -6,7 +6,7 @@ rosshutdown;
 trial_number = input('Enter the experimental trial number: ', 's');
 
 % Construct the folder path dynamically
-folderPath = strcat('data/final/salmone/12oct2023/', trial_number, '/');
+folderPath = strcat('data/final/salmone/16oct2023/', trial_number, '/');
 
 
 rosinit('10.240.23.63');
