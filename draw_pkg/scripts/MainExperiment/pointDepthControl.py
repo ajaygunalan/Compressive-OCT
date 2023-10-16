@@ -21,7 +21,7 @@ def save_to_csv(filename, row):
 # Parameters
 port = "/dev/ttyACM0"
 baud_rate = 115200
-Kp = 0.5
+Kp = 1.0
 Kd = 0.5
 tolerance = 0.1 # mm
 prev_error = 0.0
@@ -33,7 +33,7 @@ laser_power = float(input("Enter laser power (in W): "))
 laser_frequency = float(input("Enter laser frequency (in Hz): "))
 
 # Ask user for date and experiment trial number
-experiment_date = "13oct2023"
+experiment_date = "16oct2023"
 experiment_trial = input("Enter the experiment trial number: ")
 
 # Create unique filename with date and trial number
@@ -44,10 +44,6 @@ proceed_experiment = input('Do you want to proceed with the experiment? (yes/no)
 if proceed_experiment.lower() != 'yes':
     print("Exiting as user did not grant permission for the experiment.")
     exit()
-
-# Create unique filename with timestamp
-timestamp_str = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-filename = f'/home/sli/OCTAssistedSurgicalLaserWS/src/data/13oct2023/ablation_data_{timestamp_str}.csv'
 
 # Initialize CSV
 with open(filename, 'w') as csvfile:
