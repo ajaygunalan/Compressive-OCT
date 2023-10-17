@@ -9,9 +9,42 @@
 #include <thread>
 #include <iostream>
 #define PI 3.14159265358979323846
+#define DEBUG 
 
 using namespace cv;
 using namespace std;
+
+
+void logDataProperties(DataHandle AScanDH) {
+#ifdef DEBUG
+	int dataDimensions = getDataPropertyInt(AScanDH, Data_Dimensions);
+	int dataSize1 = getDataPropertyInt(AScanDH, Data_Size1);
+	int dataSize2 = getDataPropertyInt(AScanDH, Data_Size2);
+	int dataSize3 = getDataPropertyInt(AScanDH, Data_Size3);
+	int dataNumberOfElements = getDataPropertyInt(AScanDH, Data_NumberOfElements);
+	int dataSizeInBytes = getDataPropertyInt(AScanDH, Data_SizeInBytes);
+	int dataBytesPerElement = getDataPropertyInt(AScanDH, Data_BytesPerElement);
+
+	cout << "Data Properties: Dimensions=" << dataDimensions
+		<< ", Size1=" << dataSize1
+		<< ", Size2=" << dataSize2
+		<< ", Size3=" << dataSize3
+		<< ", NumberOfElements=" << dataNumberOfElements
+		<< ", SizeInBytes=" << dataSizeInBytes
+		<< ", BytesPerElement=" << dataBytesPerElement << endl;
+#endif
+}
+
+// Return type should match the type of surfaceValue in your main function
+float estimateSurface(const std::vector<std::vector<float>>& ascanMatrix) {
+	// Declare variables you'll use for computation
+	float estimatedSurfaceValue;
+
+	// Insert the algorithm to estimate the surface value from ascanMatrix
+	// ...
+
+	return estimatedSurfaceValue;
+}
 
 
 
@@ -45,6 +78,15 @@ void ExportAScanMultiLoc(const std::vector<std::pair<double, double>>& scanLocat
 		executeProcessing(Proc, Raw);
 		stopMeasurement(Dev);
 
+
+		// Verifying that each A-scan has 1024 data points
+		int aScanSize = getDataPropertyInt(AScanDH, Data_Size1);
+		if (aScanSize != 1024) {
+			cout << "Unexpected A-scan size: " << aScanSize << endl;
+			return;
+		}
+		logDataProperties(AScanDH);
+
 		int posXInt = static_cast<int>(PosX);
 		int posYInt = static_cast<int>(PosY);
 		std::string fileName = "oct";
@@ -66,6 +108,72 @@ void ExportAScanMultiLoc(const std::vector<std::pair<double, double>>& scanLocat
 	closeProbe(Probe);
 	closeDevice(Dev);
 }
+
+
+void AScanMultiLoc(const std::vector<std::pair<double, double>>& scanLocations, double NumOfAScan, const string& filepath) {
+	char message[1024];
+
+	OCTDeviceHandle Dev = initDevice();
+	ProbeHandle Probe = initProbe(Dev, "Probe_Standard_OCTG_LSM04.ini");
+
+	// Error handling
+	if (getError(message, 1024)) {
+		cout << "ERROR: " << message << endl;
+		return;
+	}
+
+	ProcessingHandle Proc = createProcessingForDevice(Dev);
+	setDevicePreset(Dev, 0, Probe, Proc, 0);
+
+	for (const auto& location : scanLocations) {
+		std::vector<std::vector<float>> ascanMatrix;
+
+		double PosX = location.first;
+		double PosY = location.second;
+
+
+		RawDataHandle Raw = createRawData();
+		DataHandle AScanDH = createData();
+
+		ScanPatternHandle Pattern = createAScanPattern(Probe, NumOfAScan, PosX, PosY);
+		startMeasurement(Dev, Pattern, Acquisition_AsyncFinite);
+		getRawData(Dev, Raw);
+		setProcessedDataOutput(Proc, AScanDH);
+		executeProcessing(Proc, Raw);
+		stopMeasurement(Dev);
+
+		// Retrieve dimensions and sizes
+		int AScanSize = getDataPropertyInt(AScanDH, Data_Size1);  // Should be 1024
+		int numAScan = getDataPropertyInt(AScanDH, Data_Size2);  // Should be 5
+
+		// Check retrieved sizes
+		if (AScanSize != 1024 || numAScan != 5) {
+			std::cerr << "Data dimensions do not match expected values. Exiting." << std::endl;
+			return;
+		}
+
+		logDataProperties(AScanDH);
+
+		// Retrieve and store processed data
+		float* processedData = getDataPtr(AScanDH);
+		for (int i = 0; i < numAScan; ++i) {
+			std::vector<float> singleAScan(processedData + i * AScanSize, processedData + (i + 1) * AScanSize);
+			ascanMatrix.push_back(singleAScan);
+		}
+
+		float surfaceValue = estimateSurface(ascanMatrix);
+
+		clearScanPattern(Pattern);
+		clearData(AScanDH);
+		clearRawData(Raw);
+
+	}
+
+	clearProcessing(Proc);
+	closeProbe(Probe);
+	closeDevice(Dev);
+}
+
 
 
 	/**
@@ -222,11 +330,16 @@ int main(int argc, char* argv[]) {
 	{-1.0, -7.0}
 	};
 
-	std::vector<std::pair<double, double>> scanLocations = verticalline;
 
-	ExportAScanMultiLoc(verticalline, NumOfAScan, filepath);
+	std::vector<std::pair<double, double>> singlePoint = {
+	{0.0, 0.0}
+	};
+
+	std::vector<std::pair<double, double>> scanLocations = singlePoint;
+
+	ExportAScanMultiLoc(singlePoint, NumOfAScan, filepath);
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 
-	ExportAScanMultiLoc(horizontalLine, NumOfAScan, filepath);
+	ExportAScanMultiLoc(singlePoint, NumOfAScan, filepath);
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 }
