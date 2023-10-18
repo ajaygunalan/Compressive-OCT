@@ -1,4 +1,5 @@
 #include <opencv2/core.hpp>
+#include <opencv2/opencv.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <iostream>
@@ -8,11 +9,74 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include <vector>
+#include <numeric>
+#include <algorithm>
+#include <cmath>
+#include <fstream>
+// #include <matplotlibcpp.h>
+
 #define PI 3.14159265358979323846
-#define DEBUG 
+#define DEBUG
+
+// #ifdef DEBUG
+// namespace plt = matplotlibcpp;  
+// #endif
 
 using namespace cv;
 using namespace std;
+
+
+float estimateSurface(const std::vector<std::vector<float>>& ascanMatrix) {
+	// Calculate the average of each column (average A-scan)
+	std::vector<float> avg_data(ascanMatrix[0].size(), 0);
+	for (const auto& scan : ascanMatrix) {
+		for (size_t i = 0; i < scan.size(); ++i) {
+			avg_data[i] += scan[i];
+		}
+	}
+
+	for (auto& val : avg_data) {
+		val /= ascanMatrix.size();
+	}
+
+	// Generate corresponding depth values based on given SpacingZ
+	const float SpacingZ = 0.003455f;
+	std::vector<float> depth_values(avg_data.size());
+	std::iota(depth_values.begin(), depth_values.end(), 0);
+	for (auto& val : depth_values) {
+		val *= SpacingZ;
+	}
+
+	// Gaussian smoothing, assuming std_dev = 5
+	const int std_dev = 5;
+	cv::Mat avg_data_mat(avg_data.size(), 1, CV_32F, avg_data.data());  // Convert avg_data to cv::Mat
+	cv::Mat smoothed_data_mat;
+	cv::GaussianBlur(avg_data_mat, smoothed_data_mat, cv::Size(0, 0), std_dev, std_dev);
+
+	// Convert smoothed_data_mat back to std::vector<float>
+	std::vector<float> smoothed_data(smoothed_data_mat.begin<float>(), smoothed_data_mat.end<float>());
+
+	// Find peak intensity and corresponding depth value
+	auto max_element_iter = std::max_element(smoothed_data.begin(), smoothed_data.end());
+	float peak_intensity = *max_element_iter;
+	int peak_index = std::distance(smoothed_data.begin(), max_element_iter);
+	float depth = depth_values[peak_index];
+
+	/** WILL LINK THI SETUP LATER
+	#ifdef DEBUG
+	// Plotting and saving plots, requires matplotlibcpp
+	plt::figure();
+	plt::plot(depth_values, avg_data, "b-", { {"label", "Average Intensity"} });
+	plt::plot(depth_values, smoothed_data, "r-", { {"label", "Gaussian Smoothing"} });
+	plt::scatter(std::vector<float>{depth}, std::vector<float>{peak_intensity});
+	plt::legend();
+	plt::save("./depth_vs_intensity.png");
+	#endif
+	**/
+
+	return depth;
+}
 
 
 void logDataProperties(DataHandle AScanDH) {
@@ -33,17 +97,6 @@ void logDataProperties(DataHandle AScanDH) {
 		<< ", SizeInBytes=" << dataSizeInBytes
 		<< ", BytesPerElement=" << dataBytesPerElement << endl;
 #endif
-}
-
-// Return type should match the type of surfaceValue in your main function
-float estimateSurface(const std::vector<std::vector<float>>& ascanMatrix) {
-	// Declare variables you'll use for computation
-	float estimatedSurfaceValue;
-
-	// Insert the algorithm to estimate the surface value from ascanMatrix
-	// ...
-
-	return estimatedSurfaceValue;
 }
 
 
@@ -110,8 +163,13 @@ void ExportAScanMultiLoc(const std::vector<std::pair<double, double>>& scanLocat
 }
 
 
-void AScanMultiLoc(const std::vector<std::pair<double, double>>& scanLocations, double NumOfAScan, const string& filepath) {
+std::unordered_map<std::pair<double, double>, float> AScanMultiLoc(
+	const std::vector<std::pair<double, double>>& scanLocations,
+	double NumOfAScan
+) {
 	char message[1024];
+	// Create an unordered_map to store the surface values
+	std::unordered_map<std::pair<double, double>, float> surfaceValues;
 
 	OCTDeviceHandle Dev = initDevice();
 	ProbeHandle Probe = initProbe(Dev, "Probe_Standard_OCTG_LSM04.ini");
@@ -163,6 +221,9 @@ void AScanMultiLoc(const std::vector<std::pair<double, double>>& scanLocations, 
 
 		float surfaceValue = estimateSurface(ascanMatrix);
 
+		// Store the surface value in the map with the scan location as the key
+		surfaceValues[location] = surfaceValue;
+
 		clearScanPattern(Pattern);
 		clearData(AScanDH);
 		clearRawData(Raw);
@@ -172,6 +233,8 @@ void AScanMultiLoc(const std::vector<std::pair<double, double>>& scanLocations, 
 	clearProcessing(Proc);
 	closeProbe(Probe);
 	closeDevice(Dev);
+
+	return surfaceValues;
 }
 
 
@@ -290,6 +353,26 @@ void ExportBScanImage(string n, double BScanRangeMM, double ShiftX, double Shift
 	closeDevice(Dev);
 }
 
+void writeSurfaceValuesToCSV(
+	const std::unordered_map<std::pair<double, double>, float>& surfaceValues,
+	const std::string& filename
+) {
+	std::ofstream outFile(filename);  // Open a file stream for writing
+
+	if (!outFile.is_open()) {  // Check if the file opened successfully
+		std::cerr << "Failed to open the file for writing." << std::endl;
+		return;
+	}
+
+	outFile << "PosX,PosY,SurfaceValue\n";  // Write the header row to the CSV file
+
+	for (const auto& entry : surfaceValues) {  // Iterate through the map
+		outFile << entry.first.first << "," << entry.first.second << "," << entry.second << "\n";  // Write data to the CSV file
+	}
+
+	outFile.close();  // Close the file stream when done
+}
+
 int main(int argc, char* argv[]) {
 	string filepath = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\cs\\ablated_plaster\\1\\";
 	double NumOfAScan = 5;
@@ -337,9 +420,9 @@ int main(int argc, char* argv[]) {
 
 	std::vector<std::pair<double, double>> scanLocations = singlePoint;
 
-	ExportAScanMultiLoc(singlePoint, NumOfAScan, filepath);
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	auto surfaceValues = AScanMultiLoc(singlePoint, NumOfAScan);
+	writeSurfaceValuesToCSV(surfaceValues, "surfaceValues.csv");  // Call the function to write data to CSV
 
-	ExportAScanMultiLoc(singlePoint, NumOfAScan, filepath);
+
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 }
