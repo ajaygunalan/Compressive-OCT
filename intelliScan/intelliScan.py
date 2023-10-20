@@ -12,6 +12,7 @@ import cv2
 import math
 import matplotlib.animation as animation
 from scipy.spatial import distance_matrix
+import scipy
 
 
 
@@ -197,6 +198,84 @@ class SamplerClass:
         sorted_points = sorted(self.octvideo_coords, key=lambda x: (x[1], x[0]))  # Adjusted the key function to sort self.octvideo_coords
         self.octvideo_coords = [tuple(coord) for coord in sorted_points]  # Update self.octvideo_coords to the sorted order as a list
         # here the datastruct of self.octvideo_coords sud maintain order
+        
+        
+    def intelli_scan(self):
+        points = np.array(list(self.octvideo_coords))
+        # Determine the boundaries of the points
+        min_x, min_y = points.min(axis=0)
+        max_x, max_y = points.max(axis=0)
+    
+        # Determine the height of each segment
+        segment_height = (max_y - min_y) / 10
+    
+        # Initialize an empty list to hold the sorted points
+        sorted_points = []
+    
+        # Loop over the segments
+        for i in range(10):
+            # Determine the boundaries of the current segment
+            seg_min_y = min_y + i * segment_height
+            seg_max_y = min_y + (i + 1) * segment_height
+    
+            # Get the points within the current segment
+            segment_points = points[(points[:, 1] >= seg_min_y) & (points[:, 1] < seg_max_y)]
+    
+            # If there are no points in the segment, continue
+            if len(segment_points) == 0:
+                continue
+    
+            # Sort the points within the segment based on their x-coordinate to start from the left
+            segment_points = segment_points[segment_points[:, 0].argsort()]
+    
+            # Start with the top-left point in the segment
+            current_point = segment_points[0]
+            segment_points = np.delete(segment_points, 0, axis=0)
+            segment_sorted = [current_point]
+    
+            # While there are points remaining in the segment
+            while len(segment_points) > 0:
+                # Find the nearest point to the current point
+                distances = np.linalg.norm(segment_points - current_point, axis=1)
+                nearest_point_index = np.argmin(distances)
+                nearest_point = segment_points[nearest_point_index]
+    
+                # Remove the nearest point from segment_points and set it as the current point
+                segment_points = np.delete(segment_points, nearest_point_index, axis=0)
+                segment_sorted.append(nearest_point)
+                current_point = nearest_point
+    
+            # Extend the sorted_points list with the sorted points from the current segment
+            sorted_points.extend(segment_sorted)
+    
+        # Update the order of self.octvideo_coords to the sorted order
+        self.octvideo_coords = [tuple(coord) for coord in np.array(sorted_points)]
+
+
+    def nearest_neighbor_scan(self):
+        points = np.array(list(self.octvideo_coords))
+        # Compute a distance matrix
+        dist_matrix = scipy.spatial.distance_matrix(points, points)
+        # Set diagonal to a high value since we don't want to return to the same point
+        np.fill_diagonal(dist_matrix, np.inf)
+        # Start from the first point
+        current_point = 0
+        # List to hold the order of visited points
+        visit_order = [current_point]
+        # Set of unvisited points
+        unvisited = set(range(1, len(points)))
+        while unvisited:
+            # Find the nearest unvisited point
+            nearest_point = min(unvisited, key=lambda x: dist_matrix[current_point, x])
+            # Mark the nearest point as visited
+            visit_order.append(nearest_point)
+            unvisited.remove(nearest_point)
+            # Move to the nearest point
+            current_point = nearest_point
+        # Convert the visit order to the order of points
+        sorted_points = points[visit_order]
+        # Update the order of self.octvideo_coords to the sorted order
+        self.octvideo_coords = [tuple(coord) for coord in sorted_points]
 
     
     
@@ -218,15 +297,14 @@ if __name__ == "__main__":
     samplerObj1.set_surgical_image(image_path='octRGB.jpg')
 
     samplerObj1.intelligent_sampling(num_points=300, min_radius=8)
-    samplerObj1.raster_scan()
+    samplerObj1.intelli_scan()
     
 
     samplerObj1.octvideo_to_octscanner()
     samplerObj1.octscanner_to_surfacemap(surfacemap_cols=14, surfacemap_rows=14)
 
 
-    samplerObj1.plot_points(title='Compressive 3-D Raster Scan (Intelligently Sampling)')
-    samplerObj1.animate_scan(video_title='Compressive 3-D Raster Scan (Intelligently Sampling)')
+    samplerObj1.plot_points(title='IntelliSense - Intelligently Sampling and Scan')
+    samplerObj1.animate_scan(video_title='IntelliSense - Intelligently Sampling and Scan')
 
 
-    
