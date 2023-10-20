@@ -182,4 +182,5 @@ if __name__ == "__main__":
     samplerObj1.octscanner_to_surfacemap(surfacemap_cols=14, surfacemap_rows=14)
 
     samplerObj1.plot_points(title='Compressive 3-D Raster Scan (Checkerboard Pattern)')
-    samplerObj1.animate_scan(video_title='Compressive 3-D Raster Scan')
+    samplerObj1.animate_scan(video_title='Compressive 3-D Raster Scan (Checkerboard Pattern)')
+    
