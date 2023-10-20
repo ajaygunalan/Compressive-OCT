@@ -199,58 +199,54 @@ class SamplerClass:
         self.octvideo_coords = [tuple(coord) for coord in sorted_points]  # Update self.octvideo_coords to the sorted order as a list
         # here the datastruct of self.octvideo_coords sud maintain order
         
-        
-    def intelli_scan(self):
+
+    def adaptive_segmentation(self):
         points = np.array(list(self.octvideo_coords))
-        # Determine the boundaries of the points
         min_x, min_y = points.min(axis=0)
         max_x, max_y = points.max(axis=0)
-    
-        # Determine the height of each segment
-        segment_height = (max_y - min_y) / 10
-    
-        # Initialize an empty list to hold the sorted points
+
+        # Compute histogram of point densities along y-axis
+        y_coords = points[:, 1]
+        histogram, bin_edges = np.histogram(y_coords, bins='auto', density=True)
+
+        # Determine segment boundaries based on histogram
+        segment_boundaries = [min_y] + list(bin_edges[1:-1]) + [max_y]
+
+        # Now each segment may have different heights
+        # based on point density in the y-direction.
+
+        return segment_boundaries
+
+    def intelli_scan(self):
+        points = np.array(list(self.octvideo_coords))
+        segment_boundaries = self.adaptive_segmentation()
         sorted_points = []
-    
-        # Loop over the segments
-        for i in range(10):
-            # Determine the boundaries of the current segment
-            seg_min_y = min_y + i * segment_height
-            seg_max_y = min_y + (i + 1) * segment_height
-    
-            # Get the points within the current segment
+
+        for i in range(len(segment_boundaries) - 1):
+            seg_min_y, seg_max_y = segment_boundaries[i], segment_boundaries[i + 1]
             segment_points = points[(points[:, 1] >= seg_min_y) & (points[:, 1] < seg_max_y)]
-    
-            # If there are no points in the segment, continue
+
             if len(segment_points) == 0:
                 continue
-    
-            # Sort the points within the segment based on their x-coordinate to start from the left
+
             segment_points = segment_points[segment_points[:, 0].argsort()]
-    
-            # Start with the top-left point in the segment
             current_point = segment_points[0]
             segment_points = np.delete(segment_points, 0, axis=0)
             segment_sorted = [current_point]
-    
-            # While there are points remaining in the segment
+
             while len(segment_points) > 0:
-                # Find the nearest point to the current point
                 distances = np.linalg.norm(segment_points - current_point, axis=1)
                 nearest_point_index = np.argmin(distances)
                 nearest_point = segment_points[nearest_point_index]
-    
-                # Remove the nearest point from segment_points and set it as the current point
                 segment_points = np.delete(segment_points, nearest_point_index, axis=0)
                 segment_sorted.append(nearest_point)
                 current_point = nearest_point
-    
-            # Extend the sorted_points list with the sorted points from the current segment
-            sorted_points.extend(segment_sorted)
-    
-        # Update the order of self.octvideo_coords to the sorted order
-        self.octvideo_coords = [tuple(coord) for coord in np.array(sorted_points)]
 
+            sorted_points.extend(segment_sorted)
+
+        self.octvideo_coords = [tuple(coord) for coord in np.array(sorted_points)]
+        
+    
 
     def nearest_neighbor_scan(self):
         points = np.array(list(self.octvideo_coords))
@@ -297,14 +293,14 @@ if __name__ == "__main__":
     samplerObj1.set_surgical_image(image_path='octRGB.jpg')
 
     samplerObj1.intelligent_sampling(num_points=300, min_radius=8)
-    samplerObj1.nearest_neighbor_scan()
+    samplerObj1.intelli_scan()
     
 
     samplerObj1.octvideo_to_octscanner()
     samplerObj1.octscanner_to_surfacemap(surfacemap_cols=14, surfacemap_rows=14)
 
 
-    samplerObj1.plot_points(title='Intelligently Sampling and Nearest Neighbor Scan')
-    samplerObj1.animate_scan(video_title='Intelligently Sampling and Nearest Neighbor Scan')
+    samplerObj1.plot_points(title='IntelliSense - Intelligently Sampling and Scan')
+    samplerObj1.animate_scan(video_title='IntelliSense - Intelligently Sampling and Scan')
 
 
