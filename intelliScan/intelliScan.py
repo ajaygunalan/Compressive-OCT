@@ -297,14 +297,14 @@ if __name__ == "__main__":
     samplerObj1.set_surgical_image(image_path='octRGB.jpg')
 
     samplerObj1.intelligent_sampling(num_points=300, min_radius=8)
-    samplerObj1.intelli_scan()
+    samplerObj1.nearest_neighbor_scan()
     
 
     samplerObj1.octvideo_to_octscanner()
     samplerObj1.octscanner_to_surfacemap(surfacemap_cols=14, surfacemap_rows=14)
 
 
-    samplerObj1.plot_points(title='IntelliSense - Intelligently Sampling and Scan')
-    samplerObj1.animate_scan(video_title='IntelliSense - Intelligently Sampling and Scan')
+    samplerObj1.plot_points(title='Intelligently Sampling and Nearest Neighbor Scan')
+    samplerObj1.animate_scan(video_title='Intelligently Sampling and Nearest Neighbor Scan')
 
 
