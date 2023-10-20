@@ -90,20 +90,7 @@ class SamplerClass:
     def get_surface_value(self, surfacemap_coord):
         return self.surfacemap_to_value.get(surfacemap_coord)
 
-    def uniform_sampling(self, num_points):
-        n = int(math.sqrt(num_points))
-        x_coords, y_coords = np.linspace(self.boundary_points_mm[0][0], self.boundary_points_mm[1][0], n), np.linspace(self.boundary_points_mm[0][1], self.boundary_points_mm[2][1], n)
-        xx_uni, yy_uni = np.meshgrid(x_coords, y_coords)
-        points_px = np.vstack([xx_uni.flatten(), yy_uni.flatten()]).T * [self.CameraScalingX, -self.CameraScalingY] + [self.center_x, self.center_y]
-        self.add_octvideo_coords(coords=points_px)  
-
-    def raster_scan(self):
-        # Adjust the sorting to have the order begin at the top and go from left to right
-        sorted_points = sorted(self.octvideo_coords, key=lambda x: (x[1], x[0]))  # Adjusted the key function to sort self.octvideo_coords
-        self.octvideo_coords = [tuple(coord) for coord in sorted_points]  # Update self.octvideo_coords to the sorted order as a list
-        # here the datastruct of self.octvideo_coords sud maintain order
-    
-
+ 
     def animate_scan(self, video_title='Animation'):  # Default title is 'Animation' if none is provided
         sorted_points = np.array(list(self.octvideo_coords))  # Assuming the points are already sorted
     
@@ -126,8 +113,7 @@ class SamplerClass:
         # Saving the animation
         ani.save(f'{video_title}.mp4', writer='ffmpeg', fps=5)  # Use video_title as the file name
 
-        
-    
+            
     def plot_points(self, title):
         # Now using self.surgical_img and self.boundary_points_mm
         points_px = np.array(list(self.octvideo_coords))
@@ -154,6 +140,63 @@ class SamplerClass:
 
         plt.title(title)
         plt.show()
+        
+    def uniform_sampling(self, num_points):
+        n = int(math.sqrt(num_points))
+        x_coords, y_coords = np.linspace(self.boundary_points_mm[0][0], self.boundary_points_mm[1][0], n), np.linspace(self.boundary_points_mm[0][1], self.boundary_points_mm[2][1], n)
+        xx_uni, yy_uni = np.meshgrid(x_coords, y_coords)
+        points_px = np.vstack([xx_uni.flatten(), yy_uni.flatten()]).T * [self.CameraScalingX, -self.CameraScalingY] + [self.center_x, self.center_y]
+        self.add_octvideo_coords(coords=points_px) 
+        
+
+    def intelligent_sampling(self, num_points, min_radius):
+        # Compute boundary points in pixel coordinates
+        boundary_points_px = self.boundary_points_mm * [self.CameraScalingX, -self.CameraScalingY] + [self.center_x, self.center_y]
+        min_x, max_x = int(min(boundary_points_px[:, 0])), int(max(boundary_points_px[:, 0]))
+        min_y, max_y = int(min(boundary_points_px[:, 1])), int(max(boundary_points_px[:, 1]))
+
+        # Limit the gradient computation to within the boundary
+        img_roi = self.surgical_img_gray[min_y:max_y, min_x:max_x]
+        sobelx = cv2.Sobel(img_roi, cv2.CV_64F, 1, 0, ksize=5)
+        sobely = cv2.Sobel(img_roi, cv2.CV_64F, 0, 1, ksize=5)
+        grad_mag = np.sqrt(sobelx ** 2 + sobely ** 2)
+    
+        # Normalize and visualize the gradient
+        grad_mag = grad_mag / np.sum(grad_mag)
+        plt.imshow(grad_mag, cmap='gray')
+        plt.title("Normalized Gradient Magnitude")
+        plt.show()
+
+        # Generate points based on the gradient, ensuring minimum radius
+        valid_points = []
+        x_range, y_range = np.arange(min_x, max_x), np.arange(min_y, max_y)
+        xx, yy = np.meshgrid(x_range, y_range)
+        coord_pairs = np.vstack([xx.flatten(), yy.flatten()]).T
+    
+        while len(valid_points) < num_points:
+            sampled_indices = np.random.choice(coord_pairs.shape[0], num_points, p=grad_mag.flatten())
+            new_points = coord_pairs[sampled_indices]
+            for point in new_points:
+                if valid_points:  # Check if valid_points is not empty
+                    if all(np.linalg.norm(np.array(valid_points) - point, axis=1) >= min_radius):
+                        valid_points.append(point)
+                else:
+                    valid_points.append(point)  # Directly append if valid_points is empty
+                if len(valid_points) >= num_points:
+                    break
+        
+        # Store the valid points into the class's octvideo_coords set attribute
+        self.add_octvideo_coords(coords=np.array(valid_points))
+        
+        # Optionally plot the points if needed
+        self.plot_points('Intelligently Sampling by Leveraging the Gradient of the Surgical Image')
+        
+    
+    def raster_scan(self):
+        # Adjust the sorting to have the order begin at the top and go from left to right
+        sorted_points = sorted(self.octvideo_coords, key=lambda x: (x[1], x[0]))  # Adjusted the key function to sort self.octvideo_coords
+        self.octvideo_coords = [tuple(coord) for coord in sorted_points]  # Update self.octvideo_coords to the sorted order as a list
+        # here the datastruct of self.octvideo_coords sud maintain order
 
     
     
@@ -174,12 +217,13 @@ if __name__ == "__main__":
     
     samplerObj1.set_surgical_image(image_path='octRGB.jpg')
 
-    samplerObj1.uniform_sampling(num_points=300)
+    samplerObj1.intelligent_sampling(num_points=300, min_radius=8)
     samplerObj1.raster_scan()
     
 
     samplerObj1.octvideo_to_octscanner()
     samplerObj1.octscanner_to_surfacemap(surfacemap_cols=14, surfacemap_rows=14)
 
-    samplerObj1.plot_points(title='Compressive 3-D Raster Scan (Checkerboard Pattern)')
-    samplerObj1.animate_scan(video_title='Compressive 3-D Raster Scan')
+    samplerObj1.plot_points(title='Compressive 3-D Raster Scan (Intelligently Sampling)')
+    samplerObj1.animate_scan(video_title='Compressive 3-D Raster Scan (Intelligently Sampling)')
+    
