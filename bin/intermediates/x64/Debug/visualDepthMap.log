@@ -1,94 +1,16 @@
 ﻿  OCTImageCapture.cpp
-C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(53,66): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(63,17): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(127,57): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(195,57): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xhash(391,21): error C2280: 'std::_Umap_traits<_Kty,_Ty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>::_Umap_traits(const std::_Umap_traits<_Kty,_Ty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false> &)': attempting to reference a deleted function
+C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(73,66): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(83,17): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(152,57): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\numeric(533,20): warning C4244: '=': conversion from '_Ty' to 'float', possible loss of data
           with
           [
-              _Kty=std::pair<double,double>,
+              _Ty=int
+          ]
+C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(66): message : see reference to function template instantiation 'void std::iota<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,int>(_FwdIt,_FwdIt,int)' being compiled
+          with
+          [
               _Ty=float,
-              _Hasher=std::hash<std::pair<double,double>>,
-              _Keyeq=std::equal_to<std::pair<double,double>>,
-              _Alloc=std::allocator<std::pair<const std::pair<double,double>,float>>
+              _FwdIt=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<float>>>
           ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\unordered_map(64): message : compiler has generated 'std::_Umap_traits<_Kty,_Ty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>::_Umap_traits' here
-          with
-          [
-              _Kty=std::pair<double,double>,
-              _Ty=float,
-              _Hasher=std::hash<std::pair<double,double>>,
-              _Keyeq=std::equal_to<std::pair<double,double>>,
-              _Alloc=std::allocator<std::pair<const std::pair<double,double>,float>>
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\unordered_map(64,1): message : 'std::_Umap_traits<_Kty,_Ty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>::_Umap_traits(const std::_Umap_traits<_Kty,_Ty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false> &)': function was implicitly deleted because a base class invokes a deleted or inaccessible function 'std::_Uhash_compare<_Kty,_Hasher,_Keyeq>::_Uhash_compare(const std::_Uhash_compare<_Kty,_Hasher,_Keyeq> &)'
-          with
-          [
-              _Kty=std::pair<double,double>,
-              _Ty=float,
-              _Hasher=std::hash<std::pair<double,double>>,
-              _Keyeq=std::equal_to<std::pair<double,double>>,
-              _Alloc=std::allocator<std::pair<const std::pair<double,double>,float>>
-          ]
-          and
-          [
-              _Kty=std::pair<double,double>,
-              _Hasher=std::hash<std::pair<double,double>>,
-              _Keyeq=std::equal_to<std::pair<double,double>>
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xhash(168,1): message : 'std::_Uhash_compare<_Kty,_Hasher,_Keyeq>::_Uhash_compare(const std::_Uhash_compare<_Kty,_Hasher,_Keyeq> &)': function was implicitly deleted because a data member invokes a deleted or inaccessible function 'std::_Compressed_pair<_Hasher,std::_Compressed_pair<_Keyeq,float,true>,true>::_Compressed_pair(const std::_Compressed_pair<_Hasher,std::_Compressed_pair<_Keyeq,float,true>,true> &)'
-          with
-          [
-              _Kty=std::pair<double,double>,
-              _Hasher=std::hash<std::pair<double,double>>,
-              _Keyeq=std::equal_to<std::pair<double,double>>
-          ]
-          and
-          [
-              _Hasher=std::hash<std::pair<double,double>>,
-              _Keyeq=std::equal_to<std::pair<double,double>>
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xmemory(1384,1): message : 'std::_Compressed_pair<_Hasher,std::_Compressed_pair<_Keyeq,float,true>,true>::_Compressed_pair(const std::_Compressed_pair<_Hasher,std::_Compressed_pair<_Keyeq,float,true>,true> &)': function was implicitly deleted because a base class invokes a deleted or inaccessible function 'std::hash<std::pair<double,double>>::hash(const std::hash<std::pair<double,double>> &)'
-          with
-          [
-              _Hasher=std::hash<std::pair<double,double>>,
-              _Keyeq=std::equal_to<std::pair<double,double>>
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\type_traits(2256,1): message : 'std::hash<std::pair<double,double>>::hash(const std::hash<std::pair<double,double>> &)': function was implicitly deleted because a base class invokes a deleted or inaccessible function 'std::_Conditionally_enabled_hash<_Kty,false>::_Conditionally_enabled_hash(const std::_Conditionally_enabled_hash<_Kty,false> &)'
-          with
-          [
-              _Kty=std::pair<double,double>
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\type_traits(2241,5): message : 'std::_Conditionally_enabled_hash<_Kty,false>::_Conditionally_enabled_hash(const std::_Conditionally_enabled_hash<_Kty,false> &)': function was explicitly deleted
-          with
-          [
-              _Kty=std::pair<double,double>
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xhash(390): message : while compiling class template member function 'std::_Hash<std::_Umap_traits<_Kty,_Ty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>>::_Hash(std::_Hash<std::_Umap_traits<_Kty,_Ty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>> &&)'
-          with
-          [
-              _Kty=std::pair<double,double>,
-              _Ty=float,
-              _Hasher=std::hash<std::pair<double,double>>,
-              _Keyeq=std::equal_to<std::pair<double,double>>,
-              _Alloc=std::allocator<std::pair<const std::pair<double,double>,float>>
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\unordered_map(200): message : see reference to function template instantiation 'std::_Hash<std::_Umap_traits<_Kty,_Ty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>>::_Hash(std::_Hash<std::_Umap_traits<_Kty,_Ty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>> &&)' being compiled
-          with
-          [
-              _Kty=std::pair<double,double>,
-              _Ty=float,
-              _Hasher=std::hash<std::pair<double,double>>,
-              _Keyeq=std::equal_to<std::pair<double,double>>,
-              _Alloc=std::allocator<std::pair<const std::pair<double,double>,float>>
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\unordered_map(69): message : see reference to class template instantiation 'std::_Hash<std::_Umap_traits<_Kty,_Ty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>>' being compiled
-          with
-          [
-              _Kty=std::pair<double,double>,
-              _Ty=float,
-              _Hasher=std::hash<std::pair<double,double>>,
-              _Keyeq=std::equal_to<std::pair<double,double>>,
-              _Alloc=std::allocator<std::pair<const std::pair<double,double>,float>>
-          ]
-C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(168): message : see reference to class template instantiation 'std::unordered_map<std::pair<double,double>,float,std::hash<std::pair<double,double>>,std::equal_to<std::pair<double,double>>,std::allocator<std::pair<const std::pair<double,double>,float>>>' being compiled
+  visualDepthMap.vcxproj -> C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\bin\x64\Debug\OCTImageCapture.exe
