@@ -150,11 +150,14 @@ std::unordered_map<std::pair<double, double>, float> AScanMultiLoc(
 		DataHandle AScanDH = createData();
 
 		ScanPatternHandle Pattern = createAScanPattern(Probe, NumOfAScan, PosX, PosY);
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(250));; // Before measuement wait for 250 ms . This is to prevent Galvo scanners from daamged.
 		startMeasurement(Dev, Pattern, Acquisition_AsyncFinite);
 		getRawData(Dev, Raw);
 		setProcessedDataOutput(Proc, AScanDH);
 		executeProcessing(Proc, Raw);
 		stopMeasurement(Dev);
+
 
 		// Retrieve dimensions and sizes
 		int AScanSize = getDataPropertyInt(AScanDH, Data_Size1);  // Should be 1024
@@ -183,6 +186,8 @@ std::unordered_map<std::pair<double, double>, float> AScanMultiLoc(
 		clearData(AScanDH);
 		clearRawData(Raw);
 
+		
+
 	}
 
 	clearProcessing(Proc);
@@ -195,9 +200,17 @@ std::unordered_map<std::pair<double, double>, float> AScanMultiLoc(
 
 void writeSurfaceValuesToCSV(
 	const std::unordered_map<std::pair<double, double>, float>& surfaceValues,
+	const std::string& directory,
 	const std::string& filename
 ) {
-	std::ofstream outFile(filename);  // Open a file stream for writing
+	// Ensure the directory string ends with a backslash
+	std::string fullPath = directory;
+	if (fullPath.back() != '\\') {
+		fullPath += '\\';
+	}
+	fullPath += filename;  // Concatenate the directory and filename
+
+	std::ofstream outFile(fullPath);  // Open a file stream for writing
 
 	if (!outFile.is_open()) {  // Check if the file opened successfully
 		std::cerr << "Failed to open the file for writing." << std::endl;
@@ -214,25 +227,44 @@ void writeSurfaceValuesToCSV(
 }
 
 int main(int argc, char* argv[]) {
-	string filepath = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\cs\\ablated_plaster\\1\\";
+	std::string directory = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\3rdYeraReport\\";;
 	double NumOfAScan = 5;
 
-	std::vector<std::pair<double, double>> horizontalLine = {
-		{7.0, 0.0},
-		{6.0, 0.0},
-		{5.0, 0.0},
-		{4.0, 0.0},
-		{3.0, 0.0},
-		{2.0, 0.0},
-		{1.0, 0.0},
-		{0.0, 0.0},
-		{-1.0, 0.0},
-		{-2.0, 0.0},
-		{-3.0, 0.0},
-		{-4.0, 0.0},
-		{-5.0, 0.0},
-		{-6.0, 0.0},
-		{-7.0, 0.0}
+	std::vector<std::pair<double, double>> csUniformRasterTwoLines = {
+	{-5.0, 5.0},
+	{-4.375, 5.0},
+	{-3.75, 5.0},
+	{-3.1250000000000004, 5.0},
+	{-2.5, 5.0},
+	{-1.875, 5.0},
+	{-1.2500000000000004, 5.0},
+	{-0.6249999999999994, 5.0},
+	{0.0, 5.0},
+	{0.6249999999999994, 5.0},
+	{1.2500000000000004, 5.0},
+	{1.875, 5.0},
+	{2.500000000000001, 5.0},
+	{3.1250000000000004, 5.0},
+	{3.75, 5.0},
+	{4.375000000000001, 5.0},
+	{5.0, 5.0},
+	{-5.0, 4.375},
+	{-4.375, 4.375},
+	{-3.75, 4.375},
+	{-3.1250000000000004, 4.375},
+	{-2.5, 4.375},
+	{-1.875, 4.375},
+	{-1.2500000000000004, 4.375},
+	{-0.6249999999999994, 4.375},
+	{0.0, 4.375},
+	{0.6249999999999994, 4.375},
+	{1.2500000000000004, 4.375},
+	{1.875, 4.375},
+	{2.500000000000001, 4.375},
+	{3.1250000000000004, 4.375},
+	{3.75, 4.375},
+	{4.375000000000001, 4.375},
+	{5.0, 4.375}
 	};
 
 
@@ -240,10 +272,10 @@ int main(int argc, char* argv[]) {
 	{0.0, 0.0}
 	};
 
-	std::vector<std::pair<double, double>> scanLocations = singlePoint;
+	std::vector<std::pair<double, double>> scanLocations = csUniformRasterTwoLines;
 
 	auto surfaceValues = AScanMultiLoc(scanLocations, NumOfAScan);
-	writeSurfaceValuesToCSV(surfaceValues, "surfaceValues.csv");  // Call the function to write data to CSV
+	writeSurfaceValuesToCSV(surfaceValues, directory, "csUniformRasterTwoLines.csv");  
 
 
 	std::this_thread::sleep_for(std::chrono::seconds(1));
