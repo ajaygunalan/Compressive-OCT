@@ -1,13 +1,13 @@
 ﻿  OCTImageCapture.cpp
-C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(73,66): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(83,17): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(152,57): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(1567,66): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(1577,17): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(1647,57): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\numeric(533,20): warning C4244: '=': conversion from '_Ty' to 'float', possible loss of data
           with
           [
               _Ty=int
           ]
-C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(66): message : see reference to function template instantiation 'void std::iota<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,int>(_FwdIt,_FwdIt,int)' being compiled
+C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(1560): message : see reference to function template instantiation 'void std::iota<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,int>(_FwdIt,_FwdIt,int)' being compiled
           with
           [
               _Ty=float,
