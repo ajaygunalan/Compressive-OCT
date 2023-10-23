@@ -177,7 +177,6 @@ std::unordered_map<std::pair<double, double>, float> AScanMultiLoc(
 	// Error handling
 	if (getError(message, 1024)) {
 		cout << "ERROR: " << message << endl;
-		return;
 	}
 
 	ProcessingHandle Proc = createProcessingForDevice(Dev);
@@ -207,7 +206,6 @@ std::unordered_map<std::pair<double, double>, float> AScanMultiLoc(
 		// Check retrieved sizes
 		if (AScanSize != 1024 || numAScan != 5) {
 			std::cerr << "Data dimensions do not match expected values. Exiting." << std::endl;
-			return;
 		}
 
 		logDataProperties(AScanDH);
@@ -228,6 +226,7 @@ std::unordered_map<std::pair<double, double>, float> AScanMultiLoc(
 		clearData(AScanDH);
 		clearRawData(Raw);
 
+		std::chrono::milliseconds(100);
 	}
 
 	clearProcessing(Proc);
@@ -1872,9 +1871,52 @@ int main(int argc, char* argv[]) {
 	{0.0, 0.0}
 	};
 
-	std::vector<std::pair<double, double>> scanLocations = singlePoint;
 
-	auto surfaceValues = AScanMultiLoc(singlePoint, NumOfAScan);
+	std::vector<std::pair<double, double>> csUniformRasterTwoLines = {
+	{-5.0, 5.0},
+	{-4.375, 5.0},
+	{-3.75, 5.0},
+	{-3.1250000000000004, 5.0},
+	{-2.5, 5.0},
+	{-1.875, 5.0},
+	{-1.2500000000000004, 5.0},
+	{-0.6249999999999994, 5.0},
+	{0.0, 5.0},
+	{0.6249999999999994, 5.0},
+	{1.2500000000000004, 5.0},
+	{1.875, 5.0},
+	{2.500000000000001, 5.0},
+	{3.1250000000000004, 5.0},
+	{3.75, 5.0},
+	{4.375000000000001, 5.0},
+	{5.0, 5.0},
+	{-5.0, 4.375},
+	{-4.375, 4.375},
+	{-3.75, 4.375},
+	{-3.1250000000000004, 4.375},
+	{-2.5, 4.375},
+	{-1.875, 4.375},
+	{-1.2500000000000004, 4.375},
+	{-0.6249999999999994, 4.375},
+	{0.0, 4.375},
+	{0.6249999999999994, 4.375},
+	{1.2500000000000004, 4.375},
+	{1.875, 4.375},
+	{2.500000000000001, 4.375},
+	{3.1250000000000004, 4.375},
+	{3.75, 4.375},
+	{4.375000000000001, 4.375},
+	{5.0, 4.375}
+	};
+
+
+
+
+	std::vector<std::pair<double, double>> scanLocations = csUniformRasterTwoLines;
+
+	scanLocations = singlePoint;
+
+	auto surfaceValues = AScanMultiLoc(scanLocations, NumOfAScan);
 	writeSurfaceValuesToCSV(surfaceValues, "surfaceValues.csv");  // Call the function to write data to CSV
 
 
