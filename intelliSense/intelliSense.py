@@ -94,34 +94,6 @@ class SamplerClass:
     def get_surface_value(self, surfacemap_coord):
         return self.surfacemap_to_value.get(surfacemap_coord)
     
-
-    
-    def update_surface_value(self, file_path):
-        octscanner_coords = set()  # Using a set to store unique coordinates
-
-        with open(file_path, newline='', encoding='utf-8-sig') as csvfile:
-            csvreader = csv.reader(csvfile)
-            next(csvreader, None)  # Skip header row
-            
-            # Using enumerate to count rows and process data in a single loop
-            for csv_entries_count, row in enumerate(csvreader, 1):
-                # Parse the values from the row
-                pos_x, pos_y, surface_value = map(float, row)
-                octscanner_coord = (pos_x, pos_y)
-                octscanner_coords.add(octscanner_coord)  # Storing octscanner coordinates
-                
-                # Update surfacemap_to_value
-                surfacemap_coord = self.get_surfacemap_coord(octscanner_coord)
-                if surfacemap_coord is not None:
-                    self.surfacemap_to_value[surfacemap_coord] = surface_value
-                else:
-                    print(f"No mapping found for octscanner coordinate: {octscanner_coord}")
-
-        octscanner_coords_count = len(octscanner_coords)  # Getting octscanner coordinates count
-
-        # Printing the counts in a single line on the terminal
-        print(f"CSV Entries: {csv_entries_count}, Octscanner Coordinates: {octscanner_coords_count}")
-
  
     def animate_scan(self, video_title='Animation'):  # Default title is 'Animation' if none is provided
         sorted_points = np.array(list(self.octvideo_coords))  # Assuming the points are already sorted
@@ -151,7 +123,15 @@ class SamplerClass:
         points_px = np.array(list(self.octvideo_coords))
         fig, ax = plt.subplots(1, figsize=(12, 9))
         ax.imshow(self.surgical_img)
-        plt.scatter(points_px[:, 0], points_px[:, 1], c='yellow', s=50)
+        
+        # Get the surface values corresponding to the points
+        surface_values = np.array([self.surfacemap_to_value[self.octscannersurfacedict[tuple(real_world_coord)]] for real_world_coord in self.octvideoscannerdict.values()])
+
+        # Use a colormap to map the surface values to colors
+        scatter = plt.scatter(points_px[:, 0], points_px[:, 1], c=surface_values, cmap='viridis', s=50)  # Change 'viridis' to any other colormap if needed
+
+        # Add a colorbar to the plot to show the mapping from surface values to colors
+        plt.colorbar(scatter, label='Surface Values')
 
         # Reverse the mapping dictionary for easier lookup
         reverse_mapping = {value: key for key, value in self.octvideoscannerdict.items()}
@@ -305,6 +285,57 @@ class SamplerClass:
         # Update the order of self.octvideo_coords to the sorted order
         self.octvideo_coords = [tuple(coord) for coord in sorted_points]
         
+        
+    def find_coordinates(self, file_path):
+        found_coords = []
+        not_found_coords = []
+
+        # Read the CSV file
+        with open(file_path, newline='', encoding='utf-8-sig') as csvfile:
+            csvreader = csv.reader(csvfile)
+            next(csvreader, None)  # Skip header row
+            for row in csvreader:
+                # Parse the values from the row
+                pos_x, pos_y, _ = map(lambda x: round(float(x), 3), row)
+                octscanner_coord = (pos_x, pos_y)
+
+                # Check if the coordinate is found in octscannersurfacedict
+                if octscanner_coord in self.octscannersurfacedict:
+                    found_coords.append(octscanner_coord)
+                else:
+                    not_found_coords.append(octscanner_coord)
+
+        # Print the results
+        # print(f"Found Coordinates ({len(found_coords)}): {found_coords}")
+        print(f"Not Found Coordinates ({len(not_found_coords)}): {not_found_coords}")
+
+
+
+    def update_surface_value(self, file_path):
+        octscanner_coords = set()  # Using a set to store unique coordinates
+
+        with open(file_path, newline='', encoding='utf-8-sig') as csvfile:
+            csvreader = csv.reader(csvfile)
+            next(csvreader, None)  # Skip header row
+            
+            # Using enumerate to count rows and process data in a single loop
+            for csv_entries_count, row in enumerate(csvreader, 1):
+                # Parse the values from the row
+                pos_x, pos_y, surface_value = map(lambda x: round(float(x), 3), row)
+                octscanner_coord = (pos_x, pos_y)
+                octscanner_coords.add(octscanner_coord)  # Storing octscanner coordinates
+                
+                # Update surfacemap_to_value
+                surfacemap_coord = self.get_surfacemap_coord(octscanner_coord)
+                if surfacemap_coord is not None:
+                    self.surfacemap_to_value[surfacemap_coord] = surface_value
+                else:
+                    print(f"No mapping found for octscanner coordinate: {octscanner_coord}")
+
+        octscanner_coords_count = len(octscanner_coords)  # Getting octscanner coordinates count
+
+        # Printing the counts in a single line on the terminal
+        print(f"CSV Entries: {csv_entries_count}, Octscanner Coordinates: {octscanner_coords_count}")        
 
 def convert_to_cpp(data_dict):
     pairs = [f"{{{value[0]}, {value[1]}}}" for value in data_dict.values()]
@@ -321,8 +352,9 @@ def convert_to_cpp(data_dict):
 
     return cpp_code
 
-    
-    
+
+
+
 if __name__ == "__main__":
     
     samplerObj1 = SamplerClass()
@@ -340,13 +372,14 @@ if __name__ == "__main__":
     
     samplerObj1.set_surgical_image(image_path='..\\data\\3rdYeraReport\\octVideo1.jpg')
 
-    samplerObj1.uniform_sampling(num_points=300)
+    samplerObj1.uniform_sampling(num_points=300*4)
     samplerObj1.raster_scan()
     samplerObj1.octvideo_to_octscanner()
     samplerObj1.octscanner_to_surfacemap(surfacemap_cols=14, surfacemap_rows=14)
     
     # print(convert_to_cpp(samplerObj1.octvideoscannerdict))
-    samplerObj1.update_surface_value('..\\data\\3rdYeraReport\\csUniformRaster1.csv')
+    # samplerObj1.find_coordinates('..\\data\\3rdYeraReport\\UniformRaster1.csv')
+    samplerObj1.update_surface_value('..\\data\\3rdYeraReport\\UniformRaster1.csv')
     
     samplerObj1.plot_points(title='IntelliSense - Intelligently Sampling and Scan')
     # samplerObj1.animate_scan(video_title='IntelliSense - Intelligently Sampling and Scan')
