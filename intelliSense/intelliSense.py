@@ -50,15 +50,17 @@ class SamplerClass:
 
     def octvideo_to_octscanner(self):
         points_px = np.array(list(self.octvideo_coords))
-        points_mm = np.empty_like(points_px)
+        points_mm = np.empty_like(points_px, dtype=float)  # Ensure the dtype is float for accurate rounding
         points_mm[:, 0] = (points_px[:, 0] - self.center_x) / self.CameraScalingX
         points_mm[:, 1] = (points_px[:, 1] - self.center_y) / -self.CameraScalingY
-        
+    
         # Store the mapping
         for px_coord, mm_coord in zip(points_px, points_mm):
-            self.octvideoscannerdict[tuple(px_coord)] = tuple(mm_coord)
-        
-        return points_mm
+            rounded_mm_coord = (round(mm_coord[0], 3), round(mm_coord[1], 3))
+            self.octvideoscannerdict[tuple(px_coord)] = rounded_mm_coord
+    
+        return points_mm  # You may also want to round values here before returning
+
 
     def octscanner_to_surfacemap(self, surfacemap_cols, surfacemap_rows):
         real_world_coords = np.array(list(self.octvideoscannerdict.values()))
@@ -91,6 +93,34 @@ class SamplerClass:
 
     def get_surface_value(self, surfacemap_coord):
         return self.surfacemap_to_value.get(surfacemap_coord)
+    
+
+    
+    def update_surface_value(self, file_path):
+        octscanner_coords = set()  # Using a set to store unique coordinates
+
+        with open(file_path, newline='', encoding='utf-8-sig') as csvfile:
+            csvreader = csv.reader(csvfile)
+            next(csvreader, None)  # Skip header row
+            
+            # Using enumerate to count rows and process data in a single loop
+            for csv_entries_count, row in enumerate(csvreader, 1):
+                # Parse the values from the row
+                pos_x, pos_y, surface_value = map(float, row)
+                octscanner_coord = (pos_x, pos_y)
+                octscanner_coords.add(octscanner_coord)  # Storing octscanner coordinates
+                
+                # Update surfacemap_to_value
+                surfacemap_coord = self.get_surfacemap_coord(octscanner_coord)
+                if surfacemap_coord is not None:
+                    self.surfacemap_to_value[surfacemap_coord] = surface_value
+                else:
+                    print(f"No mapping found for octscanner coordinate: {octscanner_coord}")
+
+        octscanner_coords_count = len(octscanner_coords)  # Getting octscanner coordinates count
+
+        # Printing the counts in a single line on the terminal
+        print(f"CSV Entries: {csv_entries_count}, Octscanner Coordinates: {octscanner_coords_count}")
 
  
     def animate_scan(self, video_title='Animation'):  # Default title is 'Animation' if none is provided
@@ -190,8 +220,6 @@ class SamplerClass:
         # Store the valid points into the class's octvideo_coords set attribute
         self.add_octvideo_coords(coords=np.array(valid_points))
         
-        # Optionally plot the points if needed
-        self.plot_points('Intelligently Sampling by Leveraging the Gradient of the Surgical Image')
         
     
     def raster_scan(self):
@@ -310,15 +338,15 @@ if __name__ == "__main__":
         boundary_points_mm=np.array([[5, 5], [-5, 5], [-5, -5], [5, -5], [0, 0], [5, 0], [0, 5], [0, -5], [-5, 0]])
     )
     
-    samplerObj1.set_surgical_image(image_path='octRGB.jpg')
+    samplerObj1.set_surgical_image(image_path='..\\data\\3rdYeraReport\\octVideo1.jpg')
 
-    samplerObj1.uniform_sampling(num_points=300*4)
+    samplerObj1.uniform_sampling(num_points=300)
     samplerObj1.raster_scan()
     samplerObj1.octvideo_to_octscanner()
     samplerObj1.octscanner_to_surfacemap(surfacemap_cols=14, surfacemap_rows=14)
     
-    print(convert_to_cpp(samplerObj1.octvideoscannerdict))
-   
+    # print(convert_to_cpp(samplerObj1.octvideoscannerdict))
+    samplerObj1.update_surface_value('..\\data\\3rdYeraReport\\csUniformRaster1.csv')
     
     samplerObj1.plot_points(title='IntelliSense - Intelligently Sampling and Scan')
     # samplerObj1.animate_scan(video_title='IntelliSense - Intelligently Sampling and Scan')
