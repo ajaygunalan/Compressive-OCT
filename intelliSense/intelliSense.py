@@ -14,6 +14,7 @@ import math
 import matplotlib.animation as animation
 from scipy.spatial import distance_matrix
 import scipy
+import matlab.engine
 
 
 
@@ -123,6 +124,10 @@ class SamplerClass:
         points_px = np.array(list(self.octvideo_coords))
         fig, ax = plt.subplots(1, figsize=(12, 9))
         ax.imshow(self.surgical_img)
+        
+        # Remove axis numbers (ticks)
+        ax.set_xticks([])  # Remove x-axis ticks
+        ax.set_yticks([])  # Remove y-axis ticks
         
         # Get the surface values corresponding to the points
         surface_values = np.array([self.surfacemap_to_value[self.octscannersurfacedict[tuple(real_world_coord)]] for real_world_coord in self.octvideoscannerdict.values()])
