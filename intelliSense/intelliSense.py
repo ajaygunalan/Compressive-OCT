@@ -85,11 +85,20 @@ class SamplerClass:
     
         for i, real_world_coord in enumerate(real_world_coords):
             pixel_coord = np.empty_like(real_world_coord)
-            pixel_coord[0] = np.round(real_world_coord[0] * scaling_x + center_x, 3)
-            pixel_coord[1] = np.round(-real_world_coord[1] * scaling_y + center_y, 3)  # Flipping the y-coordinate
+            
+            # Calculate pixel coordinates and round
+            x = np.round(real_world_coord[0] * scaling_x + center_x, 3)
+            y = np.round(-real_world_coord[1] * scaling_y + center_y, 3)  # Flipping the y-coordinate
+            
+            # Clip the values to ensure they are within bounds
+            x = min(max(int(round(x)), 0), self.surfacemap_cols - 1)
+            y = min(max(int(round(y)), 0), self.surfacemap_rows - 1)
+    
+            pixel_coord[0], pixel_coord[1] = x, y
     
             # Store the mapping
             self.octscannersurfacedict[tuple(real_world_coord)] = tuple(pixel_coord)
+
 
     def add_mapping(self, octscanner_coord, surfacemap_coord, value=None):
         self.octscannersurfacedict[octscanner_coord] = surfacemap_coord
@@ -354,34 +363,23 @@ class SamplerClass:
         
     def getA(self):
         totalPixelCount = self.surfacemap_rows * self.surfacemap_cols
-
-        # Initialize 2D Sampling Mask with zeros
         A_2dMask = np.zeros((self.surfacemap_rows, self.surfacemap_cols))
-
-        # Loop through specific sampled locations set in self
+        
         for real_world_coord, pixel_coord in self.octscannersurfacedict.items():
             x, y = pixel_coord
+            x, y = int(round(x)), int(round(y))
             A_2dMask[y, x] = 1
-
+        
         A_2dMask = A_2dMask.astype(bool)
-
-        # Get Linear Indices of Sampled Pixels
         samplingVector = A_2dMask.ravel()
         A_LinearIdx = np.where(samplingVector == 1)[0]
         sampledPixelCount = len(A_LinearIdx)
-
-        # Construct Sensing Matrix
-        A = []
-        for pixelIndex in A_LinearIdx:
-            row = np.zeros(totalPixelCount)
-            row[pixelIndex] = 1
-            A.append(csr_matrix(row))
+        A = [csr_matrix(np.eye(1, totalPixelCount, k)) for k in A_LinearIdx]
         A = hstack(A).T
-
-        # Calculate Compression Ratio
         compressionRatio = (sampledPixelCount / totalPixelCount) * 100
-
+        
         return A, A_2dMask, A_LinearIdx, compressionRatio
+
     
 
     def getY(self):
@@ -389,6 +387,7 @@ class SamplerClass:
         image = np.zeros((self.surfacemap_rows, self.surfacemap_cols))
         for pixel_coord, value in self.surfacemap_to_value.items():
             x, y = pixel_coord
+            x, y = int(round(x)), int(round(y))
             image[y, x] = value
         x = image.ravel()
         
@@ -416,6 +415,26 @@ class SamplerClass:
 
 
 
+def find_min_max_coordinates(surfacemap_to_value):
+    # Extracting X and Y coordinates
+    x_coords = [coord[0] for coord in surfacemap_to_value.keys()]
+    y_coords = [coord[1] for coord in surfacemap_to_value.keys()]
+    
+    # Finding min and max for X and Y
+    min_x = min(x_coords)
+    max_x = max(x_coords)
+    min_y = min(y_coords)
+    max_y = max(y_coords)
+    
+    # Finding min and max for X and Y together
+    min_coord = (min_x, min_y)
+    max_coord = (max_x, max_y)
+
+    print(f"Min X: {min_x}, Max X: {max_x}")
+    print(f"Min Y: {min_y}, Max Y: {max_y}")
+    print(f"Min Coordinate: {min_coord}, Max Coordinate: {max_coord}")
+
+
 
 if __name__ == "__main__":
     
@@ -433,7 +452,7 @@ if __name__ == "__main__":
     )
     
     samplerObj1.set_surgical_image(image_path='..\\data\\3rdYeraReport\\octVideo1.jpg')
-    samplerObj1.set_surfacemap_size(surfacemap_cols=14, surfacemap_rows=14)
+    samplerObj1.set_surfacemap_size(surfacemap_cols=15, surfacemap_rows=15)
 
     samplerObj1.uniform_sampling(num_points=300*4)
     samplerObj1.raster_scan()
@@ -449,6 +468,8 @@ if __name__ == "__main__":
     # samplerObj1.animate_scan(video_title='IntelliSense - Intelligently Sampling and Scan')
     
     
+    print(samplerObj1.surfacemap_to_value)
+    find_min_max_coordinates(samplerObj1.surfacemap_to_value)
     A, A_2dMask, A_LinearIdx, compressionRatio = samplerObj1.getA()
     y = samplerObj1.getY()
     
