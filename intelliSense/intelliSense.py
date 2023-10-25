@@ -474,7 +474,7 @@ if __name__ == "__main__":
     y = samplerObj1.getY()
     
     eng = matlab.engine.start_matlab()
-    [reconstructed_img, time_taken] = eng.csAj(A, y)
+    [reconstructed_img, time_taken] = eng.csAj(A_2dMask, y)
     eng.quit()
     
 
