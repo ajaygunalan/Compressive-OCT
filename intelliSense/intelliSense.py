@@ -15,7 +15,7 @@ import matplotlib.animation as animation
 from scipy.spatial import distance_matrix
 import scipy
 import matlab.engine
-
+from scipy.sparse import csr_matrix, hstack
 
 
 class SamplerClass:
@@ -31,6 +31,17 @@ class SamplerClass:
         self.boundary_points_mm = None
         self.surgical_img = None
         self.surgical_img_gray = None
+        self.surfacemap_cols = None
+        self.surfacemap_rows = None
+        self.A = None
+        self.A_2dMask = None
+        self.A_LinearIdx = None
+        self.compressionRatio = None
+   
+    def set_surfacemap_size(self, surfacemap_cols, surfacemap_rows):
+        self.surfacemap_cols = surfacemap_cols
+        self.surfacemap_rows = surfacemap_rows
+        
 
     def set_camera_parameters(self, center_x, center_y, CameraScalingX, CameraScalingY):
         self.center_x = center_x
@@ -61,23 +72,22 @@ class SamplerClass:
             self.octvideoscannerdict[tuple(px_coord)] = rounded_mm_coord
     
         return points_mm  # You may also want to round values here before returning
-
-
-    def octscanner_to_surfacemap(self, surfacemap_cols, surfacemap_rows):
+    
+    def octscanner_to_surfacemap(self):
         real_world_coords = np.array(list(self.octvideoscannerdict.values()))
-        center_x, center_y = surfacemap_cols / 2, surfacemap_rows / 2
+        center_x, center_y = self.surfacemap_cols / 2, self.surfacemap_rows / 2
         max_coords = np.max(self.boundary_points_mm, axis=0)
         min_coords = np.min(self.boundary_points_mm, axis=0)
         real_world_range_x = max_coords[0] - min_coords[0]
         real_world_range_y = max_coords[1] - min_coords[1]
-        scaling_x = surfacemap_cols / real_world_range_x
-        scaling_y = surfacemap_rows / real_world_range_y
-
+        scaling_x = self.surfacemap_cols / real_world_range_x
+        scaling_y = self.surfacemap_rows / real_world_range_y
+    
         for i, real_world_coord in enumerate(real_world_coords):
             pixel_coord = np.empty_like(real_world_coord)
-            pixel_coord[0] = real_world_coord[0] * scaling_x + center_x
-            pixel_coord[1] = -real_world_coord[1] * scaling_y + center_y  # Flipping the y-coordinate
-            
+            pixel_coord[0] = np.round(real_world_coord[0] * scaling_x + center_x, 3)
+            pixel_coord[1] = np.round(-real_world_coord[1] * scaling_y + center_y, 3)  # Flipping the y-coordinate
+    
             # Store the mapping
             self.octscannersurfacedict[tuple(real_world_coord)] = tuple(pixel_coord)
 
@@ -340,22 +350,69 @@ class SamplerClass:
         octscanner_coords_count = len(octscanner_coords)  # Getting octscanner coordinates count
 
         # Printing the counts in a single line on the terminal
-        print(f"CSV Entries: {csv_entries_count}, Octscanner Coordinates: {octscanner_coords_count}")        
+        print(f"CSV Entries: {csv_entries_count}, Octscanner Coordinates: {octscanner_coords_count}")
+        
+    def getA(self):
+        totalPixelCount = self.surfacemap_rows * self.surfacemap_cols
 
-def convert_to_cpp(data_dict):
-    pairs = [f"{{{value[0]}, {value[1]}}}" for value in data_dict.values()]
-    cpp_code = 'std::vector<std::pair<double, double>> UniformRaster = {\n\t' + ",\n\t".join(pairs) + '\n};'
+        # Initialize 2D Sampling Mask with zeros
+        A_2dMask = np.zeros((self.surfacemap_rows, self.surfacemap_cols))
 
-    # Specify the name of the csv file
-    file_name = "cpp_code.csv"
+        # Loop through specific sampled locations set in self
+        for real_world_coord, pixel_coord in self.octscannersurfacedict.items():
+            x, y = pixel_coord
+            A_2dMask[y, x] = 1
+
+        A_2dMask = A_2dMask.astype(bool)
+
+        # Get Linear Indices of Sampled Pixels
+        samplingVector = A_2dMask.ravel()
+        A_LinearIdx = np.where(samplingVector == 1)[0]
+        sampledPixelCount = len(A_LinearIdx)
+
+        # Construct Sensing Matrix
+        A = []
+        for pixelIndex in A_LinearIdx:
+            row = np.zeros(totalPixelCount)
+            row[pixelIndex] = 1
+            A.append(csr_matrix(row))
+        A = hstack(A).T
+
+        # Calculate Compression Ratio
+        compressionRatio = (sampledPixelCount / totalPixelCount) * 100
+
+        return A, A_2dMask, A_LinearIdx, compressionRatio
     
-    # Writing to csv
-    with open(file_name, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(['Cpp Code'])  # Writing header
-        writer.writerow([cpp_code])  # Writing cpp_code as a single entry
 
-    return cpp_code
+    def getY(self):
+        # Flatten the image
+        image = np.zeros((self.surfacemap_rows, self.surfacemap_cols))
+        for pixel_coord, value in self.surfacemap_to_value.items():
+            x, y = pixel_coord
+            image[y, x] = value
+        x = image.ravel()
+        
+        # Get y from linear indices
+        y = x[self.A_LinearIdx]
+        
+        # Check if y and surfacemap_to_value values are the same
+        surfacemap_values = np.array(list(self.surfacemap_to_value.values()))
+        check_result = np.array_equal(y, surfacemap_values)
+        
+        print(f"Are the y values and surface map values the same? {check_result}")
+        return y
+    
+    def oct_scanner_cordinates_to_cpp(self, file_name):
+        pairs = [f"{{{value[0]:.3f}, {value[1]:.3f}}}" for value in self.octvideoscannerdict.values()]
+        cpp_code = 'std::vector<std::pair<double, double>> UniformRaster = {\n\t' + ",\n\t".join(pairs) + '\n};'
+    
+        # Writing to csv
+        with open(file_name, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Cpp Code'])  # Writing header
+            writer.writerow([cpp_code])  # Writing cpp_code as a single entry
+
+        return cpp_code
 
 
 
@@ -376,17 +433,29 @@ if __name__ == "__main__":
     )
     
     samplerObj1.set_surgical_image(image_path='..\\data\\3rdYeraReport\\octVideo1.jpg')
+    samplerObj1.set_surfacemap_size(surfacemap_cols=14, surfacemap_rows=14)
 
     samplerObj1.uniform_sampling(num_points=300*4)
     samplerObj1.raster_scan()
     samplerObj1.octvideo_to_octscanner()
-    samplerObj1.octscanner_to_surfacemap(surfacemap_cols=14, surfacemap_rows=14)
+    samplerObj1.octscanner_to_surfacemap()
     
     # print(convert_to_cpp(samplerObj1.octvideoscannerdict))
+    samplerObj1.oct_scanner_cordinates_to_cpp("cpp.csv")
     # samplerObj1.find_coordinates('..\\data\\3rdYeraReport\\UniformRaster1.csv')
     samplerObj1.update_surface_value('..\\data\\3rdYeraReport\\UniformRaster1.csv')
     
     samplerObj1.plot_points(title='IntelliSense - Intelligently Sampling and Scan')
     # samplerObj1.animate_scan(video_title='IntelliSense - Intelligently Sampling and Scan')
+    
+    
+    A, A_2dMask, A_LinearIdx, compressionRatio = samplerObj1.getA()
+    y = samplerObj1.getY()
+    
+    eng = matlab.engine.start_matlab()
+    [reconstructed_img, time_taken] = eng.csAj(A, y)
+    eng.quit()
+    
+
 
 
