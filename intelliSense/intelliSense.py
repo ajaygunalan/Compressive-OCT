@@ -367,7 +367,7 @@ class SamplerClass:
         
         for real_world_coord, pixel_coord in self.octscannersurfacedict.items():
             x, y = pixel_coord
-            x, y = int(round(x)), int(round(y))
+            x, y = int(round(x)), int(round(y))  # Convert x, y to integers
             A_2dMask[y, x] = 1
         
         A_2dMask = A_2dMask.astype(bool)
@@ -387,7 +387,6 @@ class SamplerClass:
         image = np.zeros((self.surfacemap_rows, self.surfacemap_cols))
         for pixel_coord, value in self.surfacemap_to_value.items():
             x, y = pixel_coord
-            x, y = int(round(x)), int(round(y))
             image[y, x] = value
         x = image.ravel()
         
@@ -454,7 +453,7 @@ if __name__ == "__main__":
     samplerObj1.set_surgical_image(image_path='..\\data\\3rdYeraReport\\octVideo1.jpg')
     samplerObj1.set_surfacemap_size(surfacemap_cols=15, surfacemap_rows=15)
 
-    samplerObj1.uniform_sampling(num_points=300*4)
+    samplerObj1.uniform_sampling(num_points=300)
     samplerObj1.raster_scan()
     samplerObj1.octvideo_to_octscanner()
     samplerObj1.octscanner_to_surfacemap()
@@ -462,7 +461,7 @@ if __name__ == "__main__":
     # print(convert_to_cpp(samplerObj1.octvideoscannerdict))
     samplerObj1.oct_scanner_cordinates_to_cpp("cpp.csv")
     # samplerObj1.find_coordinates('..\\data\\3rdYeraReport\\UniformRaster1.csv')
-    samplerObj1.update_surface_value('..\\data\\3rdYeraReport\\UniformRaster1.csv')
+    samplerObj1.update_surface_value('..\\data\\3rdYeraReport\\csUniformRaster1.csv')
     
     samplerObj1.plot_points(title='IntelliSense - Intelligently Sampling and Scan')
     # samplerObj1.animate_scan(video_title='IntelliSense - Intelligently Sampling and Scan')
@@ -474,7 +473,7 @@ if __name__ == "__main__":
     y = samplerObj1.getY()
     
     eng = matlab.engine.start_matlab()
-    [reconstructed_img, time_taken] = eng.csAj(A_2dMask, y)
+    [reconstructed_img, time_taken] = eng.csAj(A, y)
     eng.quit()
     
 
