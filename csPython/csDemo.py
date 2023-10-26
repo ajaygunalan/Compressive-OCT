@@ -16,6 +16,7 @@ from scipy.spatial import distance_matrix
 import scipy
 import matlab.engine
 from scipy.sparse import csr_matrix, hstack
+from collections import Counter
 
 
 class SamplerClass:
@@ -380,7 +381,6 @@ class SamplerClass:
         
         return A, A_2dMask, A_LinearIdx, compressionRatio
 
-    
 
     def getY(self):
         # Flatten the image
@@ -394,13 +394,20 @@ class SamplerClass:
         # Get y from linear indices
         y = x[self.A_LinearIdx]
         
-        # Check if y and surfacemap_to_value values are the same
+        # Count occurrences of each unique element in y and surfacemap_values
+        y_counter = Counter(y.ravel().tolist())
         surfacemap_values = np.array(list(self.surfacemap_to_value.values()))
-        check_result = np.array_equal(y, Are the y values and surface map values the same)
+        surfacemap_values_counter = Counter(surfacemap_values.tolist())
         
-        print(f"Are the y values and surface map values the same? {check_result}")
+        # Check if both have the same unique elements with the same counts
+        are_values_the_same = y_counter == surfacemap_values_counter
+        
+        print(f"Are the y values and surface map values the same (ignoring order)? {are_values_the_same}")
+        
         return y
+
     
+
     def oct_scanner_cordinates_to_cpp(self, file_name):
         pairs = [f"{{{value[0]:.3f}, {value[1]:.3f}}}" for value in self.octvideoscannerdict.values()]
         cpp_code = 'std::vector<std::pair<double, double>> UniformRaster = {\n\t' + ",\n\t".join(pairs) + '\n};'
