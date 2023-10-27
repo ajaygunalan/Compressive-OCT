@@ -7,16 +7,17 @@ def preprocess(image, rows, cols):
     image = image.astype(np.float64) / 255.0  # Assuming the original image was 8-bit (0-255)
     return image
 
+
 def generate_sensing_matrix(rows, cols, method='random', compression_ratio=0.3):
     if method == 'alternate':
         A = np.zeros((rows, cols), dtype=bool)
         A[::2, ::2] = True
     elif method == 'random':
-        measurement_len = round(rows * cols * compression_ratio)
-        A = np.zeros(rows * cols, dtype=bool)
-        A[:measurement_len] = True
-        np.random.shuffle(A)
-        A = A.reshape((rows, cols))
+        measurement_len = round(rows * cols * compression_ratio)  # 30% True values
+        a = np.full(rows * cols, False)
+        a[:measurement_len] = True
+        np.random.shuffle(a)
+        A = a.reshape((rows, cols))
     else:
         raise ValueError('Invalid method. Use "alternate" or "random".')
     return A
@@ -28,8 +29,8 @@ rows, cols, _ = I.shape
 I = preprocess(I, rows, cols)
 
 # Generate sensing matrix
-A = generate_sensing_matrix(rows, cols, method='alternate')
-# A = generate_sensing_matrix(rows, cols, 'random', 0.3)
+# A = generate_sensing_matrix(rows, cols, method='alternate')
+A = generate_sensing_matrix(rows, cols, 'random', 0.3)
 
 # Save matrices and images
 np.savetxt('Python_A.txt', A, fmt='%d')

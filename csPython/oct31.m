@@ -12,7 +12,7 @@ I = preprocess(I, rows, cols);
 [p, q] = size(I);  % p x q is the size of the image
 
 % Generate sensing matrix
-A = generate_sensing_matrix(rows, cols, 'random', 0.3);
+A = generate_sensing_matrix(p, q, 'random', 0.3);
 % A = generate_sensing_matrix(rows, cols, 'alternate', 0);
 writematrix(A, 'Matlab_A.txt');
 
@@ -49,7 +49,7 @@ writematrix(y_1d, 'Matlab_y.txt');
 % File: reconstruct_and_display.m
 
 % Specify the source for A_2dMask and y_1d
-source = 'Python';  % Change to 'Python' if the A matrix is saved from Python
+source = 'Python';  % Change to 'Python or Matlab' 
 
 
 % Read the saved A_2dMask based on the source
@@ -57,8 +57,8 @@ if strcmp(source, 'Matlab')
     A_2dMask = readmatrix('Matlab_A.txt');
     y_1d = readmatrix('Matlab_y.txt');
 elseif strcmp(source, 'Python')
-    A_2dMask = readmatrix('Python_A.txt');
-    y_1d = readmatrix('Python_y.txt');
+    A_2dMask = readmatrix('Matlab_A.txt');
+    y_1d = readmatrix('Python_y_M.txt');
 end
 
 
@@ -94,18 +94,10 @@ function A = generate_sensing_matrix(rows, cols, method, compression_ratio)
         A = logical(A);
     elseif strcmp(method, 'random')
         measurement_len = round(rows * cols * compression_ratio);
-        
-        % Random Sampling Matrix
         samplerMatrix = zeros(rows, cols);
-        
-        % Number of points to be measured on the image
         samplerMatrix(1:measurement_len) = 1;
-        
-        % Shuffle the matrix
         samplerMatrix(randperm(numel(samplerMatrix))) = samplerMatrix;
-        
         A = logical(samplerMatrix);
-        display("Hi");
     else
         error('Invalid method. Use ''alternate'' or ''random''.');
     end
