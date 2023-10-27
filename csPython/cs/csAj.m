@@ -1,4 +1,7 @@
-function [reconstructed, t] = csAj(A_2dMask, y, image_rows, image_cols)
+function [reconstructed, t] = csAj(A_2dMask, y)
+    % Get the dimensions of A_2dMask
+    [image_rows, image_cols] = size(A_2dMask);
+
     A_2dMaskVector = A_2dMask(:);  % Flatten the 2D mask to a vector
     A_LinearIdx = find(A_2dMaskVector == 1);  % Find indices where value is 1
     A = [];
