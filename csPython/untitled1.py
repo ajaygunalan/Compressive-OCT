@@ -28,7 +28,8 @@ rows, cols, _ = I.shape
 I = preprocess(I, rows, cols)
 
 # Generate sensing matrix
-A = generate_sensing_matrix(rows, cols, 'random', 0.3)
+A = generate_sensing_matrix(rows, cols, method='alternate')
+# A = generate_sensing_matrix(rows, cols, 'random', 0.3)
 
 # Save matrices and images
 np.savetxt('Python_A.txt', A, fmt='%d')
@@ -42,7 +43,7 @@ y = A * I
 cv2.imwrite('y.png', (y * 255).astype(np.uint8))
 
 # Flatten the image I into a 1D vector x
-x = I.flatten()
+x = I.flatten(order='F')
 
 # Obtain the linear indices of the sampled pixels from the flattened version of A
 sampler_linear_idx = np.flatnonzero(A)
