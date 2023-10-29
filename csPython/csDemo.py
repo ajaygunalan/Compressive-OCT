@@ -483,7 +483,7 @@ if __name__ == "__main__":
     samplerObj1.set_surgical_image(image_path='..\\data\\3rdYeraReport\\octVideo1.jpg')
     samplerObj1.set_surfacemap_size(surfacemap_cols=34, surfacemap_rows=34)
 
-    samplerObj1.uniform_sampling(num_points=300)
+    samplerObj1.uniform_sampling(num_points=300*4)
     samplerObj1.raster_scan()
     samplerObj1.octvideo_to_octscanner()
     samplerObj1.octscanner_to_surfacemap()
@@ -491,7 +491,7 @@ if __name__ == "__main__":
 
     # samplerObj1.oct_scanner_cordinates_to_cpp("cpp.csv")
 
-    samplerObj1.update_surface_value('..\\data\\3rdYeraReport\\csUniformRaster1.csv')
+    samplerObj1.update_surface_value('..\\data\\3rdYeraReport\\UniformRaster1.csv')
     samplerObj1.plot_points(title='Compressive 3-D Raster Scan (Checkerboard Pattern)')
     
     # samplerObj1.animate_scan(video_title='IntelliSense - Intelligently Sampling and Scan')

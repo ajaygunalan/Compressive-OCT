@@ -60,25 +60,12 @@ else
     disp('Max and Min values are the same, cannot normalize');
     SurfaceValueMatrix = SurfaceValueMatrix;  % Keep it as is
 end
-%% Ignore boundary values sicne data is corrupt here
 
-% Find rows and columns where all values are zero
-rowsWithAllZeros = ~any(SurfaceValueMatrix, 2);
-colsWithAllZeros = ~any(SurfaceValueMatrix, 1);
-
-% Remove rows and columns with all zero values
-SurfaceValueMatrix(rowsWithAllZeros, :) = [];
-SurfaceValueMatrix(:, colsWithAllZeros) = [];
-
-
-rowsToRemoveStart = 3;
-colsToRemoveStart = 3;
-rowsToRemoveEnd = 3;
-colsToRemoveEnd = 4;
-
-SurfaceValueMatrix = SurfaceValueMatrix((1 + rowsToRemoveStart):(end - rowsToRemoveEnd), (1 + colsToRemoveStart):(end - colsToRemoveEnd));
 Truth = SurfaceValueMatrix;
 x = reshape(SurfaceValueMatrix, [], 1);
+%% Ignore bounbd
+
+
 %% Sampling
 % Create A
 A_2dMask = true(size(SurfaceValueMatrix));
@@ -93,7 +80,7 @@ y = x(A_LinearIdx);
 %% Estimate depth
 
 [Estimation, t] = csAj(A_2dMask, y);
-results = RelErr(Truth, Estimation);
+
 
 
 % Vectorize the matrices
@@ -108,14 +95,14 @@ correlation_coefficient = correlation_matrix(1, 2);
 
 % Display the result
 fprintf('The correlation coefficient between the two matrices is: %.2f\n', correlation_coefficient);
-fprintf('The relative error between the two matrices is: %.2f\n', results);
 
 
 
 
 
 
-
+results = RelErr(Truth, Estimation);
+norm(Truth - Estimation, 'fro')
 
 
 %%

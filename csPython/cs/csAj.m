@@ -17,8 +17,8 @@ function [reconstructed, t] = csAj(A_2dMask, y)
     %% Run TVAL3
     clear opts
     opts.mu = 2^8;
-    opts.beta = 2^5;
-    opts.tol = 1E-3;
+    opts.beta = 2^6;
+    opts.tol = 1E-4;
     opts.maxit = 300;
     opts.TVnorm = 1;
     opts.nonneg = true;
