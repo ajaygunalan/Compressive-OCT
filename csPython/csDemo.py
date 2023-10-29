@@ -38,6 +38,7 @@ class SamplerClass:
         self.A_2dMask = None
         self.A_LinearIdx = None
         self.compressionRatio = None
+        self.y_max_value = None
    
     def set_surfacemap_size(self, surfacemap_cols, surfacemap_rows):
         self.surfacemap_cols = surfacemap_cols
@@ -76,7 +77,7 @@ class SamplerClass:
     
     def octscanner_to_surfacemap(self):
         real_world_coords = np.array(list(self.octvideoscannerdict.values()))
-        center_x, center_y = self.surfacemap_cols / 2, self.surfacemap_rows / 2
+        center_x, center_y = self.surfacemap_cols/2, self.surfacemap_rows/2
         max_coords = np.max(self.boundary_points_mm, axis=0)
         min_coords = np.min(self.boundary_points_mm, axis=0)
         real_world_range_x = max_coords[0] - min_coords[0]
@@ -87,18 +88,17 @@ class SamplerClass:
         for i, real_world_coord in enumerate(real_world_coords):
             pixel_coord = np.empty_like(real_world_coord)
             
-            # Calculate pixel coordinates and round
-            x = np.round(real_world_coord[0] * scaling_x + center_x, 3)
-            y = np.round(-real_world_coord[1] * scaling_y + center_y, 3)  # Flipping the y-coordinate
+            # Calculate pixel coordinates, round, convert to int, and add 1 for 1-based indexing
+            x = int(np.round(real_world_coord[0] * scaling_x + center_x)) + 1
+            y = int(np.round(-real_world_coord[1] * scaling_y + center_y)) + 1  # Flipping the y-coordinate
             
-            # Clip the values to ensure they are within bounds
-            x = min(max(int(round(x)), 0), self.surfacemap_cols - 1)
-            y = min(max(int(round(y)), 0), self.surfacemap_rows - 1)
     
             pixel_coord[0], pixel_coord[1] = x, y
     
             # Store the mapping
             self.octscannersurfacedict[tuple(real_world_coord)] = tuple(pixel_coord)
+
+
 
 
     def add_mapping(self, octscanner_coord, surfacemap_coord, value=None):
@@ -167,7 +167,7 @@ class SamplerClass:
             if px_coord:  # Check if mapping exists
                 plt.scatter(px_coord[0], px_coord[1], c='black', s=50)  # Adjusted color to black for boundary points
                 plt.annotate(f"RW: {real_world_coord[0]},{real_world_coord[1]}", 
-                             (px_coord[0] + 10, px_coord[1] + 10), color='white')
+                             (px_coord[0] + 10, px_coord[1] + 10), color='magenta')
 
                 # Get the surfacemap coordinate from the mapping
                 surfacemap_coord = self.octscannersurfacedict.get(tuple(real_world_coord))
@@ -363,48 +363,70 @@ class SamplerClass:
         print(f"CSV Entries: {csv_entries_count}, Octscanner Coordinates: {octscanner_coords_count}")
         
     def getA(self):
-        totalPixelCount = self.surfacemap_rows * self.surfacemap_cols
-        A_2dMask = np.zeros((self.surfacemap_rows, self.surfacemap_cols))
         
+        self.surfacemap_rows, self.surfacemap_cols = self.octscannersurfacedict.get((5, -5))
+
+        
+        totalPixelCount = self.surfacemap_rows * self.surfacemap_cols
+        A_2dMask = np.zeros((int(self.surfacemap_rows+1), int(self.surfacemap_cols+1)))
+    
         for real_world_coord, pixel_coord in self.octscannersurfacedict.items():
             x, y = pixel_coord
             x, y = int(round(x)), int(round(y))
-            A_2dMask[y, x] = 1
-        
+            A_2dMask[x, y] = 1
+    
         A_2dMask = A_2dMask.astype(bool)
-        samplingVector = A_2dMask.ravel()
-        A_LinearIdx = np.where(samplingVector == 1)[0]
-        sampledPixelCount = len(A_LinearIdx)
-        A = [csr_matrix(np.eye(1, totalPixelCount, k)) for k in A_LinearIdx]
-        A = hstack(A).T
+    
+        # Find the indices where the value is True on the transposed matrix
+        true_indices = np.argwhere(A_2dMask.T)
+        # Swap rows and columns back to their original order
+        true_indices = true_indices[:, ::-1]
+        num_rows = A_2dMask.shape[0]  # Get the number of rows in Matlab_A
+        A_LinearIdx = true_indices[:, 0] + (true_indices[:, 1] * num_rows)
+        matlab_linear_idx = A_LinearIdx + 1
+    
+        # Calculating the compression ratio
+        sampledPixelCount = np.sum(A_2dMask)  # Count the number of True entries in A_2dMask
         compressionRatio = (sampledPixelCount / totalPixelCount) * 100
+    
+        # if further processing with A is needed, you can re-include your earlier code here
+    
+        return A_2dMask, A_LinearIdx, compressionRatio
+
         
-        return A, A_2dMask, A_LinearIdx, compressionRatio
 
 
     def getY(self):
         # Flatten the image
-        image = np.zeros((self.surfacemap_rows, self.surfacemap_cols))
+        image = np.zeros((int(self.surfacemap_rows+1), int(self.surfacemap_cols+1)))
         for pixel_coord, value in self.surfacemap_to_value.items():
             x, y = pixel_coord
             x, y = int(round(x)), int(round(y))
-            image[y, x] = value
-        x = image.ravel()
+            image[x, y] = value
+        
+        x = image.flatten(order='F')
         
         # Get y from linear indices
         y = x[self.A_LinearIdx]
+        # Find the maximum value in y
+        self.y_max_value = np.max(y)
         
-        # Count occurrences of each unique element in y and surfacemap_values
-        y_counter = Counter(y.ravel().tolist())
-        surfacemap_values = np.array(list(self.surfacemap_to_value.values()))
-        surfacemap_values_counter = Counter(surfacemap_values.tolist())
+        # Normalize y by the maximum value
+        y_normalized = y / self.y_max_value if self.y_max_value != 0 else y
         
-        # Check if both have the same unique elements with the same counts
-        are_values_the_same = y_counter == surfacemap_values_counter
         
-        print(f"Are the y values and surface map values the same (ignoring order)? {are_values_the_same}")
         
-        return y
+        # # Count occurrences of each unique element in y and surfacemap_values
+        # y_counter = Counter(y.ravel().tolist())
+        # surfacemap_values = np.array(list(self.surfacemap_to_value.values()))
+        # surfacemap_values_counter = Counter(surfacemap_values.tolist())
+        
+        # # Check if both have the same unique elements with the same counts
+        # are_values_the_same = y_counter == surfacemap_values_counter
+        
+        # print(f"Are the y values and surface map values the same (ignoring order)? {are_values_the_same}")
+        
+        return y_normalized
 
     
 
@@ -459,31 +481,27 @@ if __name__ == "__main__":
     )
     
     samplerObj1.set_surgical_image(image_path='..\\data\\3rdYeraReport\\octVideo1.jpg')
-    samplerObj1.set_surfacemap_size(surfacemap_cols=15, surfacemap_rows=15)
+    samplerObj1.set_surfacemap_size(surfacemap_cols=34, surfacemap_rows=34)
 
-    samplerObj1.uniform_sampling(num_points=300*4)
+    samplerObj1.uniform_sampling(num_points=300)
     samplerObj1.raster_scan()
     samplerObj1.octvideo_to_octscanner()
     samplerObj1.octscanner_to_surfacemap()
     
 
-    samplerObj1.oct_scanner_cordinates_to_cpp("cpp.csv")
+    # samplerObj1.oct_scanner_cordinates_to_cpp("cpp.csv")
 
-    samplerObj1.update_surface_value('..\\data\\3rdYeraReport\\UniformRaster1.csv')
-    samplerObj1.plot_points(title='IntelliSense - Intelligently Sampling and Scan')
+    samplerObj1.update_surface_value('..\\data\\3rdYeraReport\\csUniformRaster1.csv')
+    samplerObj1.plot_points(title='Compressive 3-D Raster Scan (Checkerboard Pattern)')
+    
     # samplerObj1.animate_scan(video_title='IntelliSense - Intelligently Sampling and Scan')
+    # find_min_max_coordinates(samplerObj1.surfacemap_to_value)
     
-    
-
-    find_min_max_coordinates(samplerObj1.surfacemap_to_value)
-    A, A_2dMask, A_LinearIdx, compressionRatio = samplerObj1.getA()
+    A_2dMask, A_LinearIdx, compressionRatio = samplerObj1.getA()
     y = samplerObj1.getY()
     
-    eng = matlab.engine.start_matlab()
-    eng.run('add_all_paths.m', nargout=0)
-    [reconstructed_img, time_taken] = eng.csAj(A_2dMask, y, samplerObj1.surfacemap_rows, samplerObj1.surfacemap_cols)
-    eng.quit()
-    print(f"Time taken: {time_taken:.4f} seconds")
+    np.savetxt('Python_A.txt', A_2dMask, fmt='%d')
+    np.savetxt('Python_y.txt', y)
 
 
 
