@@ -362,58 +362,58 @@ class SamplerClass:
         # Printing the counts in a single line on the terminal
         print(f"CSV Entries: {csv_entries_count}, Octscanner Coordinates: {octscanner_coords_count}")
         
-    def getA(self):
-        
-        self.surfacemap_rows, self.surfacemap_cols = self.octscannersurfacedict.get((5, -5))
 
-        
+
+    def getA(self):
+        self.surfacemap_rows, self.surfacemap_cols = self.octscannersurfacedict.get((5, -5))
         totalPixelCount = self.surfacemap_rows * self.surfacemap_cols
-        A_2dMask = np.zeros((int(self.surfacemap_rows+1), int(self.surfacemap_cols+1)))
+        self.A_2dMask = np.zeros((int(self.surfacemap_rows), int(self.surfacemap_cols)))
     
         for real_world_coord, pixel_coord in self.octscannersurfacedict.items():
             x, y = pixel_coord
             x, y = int(round(x)), int(round(y))
-            A_2dMask[x, y] = 1
+            self.A_2dMask[x-1, y-1] = 1 
     
-        A_2dMask = A_2dMask.astype(bool)
+        self.A_2dMask = self.A_2dMask.astype(bool)
     
         # Find the indices where the value is True on the transposed matrix
-        true_indices = np.argwhere(A_2dMask.T)
-        # Swap rows and columns back to their original order
+        true_indices = np.argwhere(self.A_2dMask.T)
         true_indices = true_indices[:, ::-1]
-        num_rows = A_2dMask.shape[0]  # Get the number of rows in Matlab_A
-        A_LinearIdx = true_indices[:, 0] + (true_indices[:, 1] * num_rows)
-        matlab_linear_idx = A_LinearIdx + 1
+        num_rows = self.A_2dMask.shape[0]
+        self.A_LinearIdx = true_indices[:, 0] + (true_indices[:, 1] * num_rows)
+        matlab_linear_idx = self.A_LinearIdx + 1
     
         # Calculating the compression ratio
-        sampledPixelCount = np.sum(A_2dMask)  # Count the number of True entries in A_2dMask
-        compressionRatio = (sampledPixelCount / totalPixelCount) * 100
-    
-        # if further processing with A is needed, you can re-include your earlier code here
-    
-        return A_2dMask, A_LinearIdx, compressionRatio
-
+        sampledPixelCount = np.sum(self.A_2dMask)
+        self.compressionRatio = (sampledPixelCount / totalPixelCount) * 100
         
+    
+        return self.A_2dMask, self.A_LinearIdx, self.compressionRatio
+
+
 
 
     def getY(self):
         # Flatten the image
-        image = np.zeros((int(self.surfacemap_rows+1), int(self.surfacemap_cols+1)))
+        image = np.zeros((int(self.surfacemap_rows), int(self.surfacemap_cols)))
         for pixel_coord, value in self.surfacemap_to_value.items():
             x, y = pixel_coord
             x, y = int(round(x)), int(round(y))
-            image[x, y] = value
+            image[x-1, y-1] = value
         
         x = image.flatten(order='F')
-        
+
+        temp = self.A_LinearIdx       
         # Get y from linear indices
-        y = x[self.A_LinearIdx]
+        y_val = x[temp]
+       
         # Find the maximum value in y
-        self.y_max_value = np.max(y)
+        self.y_max_value = np.max(y_val)
         
         # Normalize y by the maximum value
-        y_normalized = y / self.y_max_value if self.y_max_value != 0 else y
+        y_normalized =  y_val/self.y_max_value if self.y_max_value != 0 else y_val
         
+        a =  y_normalized
         
         
         # # Count occurrences of each unique element in y and surfacemap_values

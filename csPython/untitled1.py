@@ -42,6 +42,7 @@ def getYforMatlab(I, A):
 
     # Use these indices to extract the corresponding elements from x to form y_1d
     y_1d = x[python_linear_idx]
+    a = y_1d
     
     return y_1d
 
