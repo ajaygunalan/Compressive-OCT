@@ -18,6 +18,12 @@
 
 #define PI 3.14159265358979323846
 #define DEBUG
+#define PRESET_DEFAULT_76kHz 0
+#define PRESET_HIGH_SPEED_146kHz 1
+#define PRESET_MEDIUM_SENSITIVITY_76kHz 2
+#define PRESET_VIDEO_RATE_28kHz 3
+#define PRESET_HIGH_SENSITIVITY_10kHz 4
+#define CATEGORY_SPEED_SENSITIVITY 0
 
 // #ifdef DEBUG
 // namespace plt = matplotlibcpp;  
@@ -70,8 +76,14 @@ ScanResult getSurfaceFrom3DScan(int AScansPerBScan, double LengthOfBScan, int BS
         return ScanResult{ nullptr, -1.0, -1.0 };  // Indicate error with negative times
     }
 
-    ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, AScansPerBScan, WidthOfVolume, BScansPerVolume, ScanPattern_ApoEachBScan, ScanPattern_AcqOrderAll);
+    setDevicePreset(Dev, CATEGORY_SPEED_SENSITIVITY, Probe, Proc, PRESET_HIGH_SPEED_146kHz);
+    int AScanAveraging = 3;
+    setProbeParameterInt(Probe, Probe_Oversampling, AScanAveraging); // this results in a repetition of each scan point in the B-scan
+    //setProbeParameterInt(Probe, Probe_Oversampling_SlowAxis, BScanAveraging); // this results in a repetition of each B-scan in the pattern
 
+
+    ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, AScansPerBScan, WidthOfVolume, BScansPerVolume, ScanPattern_ApoEachBScan, ScanPattern_AcqOrderAll);
+    
     auto start = std::chrono::high_resolution_clock::now();
 
     startMeasurement(Dev, Pattern, Acquisition_AsyncFinite);
@@ -102,19 +114,19 @@ ScanResult getSurfaceFrom3DScan(int AScansPerBScan, double LengthOfBScan, int BS
 
 int main() {
     int AScansPerBScan = 128;
-    double LengthOfBScan = 2.0;
+    double LengthOfBScan = 5.0;
     int BScansPerVolume = 128;
-    double WidthOfVolume = 2.0;
+    double WidthOfVolume = 10.0;
 
     std::string folderLocation = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\getDepthFromSparse3Doct\\";
-    std::string fileName = "surface.csv";
+    std::string fileName = "surface";
 
     // Do the 3D Scan
     ScanResult result = getSurfaceFrom3DScan(AScansPerBScan, LengthOfBScan, BScansPerVolume, WidthOfVolume);
 
     // Export the data
     if (result.surface) {
-        exportData(result.surface, DataExport_CSV, (folderLocation + fileName).c_str());
+        exportData(result.surface, DataExport_Fits, (folderLocation + fileName + ".fits").c_str());
     }
     std::ofstream metaFile(folderLocation + fileName + "_meta.txt");
     if (metaFile.is_open()) {
