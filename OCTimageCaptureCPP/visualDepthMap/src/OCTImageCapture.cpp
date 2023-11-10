@@ -37,28 +37,9 @@ struct ScanResult {
     DataHandle surface;
     double actualTime;
     double expectedTime;
+    int numOfLostBScan;
 };
 
-
-void logDataProperties(DataHandle DH) {
-#ifdef DEBUG
-	int dataDimensions = getDataPropertyInt(DH, Data_Dimensions);
-	int dataSize1 = getDataPropertyInt(DH, Data_Size1);
-	int dataSize2 = getDataPropertyInt(DH, Data_Size2);
-	int dataSize3 = getDataPropertyInt(DH, Data_Size3);
-	int dataNumberOfElements = getDataPropertyInt(DH, Data_NumberOfElements);
-	int dataSizeInBytes = getDataPropertyInt(DH, Data_SizeInBytes);
-	int dataBytesPerElement = getDataPropertyInt(DH, Data_BytesPerElement);
-
-	cout << "Data Properties: Dimensions=" << dataDimensions
-		<< ", Size1=" << dataSize1
-		<< ", Size2=" << dataSize2
-		<< ", Size3=" << dataSize3
-		<< ", NumberOfElements=" << dataNumberOfElements
-		<< ", SizeInBytes=" << dataSizeInBytes
-		<< ", BytesPerElement=" << dataBytesPerElement << endl;
-#endif
-}
 
 ScanResult getSurfaceFrom3DScan(int AScansPerBScan, double LengthOfBScan, int BScansPerVolume, double WidthOfVolume) {
     char message[1024];
@@ -83,15 +64,20 @@ ScanResult getSurfaceFrom3DScan(int AScansPerBScan, double LengthOfBScan, int BS
 
     ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, AScansPerBScan, WidthOfVolume, BScansPerVolume, ScanPattern_ApoOneForAll, ScanPattern_AcqOrderAll);
     
-    auto start = std::chrono::high_resolution_clock::now();
 
-    startMeasurement(Dev, Pattern, Acquisition_AsyncFinite);
+    // the apodization spectra are acquired now
+    //measureApodizationSpectra(Dev, Probe, Proc);
+
+    auto start = std::chrono::high_resolution_clock::now();
+    startMeasurement(Dev, Pattern, Acquisition_AsyncContinuous);
     getRawData(Dev, RawVolume);
     setProcessedDataOutput(Proc, Volume);
     executeProcessing(Proc, RawVolume);
     stopMeasurement(Dev);
-
     auto stop = std::chrono::high_resolution_clock::now();
+
+
+    int numOfLostBScan = getRawDataPropertyInt(RawVolume, RawData_LostFrames);
 
     std::chrono::duration<double> actualTimeDuration = stop - start;
     double actualTime = actualTimeDuration.count();
@@ -107,19 +93,24 @@ ScanResult getSurfaceFrom3DScan(int AScansPerBScan, double LengthOfBScan, int BS
     closeProbe(Probe);
     closeDevice(Dev);
 
-    return ScanResult{ Surface, actualTime, expectedTime };
+    return ScanResult{ Surface, actualTime, expectedTime, numOfLostBScan};
 }
 
 
 int main() {
-    int AScansPerBScan = 256/2;
     double LengthOfBScan = 10.0;
-    int BScansPerVolume = 100/2;
     double WidthOfVolume = 10.0;
 
-    std::string folderLocation = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\getDepthFromSparse3Doct\\";
-    std::string fileName = "surfaceCompressive";
+    int AScansPerBScan = 256;
+    int BScansPerVolume = 100;
+    std::string fileName = "surfaceFull";
 
+    //int AScansPerBScan = 256/2;
+    //int BScansPerVolume = 100/2;
+    //std::string fileName = "surfaceCompressive";
+
+    std::string folderLocation = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\getDepthFromSparse3Doct\\";
+   
     // Do the 3D Scan
     ScanResult result = getSurfaceFrom3DScan(AScansPerBScan, LengthOfBScan, BScansPerVolume, WidthOfVolume);
 
@@ -129,11 +120,15 @@ int main() {
     }
     std::ofstream metaFile(folderLocation + fileName + "_meta.txt");
     if (metaFile.is_open()) {
-        metaFile << "Actual time taken: " << result.actualTime << " seconds\n";
-        metaFile << "Expected time: " << result.expectedTime << " seconds\n";
-        metaFile << "Time difference: " << (result.actualTime - result.expectedTime) << " seconds\n";
+        metaFile << "SD-OCT Device Speed: Max Speed 146 kHz (Lowest sensitivity) \n";
+        metaFile << "A-Scan Averaging: 3 \n";
+        metaFile << "B-Scan Averaging: N/A \n";
+        metaFile << "SD-OCT Device Speed: Max Speed 146 kHz (Lowest sensitivity) \n";
+        metaFile << "Actual scanning time by Measuring: " << result.actualTime << " seconds\n";
+        metaFile << "Expected acquisition time from API: " << result.expectedTime << " seconds\n";
         metaFile << "Depth Map Size: " << AScansPerBScan << " (AScansPerBScan) by " << BScansPerVolume <<" (BScansPerVolume)\n";
         metaFile << "Scan Range: " << LengthOfBScan << " mm by " << WidthOfVolume << " mm\n";
+        metaFile << "Number of Lost B-Scan: " << result.numOfLostBScan << " \n";
         metaFile.close();
     }
     else {

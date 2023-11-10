@@ -1,4 +1,9 @@
-Actual time taken: 3.72797 seconds
-Expected time: 0.234185 seconds
-Time difference: 3.49378 seconds
-Depth Map Size: 128 by 50
+SD-OCT Device Speed: Max Speed 146 kHz (Lowest sensitivity) 
+A-Scan Averaging: 3 
+B-Scan Averaging: N/A 
+SD-OCT Device Speed: Max Speed 146 kHz (Lowest sensitivity) 
+Actual scanning time by Measuring: 4.51691 seconds
+Expected acquisition time from API: 0.234185 seconds
+Depth Map Size: 128 (AScansPerBScan) by 50 (BScansPerVolume)
+Scan Range: 10 mm by 10 mm
+Number of Lost B-Scan: 0 
