@@ -161,19 +161,19 @@ class SamplerClass:
         # Reverse the mapping dictionary for easier lookup
         reverse_mapping = {value: key for key, value in self.octvideoscannerdict.items()}
 
-        # Use the mapping to get pixel coordinates for the boundary points
-        for real_world_coord in self.boundary_points_mm:  # Updated line
-            px_coord = reverse_mapping.get(tuple(real_world_coord))
-            if px_coord:  # Check if mapping exists
-                plt.scatter(px_coord[0], px_coord[1], c='black', s=50)  # Adjusted color to black for boundary points
-                plt.annotate(f"RW: {real_world_coord[0]},{real_world_coord[1]}", 
-                             (px_coord[0] + 10, px_coord[1] + 10), color='magenta')
+        # # Use the mapping to get pixel coordinates for the boundary points
+        # for real_world_coord in self.boundary_points_mm:  # Updated line
+        #     px_coord = reverse_mapping.get(tuple(real_world_coord))
+        #     if px_coord:  # Check if mapping exists
+        #         plt.scatter(px_coord[0], px_coord[1], c='black', s=50)  # Adjusted color to black for boundary points
+        #         plt.annotate(f"RW: {real_world_coord[0]},{real_world_coord[1]}", 
+        #                      (px_coord[0] + 10, px_coord[1] + 10), color='magenta')
 
-                # Get the surfacemap coordinate from the mapping
-                surfacemap_coord = self.octscannersurfacedict.get(tuple(real_world_coord))
-                if surfacemap_coord:  # Check if mapping exists
-                    plt.annotate(f"SM: {surfacemap_coord[0]},{surfacemap_coord[1]}", 
-                                 (px_coord[0] + 10, px_coord[1] + 30), color='red')  # New annotation for surfacemap points
+        #         # Get the surfacemap coordinate from the mapping
+        #         surfacemap_coord = self.octscannersurfacedict.get(tuple(real_world_coord))
+        #         if surfacemap_coord:  # Check if mapping exists
+        #             plt.annotate(f"SM: {surfacemap_coord[0]},{surfacemap_coord[1]}", 
+        #                          (px_coord[0] + 10, px_coord[1] + 30), color='red')  # New annotation for surfacemap points
 
         plt.title(title)
         plt.show()
@@ -492,7 +492,7 @@ if __name__ == "__main__":
     # samplerObj1.oct_scanner_cordinates_to_cpp("cpp.csv")
 
     samplerObj1.update_surface_value('..\\data\\3rdYeraReport\\UniformRaster1.csv')
-    samplerObj1.plot_points(title='Compressive 3-D Raster Scan (Checkerboard Pattern)')
+    samplerObj1.plot_points(title='Standard 3-D Raster Scan')
     
     # samplerObj1.animate_scan(video_title='IntelliSense - Intelligently Sampling and Scan')
     # find_min_max_coordinates(samplerObj1.surfacemap_to_value)
