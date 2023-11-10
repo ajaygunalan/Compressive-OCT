@@ -54,9 +54,8 @@ void logDataProperties(DataHandle DH) {
 #endif
 }
 
-std::pair<double, double> VolumeScanPattern(int AScansPerBScan, double LengthOfBScan, int BScansPerVolume, double WidthOfVolume) {
+ScanResult getSurfaceFrom3DScan(int AScansPerBScan, double LengthOfBScan, int BScansPerVolume, double WidthOfVolume) {
     char message[1024];
-
     OCTDeviceHandle Dev = initDevice();
     ProbeHandle Probe = initProbe(Dev, "Probe_Standard_OCTG_LSM04.ini");
     ProcessingHandle Proc = createProcessingForDevice(Dev);
@@ -68,10 +67,9 @@ std::pair<double, double> VolumeScanPattern(int AScansPerBScan, double LengthOfB
     if (getError(message, 1024)) {
         std::cout << "ERROR: " << message << std::endl;
         _getch();
-        return std::make_pair(-1.0, -1.0);  // Indicate error with negative times
+        return ScanResult{ nullptr, -1.0, -1.0 };  // Indicate error with negative times
     }
 
-    // Set up the scan pattern
     ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, AScansPerBScan, WidthOfVolume, BScansPerVolume, ScanPattern_ApoEachBScan, ScanPattern_AcqOrderAll);
 
     auto start = std::chrono::high_resolution_clock::now();
@@ -84,13 +82,11 @@ std::pair<double, double> VolumeScanPattern(int AScansPerBScan, double LengthOfB
 
     auto stop = std::chrono::high_resolution_clock::now();
 
-    std::chrono::duration<double> actualTime = stop - start;
-    double expectedTime = expectedAcquisitionTime_s(Pattern, Dev); // Assuming this function returns expected time in seconds
-
-
+    std::chrono::duration<double> actualTimeDuration = stop - start;
+    double actualTime = actualTimeDuration.count();
+    double expectedTime = expectedAcquisitionTime_s(Pattern, Dev);
 
     determineSurface(Volume, Surface);
-    exportData(Surface, DataExport_CSV,  "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\getDepthFromSparse3Doct\\surface.csv" );
 
     // Clean up
     clearScanPattern(Pattern);
@@ -100,29 +96,40 @@ std::pair<double, double> VolumeScanPattern(int AScansPerBScan, double LengthOfB
     closeProbe(Probe);
     closeDevice(Dev);
 
-    _getch();
-
-    return std::make_pair(actualTime.count(), expectedTime);
+    return ScanResult{ Surface, actualTime, expectedTime };
 }
 
 
-
 int main() {
-    // Parameters for the volume pattern
     int AScansPerBScan = 128;
     double LengthOfBScan = 2.0;
     int BScansPerVolume = 128;
     double WidthOfVolume = 2.0;
 
-    //  Do volume Scan
-    auto times = VolumeScanPattern(AScansPerBScan, LengthOfBScan, BScansPerVolume, WidthOfVolume);
+    std::string folderLocation = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\getDepthFromSparse3Doct\\";
+    std::string fileName = "surface.csv";
 
-    double actualTime = times.first;
-    double expectedTime = times.second;
-    double timeDifference = actualTime - expectedTime;
-    std::cout << "Actual time taken: " << actualTime << " seconds" << std::endl;
-    std::cout << "Expected time: " << expectedTime << " seconds" << std::endl;
-    std::cout << "Time difference: " << timeDifference << " seconds" << std::endl;
+    // Do the 3D Scan
+    ScanResult result = getSurfaceFrom3DScan(AScansPerBScan, LengthOfBScan, BScansPerVolume, WidthOfVolume);
+
+    // Export the data
+    if (result.surface) {
+        exportData(result.surface, DataExport_CSV, (folderLocation + fileName).c_str());
+    }
+    std::ofstream metaFile(folderLocation + fileName + "_meta.txt");
+    if (metaFile.is_open()) {
+        metaFile << "Actual time taken: " << result.actualTime << " seconds\n";
+        metaFile << "Expected time: " << result.expectedTime << " seconds\n";
+        metaFile << "Time difference: " << (result.actualTime - result.expectedTime) << " seconds\n";
+        metaFile.close();
+    }
+    else {
+        std::cerr << "Unable to open file for writing metadata\n";
+    }
 
     return 0;
 }
+
+
+
+
