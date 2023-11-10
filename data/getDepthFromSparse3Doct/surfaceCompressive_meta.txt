@@ -1,0 +1,4 @@
+Actual time taken: 3.72797 seconds
+Expected time: 0.234185 seconds
+Time difference: 3.49378 seconds
+Depth Map Size: 128 by 50

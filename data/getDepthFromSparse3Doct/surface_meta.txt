@@ -1,3 +1,0 @@
-Actual time taken: 4.79189 seconds
-Expected time: 0.908035 seconds
-Time difference: 3.88386 seconds

@@ -79,10 +79,9 @@ ScanResult getSurfaceFrom3DScan(int AScansPerBScan, double LengthOfBScan, int BS
     setDevicePreset(Dev, CATEGORY_SPEED_SENSITIVITY, Probe, Proc, PRESET_HIGH_SPEED_146kHz);
     int AScanAveraging = 3;
     setProbeParameterInt(Probe, Probe_Oversampling, AScanAveraging); // this results in a repetition of each scan point in the B-scan
-    //setProbeParameterInt(Probe, Probe_Oversampling_SlowAxis, BScanAveraging); // this results in a repetition of each B-scan in the pattern
+    setProcessingParameterInt(Proc, Processing_AScanAveraging, AScanAveraging);
 
-
-    ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, AScansPerBScan, WidthOfVolume, BScansPerVolume, ScanPattern_ApoEachBScan, ScanPattern_AcqOrderAll);
+    ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, AScansPerBScan, WidthOfVolume, BScansPerVolume, ScanPattern_ApoOneForAll, ScanPattern_AcqOrderAll);
     
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -113,13 +112,13 @@ ScanResult getSurfaceFrom3DScan(int AScansPerBScan, double LengthOfBScan, int BS
 
 
 int main() {
-    int AScansPerBScan = 128;
-    double LengthOfBScan = 5.0;
-    int BScansPerVolume = 128;
+    int AScansPerBScan = 256/2;
+    double LengthOfBScan = 10.0;
+    int BScansPerVolume = 100/2;
     double WidthOfVolume = 10.0;
 
     std::string folderLocation = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\getDepthFromSparse3Doct\\";
-    std::string fileName = "surface";
+    std::string fileName = "surfaceCompressive";
 
     // Do the 3D Scan
     ScanResult result = getSurfaceFrom3DScan(AScansPerBScan, LengthOfBScan, BScansPerVolume, WidthOfVolume);
@@ -133,6 +132,8 @@ int main() {
         metaFile << "Actual time taken: " << result.actualTime << " seconds\n";
         metaFile << "Expected time: " << result.expectedTime << " seconds\n";
         metaFile << "Time difference: " << (result.actualTime - result.expectedTime) << " seconds\n";
+        metaFile << "Depth Map Size: " << AScansPerBScan << " (AScansPerBScan) by " << BScansPerVolume <<" (BScansPerVolume)\n";
+        metaFile << "Scan Range: " << LengthOfBScan << " mm by " << WidthOfVolume << " mm\n";
         metaFile.close();
     }
     else {
