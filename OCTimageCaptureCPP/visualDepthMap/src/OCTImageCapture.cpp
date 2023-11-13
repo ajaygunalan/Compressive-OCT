@@ -101,13 +101,22 @@ int main() {
     double LengthOfBScan = 10.0;
     double WidthOfVolume = 10.0;
 
-    int AScansPerBScan = 256;
-    int BScansPerVolume = 100;
-    std::string fileName = "surfaceFull";
+    int FullAScansPerBScan = 256;
+    int FullBScansPerVolume = 100;
+    
+    double AscanCompressionRatio = 0.50;
+    double BscanCompressionRatio = 0.50;
 
-    //int AScansPerBScan = 256/2;
-    //int BScansPerVolume = 100/2;
-    //std::string fileName = "surfaceCompressive";
+    int CompressiveAScansPerBScan = FullAScansPerBScan*AscanCompressionRatio;
+    int CompressiveBScansPerVolume = FullBScansPerVolume*BscanCompressionRatio;
+    
+
+/*    int AScansPerBScan = FullAScansPerBScan;
+    int BScansPerVolume = FullBScansPerVolume;
+    std::string fileName = "surfaceFull"*/;
+    int AScansPerBScan = CompressiveAScansPerBScan;
+    int BScansPerVolume = CompressiveBScansPerVolume;
+    std::string fileName = "surfaceCompressive";
 
     std::string folderLocation = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\getDepthFromSparse3Doct\\";
    
@@ -116,19 +125,23 @@ int main() {
 
     // Export the data
     if (result.surface) {
-        exportData(result.surface, DataExport_Fits, (folderLocation + fileName + ".fits").c_str());
+        exportData(result.surface, DataExport_CSV, (folderLocation + fileName + ".csv").c_str());
     }
-    std::ofstream metaFile(folderLocation + fileName + "_meta.txt");
+    std::ofstream metaFile(folderLocation + fileName + "_meta.csv");
     if (metaFile.is_open()) {
-        metaFile << "SD-OCT Device Speed: Max Speed 146 kHz (Lowest sensitivity) \n";
-        metaFile << "A-Scan Averaging: 3 \n";
-        metaFile << "B-Scan Averaging: N/A \n";
-        metaFile << "SD-OCT Device Speed: Max Speed 146 kHz (Lowest sensitivity) \n";
-        metaFile << "Actual scanning time by Measuring: " << result.actualTime << " seconds\n";
-        metaFile << "Expected acquisition time from API: " << result.expectedTime << " seconds\n";
-        metaFile << "Depth Map Size: " << AScansPerBScan << " (AScansPerBScan) by " << BScansPerVolume <<" (BScansPerVolume)\n";
-        metaFile << "Scan Range: " << LengthOfBScan << " mm by " << WidthOfVolume << " mm\n";
-        metaFile << "Number of Lost B-Scan: " << result.numOfLostBScan << " \n";
+        metaFile << BScansPerVolume << "\n";
+        metaFile << AScansPerBScan << "\n";
+        metaFile << result.actualTime << "\n";
+        metaFile << FullBScansPerVolume << "\n";
+        metaFile << FullAScansPerBScan << "\n";
+        metaFile << BscanCompressionRatio << "\n";
+        metaFile << AscanCompressionRatio << "\n";
+        metaFile << CompressiveBScansPerVolume << "\n";
+        metaFile << CompressiveAScansPerBScan << "\n";
+        metaFile << LengthOfBScan << "\n";
+        metaFile << WidthOfVolume << "\n";
+        metaFile << result.numOfLostBScan << "\n";
+        metaFile << result.expectedTime;
         metaFile.close();
     }
     else {

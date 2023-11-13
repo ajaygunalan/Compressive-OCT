@@ -1,9 +1,0 @@
-SD-OCT Device Speed: Max Speed 146 kHz (Lowest sensitivity) 
-A-Scan Averaging: 3 
-B-Scan Averaging: N/A 
-SD-OCT Device Speed: Max Speed 146 kHz (Lowest sensitivity) 
-Actual scanning time by Measuring: 7.14284 seconds
-Expected acquisition time from API: 0.726049 seconds
-Depth Map Size: 256 (AScansPerBScan) by 100 (BScansPerVolume)
-Scan Range: 10 mm by 10 mm
-Number of Lost B-Scan: 0 

@@ -1,2 +1,4 @@
 ﻿  OCTImageCapture.cpp
+C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(110,35): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\OCTimageCaptureCPP\visualDepthMap\src\OCTImageCapture.cpp(111,36): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   visualDepthMap.vcxproj -> C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\bin\x64\Debug\OCTImageCapture.exe
