@@ -105,15 +105,15 @@ int main() {
     int FullBScansPerVolume = 100;
     
     double AscanCompressionRatio = 0.50;
-    double BscanCompressionRatio = 0.50;
+    double BscanCompressionRatio = 0.25;
 
     int CompressiveAScansPerBScan = FullAScansPerBScan*AscanCompressionRatio;
     int CompressiveBScansPerVolume = FullBScansPerVolume*BscanCompressionRatio;
     
 
-/*    int AScansPerBScan = FullAScansPerBScan;
-    int BScansPerVolume = FullBScansPerVolume;
-    std::string fileName = "surfaceFull"*/;
+    //int AScansPerBScan = FullAScansPerBScan;
+    //int BScansPerVolume = FullBScansPerVolume;
+    //std::string fileName = "surfaceTruth";
     int AScansPerBScan = CompressiveAScansPerBScan;
     int BScansPerVolume = CompressiveBScansPerVolume;
     std::string fileName = "surfaceCompressive";
