@@ -1,4 +1,8 @@
 clear all; clc; close all;
+%%
+
+system('"\\bin\\x64\\Debug\\OCTImageCapture.exe"')
+
 
 % Specify the file path
 filenameT = 'data\getDepthFromSparse3Doct\surfaceTruth.csv';
@@ -17,7 +21,7 @@ ActualScanningTimeSec = CompressiveMeta(3);
 TruthBScansPerVolume = CompressiveMeta(4);
 TruthAScansPerBScan = CompressiveMeta(5);
 BscanCompressionRatio = CompressiveMeta(6);
-AscanCompressionRatio = CompressiveMeta(7);
+CscanCompressionRatio = CompressiveMeta(7);
 CompressiveBScansPerVolume = CompressiveMeta(8);
 CompressiveAScansPerBScan = CompressiveMeta(9);
 LengthOfBScan = CompressiveMeta(10);
@@ -33,16 +37,15 @@ Compressive(:, end) = [];
 Truth = (Truth - min(Truth(:))) / (max(Truth(:)) - min(Truth(:)));
 Compressive_norm = (Compressive - min(Compressive(:))) / (max(Compressive(:)) - min(Compressive(:)));
 
-
-% Upsampling rows for BscanCompressionRatio = 0.5
-rowUpsampleFactor = 1 / BscanCompressionRatio; 
-CompressiveUpsampledRows = zeros(size(Compressive, 1) * rowUpsampleFactor, size(Compressive, 2));
-CompressiveUpsampledRows(1:rowUpsampleFactor:end, :) = Compressive;
-
-% Upsampling columns for AscanCompressionRatio = 0.25
-colUpsampleFactor = 1 / AscanCompressionRatio; 
+% Upsampling columns for BscanCompressionRatio = 0.25
+colUpsampleFactor = 1 / BscanCompressionRatio; 
 CompressiveUpsampled = zeros(size(CompressiveUpsampledRows, 1), size(CompressiveUpsampledRows, 2) * colUpsampleFactor);
 CompressiveUpsampled(:, 1:colUpsampleFactor:end) = CompressiveUpsampledRows;
+
+% Upsampling rows for CscanCompressionRatio = 0.5
+rowUpsampleFactor = 1 / CscanCompressionRatio; 
+CompressiveUpsampledRows = zeros(size(Compressive, 1) * rowUpsampleFactor, size(Compressive, 2));
+CompressiveUpsampledRows(1:rowUpsampleFactor:end, :) = Compressive;
 
 % Normalize the upsampled matrix to the range [0, 1]
 CompressiveUpsampled_norm = (CompressiveUpsampled - min(CompressiveUpsampled(:))) / (max(CompressiveUpsampled(:)) - min(CompressiveUpsampled(:)));

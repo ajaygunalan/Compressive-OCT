@@ -97,47 +97,20 @@ ScanResult getSurfaceFrom3DScan(int AScansPerBScan, double LengthOfBScan, int BS
 }
 
 
-int main() {
-    double LengthOfBScan = 10.0;
-    double WidthOfVolume = 10.0;
-
-    int FullAScansPerBScan = 256;
-    int FullBScansPerVolume = 100;
-    
-    double AscanCompressionRatio = 0.50;
-    double BscanCompressionRatio = 0.25;
-
-    int CompressiveAScansPerBScan = FullAScansPerBScan*AscanCompressionRatio;
-    int CompressiveBScansPerVolume = FullBScansPerVolume*BscanCompressionRatio;
-    
-
-    //int AScansPerBScan = FullAScansPerBScan;
-    //int BScansPerVolume = FullBScansPerVolume;
-    //std::string fileName = "surfaceTruth";
-    int AScansPerBScan = CompressiveAScansPerBScan;
-    int BScansPerVolume = CompressiveBScansPerVolume;
-    std::string fileName = "surfaceCompressive";
-
-    std::string folderLocation = "C:\\Ajay_OCT\\OCTAssistedSurgicalLaserbot\\data\\getDepthFromSparse3Doct\\";
-   
-    // Do the 3D Scan
-    ScanResult result = getSurfaceFrom3DScan(AScansPerBScan, LengthOfBScan, BScansPerVolume, WidthOfVolume);
-
-    // Export the data
+void performScanAndExport(const std::string& folderLocation, std::string fileName,
+    int numAScans, int numBScans, double LengthOfBScan, double WidthOfVolume,
+    double BscanCompressionRatio, double CscanCompressionRatio) {
+    ScanResult result = getSurfaceFrom3DScan(numAScans, LengthOfBScan, numBScans, WidthOfVolume);
     if (result.surface) {
         exportData(result.surface, DataExport_CSV, (folderLocation + fileName + ".csv").c_str());
     }
     std::ofstream metaFile(folderLocation + fileName + "_meta.csv");
     if (metaFile.is_open()) {
-        metaFile << BScansPerVolume << "\n";
-        metaFile << AScansPerBScan << "\n";
-        metaFile << result.actualTime << "\n";
-        metaFile << FullBScansPerVolume << "\n";
-        metaFile << FullAScansPerBScan << "\n";
+        metaFile << numBScans << "\n";
+        metaFile << numAScans << "\n";
         metaFile << BscanCompressionRatio << "\n";
-        metaFile << AscanCompressionRatio << "\n";
-        metaFile << CompressiveBScansPerVolume << "\n";
-        metaFile << CompressiveAScansPerBScan << "\n";
+        metaFile << CscanCompressionRatio << "\n";
+        metaFile << result.actualTime << "\n";
         metaFile << LengthOfBScan << "\n";
         metaFile << WidthOfVolume << "\n";
         metaFile << result.numOfLostBScan << "\n";
@@ -147,10 +120,26 @@ int main() {
     else {
         std::cerr << "Unable to open file for writing metadata\n";
     }
+}
+
+int main() {
+    double LengthOfBScan = 10.0; // mm
+    double WidthOfVolume = 10.0; // mm
+    std::string folderLocation = "C:\\Ajay_OCT\\OCT-Guided-AutoCALM\\data\\getDepthFromSparse3Doct\\";
+
+    // Normal Scan
+    int numAScansPerBScan = 256;
+    int numBScansPerVolume = 100;
+    double BscanCompressionRatio = 1.0;
+    double CscanCompressionRatio = 1.0;
+    performScanAndExport(folderLocation, "surfaceTruth", numAScansPerBScan, numBScansPerVolume, LengthOfBScan, WidthOfVolume, BscanCompressionRatio, CscanCompressionRatio);
+
+    // Compressive Scan
+    BscanCompressionRatio = 0.50;
+    CscanCompressionRatio = 0.50;
+    numAScansPerBScan = static_cast<int>(numAScansPerBScan * BscanCompressionRatio);
+    numBScansPerVolume = static_cast<int>(numBScansPerVolume * CscanCompressionRatio);
+    performScanAndExport(folderLocation, "surfaceCompressive", numAScansPerBScan, numBScansPerVolume, LengthOfBScan, WidthOfVolume, BscanCompressionRatio, CscanCompressionRatio);
 
     return 0;
 }
-
-
-
-
