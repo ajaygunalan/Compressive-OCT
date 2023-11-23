@@ -1,37 +1,64 @@
 clear all; clc; close all;
-%%
+%% Perform Imagaing
+% Prompt the user for the trial number
+trialNum = input('Enter the trial number: ', 's');
+commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum];
+[status, cmdout] = system(commandStr);
+% Check the status and display the output or error message
+if status == 0
+    disp('Command executed successfully');
+    disp(cmdout);
+else
+    disp('Error in executing command');
+    disp(cmdout);
+end
+%% Read the Data
+trialNum = '1';
+% Base path
+basePath = 'data\getDepthFromSparse3Doct\';
 
-system('"\\bin\\x64\\Debug\\OCTImageCapture.exe"')
-
-
-% Specify the file path
-filenameT = 'data\getDepthFromSparse3Doct\surfaceTruth.csv';
-filenameC = 'data\getDepthFromSparse3Doct\surfaceCompressive.csv';
-filenameCmeta = 'data\getDepthFromSparse3Doct\surfaceCompressive_meta.csv';
+% File paths
+TruthPath = [basePath, trialNum, 'surfaceTruth.csv'];
+TruthMetaPath = [basePath, trialNum, 'surfaceTruth_meta.csv'];
+CompressivePath = [basePath, trialNum, 'surfaceCompressive.csv'];
+CompressiveMetaPath = [basePath, trialNum, 'surfaceCompressive_meta.csv'];
 
 % Read the matrix from the CSV file
-Truth = readmatrix(filenameT);
-Compressive = readmatrix(filenameC);
-CompressiveMeta = readmatrix(filenameCmeta);
+TruthData = readmatrix(TruthPath);
+TruthMetaData = readmatrix(TruthMetaPath);
+CompressiveData = readmatrix(CompressivePath);
+CompressiveMetaData = readmatrix(CompressiveMetaPath);
 
-% Assign variables
-BScansPerVolume = CompressiveMeta(1);
-AScansPerBScan = CompressiveMeta(2);
-ActualScanningTimeSec = CompressiveMeta(3);
-TruthBScansPerVolume = CompressiveMeta(4);
-TruthAScansPerBScan = CompressiveMeta(5);
-BscanCompressionRatio = CompressiveMeta(6);
-CscanCompressionRatio = CompressiveMeta(7);
-CompressiveBScansPerVolume = CompressiveMeta(8);
-CompressiveAScansPerBScan = CompressiveMeta(9);
-LengthOfBScan = CompressiveMeta(10);
-WidthOfVolume = CompressiveMeta(11);
-NumOfLostBScan = CompressiveMeta(12);
-ExpectedAcquisitionTimeSec = CompressiveMeta(13);
+% Creating metadata structures
+TruthMeta = struct();
+CompressiveMeta = struct();
 
-% Remove the last column from each matrix
-Truth(:, end) = [];
-Compressive(:, end) = [];
+% Assigning values to TruthMeta structure
+TruthMeta.BScansPerVolume = TruthMetaData(1);
+TruthMeta.AScansPerBScan = TruthMetaData(2);
+TruthMeta.BscanCompressionRatio = TruthMetaData(3);
+TruthMeta.CscanCompressionRatio = TruthMetaData(4);
+TruthMeta.ActualScanningTimeSec = TruthMetaData(5);
+TruthMeta.LengthOfBScan = TruthMetaData(6);
+TruthMeta.WidthOfVolume = TruthMetaData(7);
+TruthMeta.NumOfLostBScan = TruthMetaData(8);
+TruthMeta.ExpectedAcquisitionTimeSec = TruthMetaData(9);
+
+% Assigning values to CompressiveMeta structure
+CompressiveMeta.BScansPerVolume = CompressiveMetaData(1);
+CompressiveMeta.AScansPerBScan = CompressiveMetaData(2);
+CompressiveMeta.BscanCompressionRatio = CompressiveMetaData(3);
+CompressiveMeta.CscanCompressionRatio = CompressiveMetaData(4);
+CompressiveMeta.ActualScanningTimeSec = CompressiveMetaData(5);
+CompressiveMeta.LengthOfBScan = CompressiveMetaData(6);
+CompressiveMeta.WidthOfVolume = CompressiveMetaData(7);
+CompressiveMeta.NumOfLostBScan = CompressiveMetaData(8);
+CompressiveMeta.ExpectedAcquisitionTimeSec = CompressiveMetaData(9);
+
+% Remove the last column from each data matrix
+TruthData(:, end) = [];
+CompressiveData(:, end) = [];
+%%
 
 % Normalize each matrix to the range [0, 1]
 Truth = (Truth - min(Truth(:))) / (max(Truth(:)) - min(Truth(:)));

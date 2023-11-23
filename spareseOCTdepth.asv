@@ -1,48 +1,78 @@
 clear all; clc; close all;
+%% Perform Imagaing
+% Prompt the user for the trial number
+trialNum = input('Enter the trial number: ', 's');
+commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum];
+[status, cmdout] = system(commandStr);
+% Check the status and display the output or error message
+if status == 0
+    disp('Command executed successfully');
+    disp(cmdout);
+else
+    disp('Error in executing command');
+    disp(cmdout);
+end
+%% Read the Data
+trialNum = '1';
+% Base path
+basePath = 'data\getDepthFromSparse3Doct\';
 
-% Specify the file path
-filenameT = 'data\getDepthFromSparse3Doct\surfaceTruth.csv';
-filenameC = 'data\getDepthFromSparse3Doct\surfaceCompressive.csv';
-filenameCmeta = 'data\getDepthFromSparse3Doct\surfaceCompressive_meta.csv';
+% File paths
+TruthPath = [basePath, trialNum, 'surfaceTruth.csv'];
+TruthMetaPath = [basePath, trialNum, 'surfaceTruth_meta.csv'];
+CompressivePath = [basePath, trialNum, 'surfaceCompressive.csv'];
+CompressiveMetaPath = [basePath, trialNum, 'surfaceCompressive_meta.csv'];
 
 % Read the matrix from the CSV file
-Truth = readmatrix(filenameT);
-Compressive = readmatrix(filenameC);
-CompressiveMeta = readmatrix(filenameCmeta);
+Truth = readmatrix(TruthPath);
+TruthMeta = readmatrix(TruthPathMeta);
+Compressive = readmatrix(CompressivePath);
+CompressiveMeta = readmatrix(CompressiveMetaPath);
 
-% Assign variables
-BScansPerVolume = CompressiveMeta(1);
-AScansPerBScan = CompressiveMeta(2);
-ActualScanningTimeSec = CompressiveMeta(3);
-TruthBScansPerVolume = CompressiveMeta(4);
-TruthAScansPerBScan = CompressiveMeta(5);
-BscanCompressionRatio = CompressiveMeta(6);
-CscanCompressionRatio = CompressiveMeta(7);
-CompressiveBScansPerVolume = CompressiveMeta(8);
-CompressiveAScansPerBScan = CompressiveMeta(9);
-LengthOfBScan = CompressiveMeta(10);
-WidthOfVolume = CompressiveMeta(11);
-NumOfLostBScan = CompressiveMeta(12);
-ExpectedAcquisitionTimeSec = CompressiveMeta(13);
+% Creating structures
+Truth = struct();
+Compressive = struct();
+
+% Assigning values to Truth structure
+Truth.BScansPerVolume = TruthMetaData(1);
+Truth.AScansPerBScan = TruthMetaData(2);
+Truth.BscanCompressionRatio = TruthMetaData(3);
+Truth.CscanCompressionRatio = TruthMetaData(4);
+Truth.ActualScanningTimeSec = TruthMetaData(5);
+Truth.LengthOfBScan = TruthMetaData(6);
+Truth.WidthOfVolume = TruthMetaData(7);
+Truth.NumOfLostBScan = TruthMetaData(8);
+Truth.ExpectedAcquisitionTimeSec = TruthMetaData(9);
+
+% Assigning values to Compressive structure
+Compressive.BScansPerVolume = CompressiveMetaData(1);
+Compressive.AScansPerBScan = CompressiveMetaData(2);
+Compressive.BscanCompressionRatio = CompressiveMetaData(3);
+Compressive.CscanCompressionRatio = CompressiveMetaData(4);
+Compressive.ActualScanningTimeSec = CompressiveMetaData(5);
+Compressive.LengthOfBScan = CompressiveMetaData(6);
+Compressive.WidthOfVolume = CompressiveMetaData(7);
+Compressive.NumOfLostBScan = CompressiveMetaData(8);
+Compressive.ExpectedAcquisitionTimeSec = CompressiveMetaData(9);
 
 % Remove the last column from each matrix
 Truth(:, end) = [];
 Compressive(:, end) = [];
+%%
 
 % Normalize each matrix to the range [0, 1]
 Truth = (Truth - min(Truth(:))) / (max(Truth(:)) - min(Truth(:)));
 Compressive_norm = (Compressive - min(Compressive(:))) / (max(Compressive(:)) - min(Compressive(:)));
 
-
-% Upsampling rows for BscanCompressionRatio = 0.5
-rowUpsampleFactor = 1 / BscanCompressionRatio; 
-CompressiveUpsampledRows = zeros(size(Compressive, 1) * rowUpsampleFactor, size(Compressive, 2));
-CompressiveUpsampledRows(1:rowUpsampleFactor:end, :) = Compressive;
-
-% Upsampling columns for AscanCompressionRatio = 0.25
-colUpsampleFactor = 1 / AscanCompressionRatio; 
+% Upsampling columns for BscanCompressionRatio = 0.25
+colUpsampleFactor = 1 / BscanCompressionRatio; 
 CompressiveUpsampled = zeros(size(CompressiveUpsampledRows, 1), size(CompressiveUpsampledRows, 2) * colUpsampleFactor);
 CompressiveUpsampled(:, 1:colUpsampleFactor:end) = CompressiveUpsampledRows;
+
+% Upsampling rows for CscanCompressionRatio = 0.5
+rowUpsampleFactor = 1 / CscanCompressionRatio; 
+CompressiveUpsampledRows = zeros(size(Compressive, 1) * rowUpsampleFactor, size(Compressive, 2));
+CompressiveUpsampledRows(1:rowUpsampleFactor:end, :) = Compressive;
 
 % Normalize the upsampled matrix to the range [0, 1]
 CompressiveUpsampled_norm = (CompressiveUpsampled - min(CompressiveUpsampled(:))) / (max(CompressiveUpsampled(:)) - min(CompressiveUpsampled(:)));

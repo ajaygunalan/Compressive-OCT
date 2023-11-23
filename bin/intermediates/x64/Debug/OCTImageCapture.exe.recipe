@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Ajay_OCT\OCTAssistedSurgicalLaserbot\bin\x64\Debug\OCTImageCapture.exe</FullPath>
+      <FullPath>C:\Ajay_OCT\OCT-Guided-AutoCALM\bin\x64\Debug\OCTImageCapture.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

@@ -122,7 +122,12 @@ void performScanAndExport(const std::string& folderLocation, std::string fileNam
     }
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " trialNum\n";
+        return -1;
+    }
+    std::string trialNum = argv[1];
     double LengthOfBScan = 10.0; // mm
     double WidthOfVolume = 10.0; // mm
     std::string folderLocation = "C:\\Ajay_OCT\\OCT-Guided-AutoCALM\\data\\getDepthFromSparse3Doct\\";
@@ -132,14 +137,14 @@ int main() {
     int numBScansPerVolume = 100;
     double BscanCompressionRatio = 1.0;
     double CscanCompressionRatio = 1.0;
-    performScanAndExport(folderLocation, "surfaceTruth", numAScansPerBScan, numBScansPerVolume, LengthOfBScan, WidthOfVolume, BscanCompressionRatio, CscanCompressionRatio);
+    performScanAndExport(folderLocation, trialNum + "surfaceTruth" , numAScansPerBScan, numBScansPerVolume, LengthOfBScan, WidthOfVolume, BscanCompressionRatio, CscanCompressionRatio);
 
     // Compressive Scan
     BscanCompressionRatio = 0.50;
     CscanCompressionRatio = 0.50;
     numAScansPerBScan = static_cast<int>(numAScansPerBScan * BscanCompressionRatio);
     numBScansPerVolume = static_cast<int>(numBScansPerVolume * CscanCompressionRatio);
-    performScanAndExport(folderLocation, "surfaceCompressive", numAScansPerBScan, numBScansPerVolume, LengthOfBScan, WidthOfVolume, BscanCompressionRatio, CscanCompressionRatio);
+    performScanAndExport(folderLocation, trialNum + "surfaceCompressive", numAScansPerBScan, numBScansPerVolume, LengthOfBScan, WidthOfVolume, BscanCompressionRatio, CscanCompressionRatio);
 
     return 0;
 }
