@@ -1,2 +1,0 @@
-# TVAL3
-TVAL3
