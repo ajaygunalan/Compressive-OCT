@@ -1,4 +1,4 @@
-## Compressive OCT for Fast Depth Map in Laser Microsurgery
+## Compressive OCT for Fast Depth Measurement in Laser Microsurgery
 
 This document describes the use of 3D Optical Coherence Tomography (OCT) for acquiring and segmenting surface details in laser microsurgery. 
 The process utilizes ThorLabs' SpectralRadar SDK 5.2 for data capture, which is then exported to MATLAB as CSV files.
