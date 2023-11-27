@@ -13,15 +13,13 @@ else
     disp(cmdout);
 end
 %% Read the Data
-trialNum = '1';
 % Base path
-basePath = 'data\getDepthFromSparse3Doct\';
-
+basePath = ['data\getDepthFromSparse3Doct\', trialNum, '\'];
 % File paths
-TruthPath = [basePath, trialNum, 'surfaceTruth.csv'];
-TruthMetaPath = [basePath, trialNum, 'surfaceTruth_meta.csv'];
-CompressivePath = [basePath, trialNum, 'surfaceCompressive.csv'];
-CompressiveMetaPath = [basePath, trialNum, 'surfaceCompressive_meta.csv'];
+TruthPath = [basePath, 'surfaceTruth.csv'];
+TruthMetaPath = [basePath, 'surfaceTruth_meta.csv'];
+CompressivePath = [basePath, 'surfaceCompressive.csv'];
+CompressiveMetaPath = [basePath, 'surfaceCompressive_meta.csv'];
 
 % Read the matrix from the CSV file
 TruthData = readmatrix(TruthPath);
@@ -94,7 +92,7 @@ TruthData = TruthData .* maxTruthData;
 Estimation = Estimation .* maxCompressiveData;
 %% Display & Save Results
 % Define the filename for storing error and time
-reconstructionResultFilename = [basePath, trialNum, '_ReconstructionResult.csv'];
+reconstructionResultFilename = [basePath, '_ReconstructionResult.csv'];
 % Create a table with reconstruction error and time
 resultsTable = table(reconstruction_error, reconstruction_time, 'VariableNames', {'ReconstructionError', 'ReconstructionTime'});
 % Write the table to a CSV file
@@ -110,16 +108,16 @@ disp(['Compressive Scanning Time for Compressive Data: ', num2str(CompressiveMet
 
 % Save the Normalized TruthData Matrix
 fig1 = figure; imagesc(TruthData); axis equal; axis tight; title('TrueData'); colorbar;
-saveas(fig1, [basePath, trialNum, 'TrueData.png']);
+saveas(fig1, [basePath, 'TrueData.png']);
 
 % Save the Normalized Compressive Matrix
 fig2 = figure; imagesc(Compressive_norm); axis equal; axis tight; title('SparseData'); colorbar;
-saveas(fig2, [basePath, trialNum, 'SparseData.png']);
+saveas(fig2, [basePath, 'SparseData.png']);
 
 % Save the Normalized Upsampled Compressive Matrix
 fig3 = figure; imagesc(CompressiveUpsampled_norm); axis equal; axis tight; title('UpsampledSparseData'); colorbar;
-saveas(fig3, [basePath, trialNum, 'UpsampledSparseData.png']);
+saveas(fig3, [basePath, 'UpsampledSparseData.png']);
 
 % Save the Estimation
 fig4 = figure; imagesc(Estimation); axis equal; axis tight; title('Estimation'); colorbar;
-saveas(fig4, [basePath, trialNum, 'Estimation.png']);
+saveas(fig4, [basePath, 'Estimation.png']);

@@ -14,6 +14,9 @@
 #include <algorithm>
 #include <cmath>
 #include <fstream>
+#include <filesystem>
+namespace fs = std::filesystem;
+
 // #include <matplotlibcpp.h>
 
 #define PI 3.14159265358979323846
@@ -130,21 +133,28 @@ int main(int argc, char* argv[]) {
     std::string trialNum = argv[1];
     double LengthOfBScan = 10.0; // mm
     double WidthOfVolume = 10.0; // mm
-    std::string folderLocation = "C:\\Ajay_OCT\\OCT-Guided-AutoCALM\\data\\getDepthFromSparse3Doct\\";
+    std::string baseFolder = "C:\\Ajay_OCT\\OCT-Guided-AutoCALM\\data\\getDepthFromSparse3Doct\\";
+    std::string folderLocation = baseFolder + trialNum + "\\";
+
+    // Create the directory if it does not exist
+    if (!fs::exists(folderLocation)) {
+        fs::create_directories(folderLocation);
+    }
+
 
     // Normal Scan
     int numAScansPerBScan = 256;
     int numBScansPerVolume = 100;
     double BscanCompressionRatio = 1.0;
     double CscanCompressionRatio = 1.0;
-    performScanAndExport(folderLocation, trialNum + "surfaceTruth" , numAScansPerBScan, numBScansPerVolume, LengthOfBScan, WidthOfVolume, BscanCompressionRatio, CscanCompressionRatio);
+    performScanAndExport(folderLocation, "surfaceTruth" , numAScansPerBScan, numBScansPerVolume, LengthOfBScan, WidthOfVolume, BscanCompressionRatio, CscanCompressionRatio);
 
     // Compressive Scan
     BscanCompressionRatio = 0.50;
     CscanCompressionRatio = 0.50;
     numAScansPerBScan = static_cast<int>(numAScansPerBScan * BscanCompressionRatio);
     numBScansPerVolume = static_cast<int>(numBScansPerVolume * CscanCompressionRatio);
-    performScanAndExport(folderLocation, trialNum + "surfaceCompressive", numAScansPerBScan, numBScansPerVolume, LengthOfBScan, WidthOfVolume, BscanCompressionRatio, CscanCompressionRatio);
+    performScanAndExport(folderLocation, "surfaceCompressive", numAScansPerBScan, numBScansPerVolume, LengthOfBScan, WidthOfVolume, BscanCompressionRatio, CscanCompressionRatio);
 
     return 0;
 }
