@@ -1,3 +1,28 @@
+## Compressive OCT for Fast Depth Map in Laser Microsurgery
+
+This document describes the use of 3D Optical Coherence Tomography (OCT) for acquiring and segmenting surface details in laser microsurgery. 
+The process utilizes ThorLabs' SpectralRadar SDK 5.2 for data capture, which is then exported to MATLAB as CSV files.
+A Compressive Depth Map is reconstructed in MATLAB using TVAL3 and compared with a fully scanned depth map for accuracy.
+
+### Usage Instructions
+
+#### MATLAB
+- Run `sparseOCTdepth.m`
+- The user should input the experimental trial number (trialNum) when prompted. Note: Avoid using 0 as the trial number, as this is the default directory reserved for C++ operations
+- Data will be stored in `./data/getDepthFromSparse3Doct/<trialNum>`.
+
+#### C++ (Visual Studio)
+- Running the C++ program in Visual Studio will store data in the directory `./data/getDepthFromSparse3Doct/0`
+
+#### C++ Setup
+1. [Setting Up C++ on Windows](https://www.youtube.com/watch?v=1OsGXuNA5cc)
+2. [Optimal Visual Studio Setup for C++ Projects](https://www.youtube.com/watch?v=qeH9Xv_90KM)
+3. [Static Linking of ThorLabs API](https://www.youtube.com/watch?v=or1dAmUO8k0) (Static linking is preferred for speed).
+   - ThorLabs API can be found [here](https://gitlab.advr.iit.it/BRL/laser/thorlabs-api).
+4. Ensure to build for x64 architecture.
+    
+
+<!-- 
 
 Will be updated in the future!
 
@@ -29,3 +54,4 @@ Will be updated in the future!
 2. [LSM04](https://www.thorlabs.com/thorproduct.cfm?partnumber=LSM04)
 
 <img src="OCTLens.JPG"  width="800" height="400">
+-->
