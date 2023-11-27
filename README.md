@@ -8,7 +8,8 @@ A Compressive Depth Map is reconstructed in MATLAB using TVAL3 and compared with
 
 #### MATLAB
 - Run `sparseOCTdepth.m`
-- The user should input the experimental trial number (trialNum) when prompted. Note: Avoid using 0 as the trial number, as this is the default directory reserved for C++ operations
+- The user should input the experimental trial number (`trialNum`) when prompted.
+- Note: **Avoid** using `0` as the trial number, as this is the default directory reserved for C++ operations
 - Data will be stored in `./data/getDepthFromSparse3Doct/<trialNum>`.
 
 #### C++ (Visual Studio)
