@@ -12,6 +12,56 @@ else
     disp('Error in executing command');
     disp(cmdout);
 end
+%%
+trialNum = '0';
+%%
+% Set base folder and trial number
+baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
+folderLocation = fullfile(baseFolder, trialNum);
+
+% Parameters for file naming
+NumAScansPerBScanReference = 256;
+NumBScansPerVolumeReference = 100;
+
+% Initialize counter
+count = 1;
+
+% Loop through the range of compression ratios
+for BscanCR = 1.0:-0.1:0.1
+    for CscanCR = 1.0:-0.1:0.1
+        numAScansPerBScan = round(NumAScansPerBScanReference * BscanCR);
+        numBScansPerVolume = round(NumBScansPerVolumeReference * CscanCR);
+
+        % Construct filename
+        fileName = sprintf('ScanNum_%d_CR_BScan_%0.2f_CScan_%0.2f', count, BscanCR, CscanCR);
+        surfaceFileName = fullfile(folderLocation, [fileName, '_surface.csv']);
+        metaFileName = fullfile(folderLocation, [fileName, '_meta.csv']);
+
+        % Read Surface Data File
+        if isfile(surfaceFileName)
+            surfaceData = readtable(surfaceFileName);
+            % Process surfaceData as needed
+        else
+            disp(['No surface data file: ', surfaceFileName]);
+        end
+
+        % Read Metadata File
+        if isfile(metaFileName)
+            metaData = readtable(metaFileName, 'ReadVariableNames', false);
+            % Process metaData as needed
+        else
+            disp(['No metadata file: ', metaFileName]);
+        end
+
+
+        
+        
+        count = count + 1;
+    end
+end
+
+
+
 %% Read the Data
 % Base path
 basePath = ['data\getDepthFromSparse3Doct\', trialNum, '\'];
