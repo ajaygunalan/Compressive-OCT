@@ -42,87 +42,17 @@ struct ScanResult {
     double actualTime;
     double expectedTime;
     int numOfLostBScan;
-    int BscanCompressionRatio;
-    int CscanCompressionRatio;
+    double BscanCompressionRatio;
+    double CscanCompressionRatio;
+    int count;
 };
 
-
-void getSurfaceFrom3DScan(const std::string& folderLocation, int NumAScansPerBScanReference, double LengthOfBScan, int NumBScansPerVolumeReference, double WidthOfVolume) {
-    char message[1024];
-    OCTDeviceHandle Dev = initDevice();
-    ProbeHandle Probe = initProbe(Dev, "Probe_Standard_OCTG_LSM04.ini");
-    ProcessingHandle Proc = createProcessingForDevice(Dev);
-
-
-
-    if (getError(message, 1024)) {
-        std::cout << "ERROR: " << message << std::endl;
-        _getch();
-    }
-
-    setDevicePreset(Dev, CATEGORY_SPEED_SENSITIVITY, Probe, Proc, PRESET_HIGH_SPEED_146kHz);
-    int AScanAveraging = 3;
-    setProbeParameterInt(Probe, Probe_Oversampling, AScanAveraging); // this results in a repetition of each scan point in the B-scan
-    setProcessingParameterInt(Proc, Processing_AScanAveraging, AScanAveraging);
-
-
-    for (double BscanCompressionRatio = 0.25; BscanCompressionRatio >= 0.05; BscanCompressionRatio -= 0.05) {
-        for (double CscanCompressionRatio = 1.0; CscanCompressionRatio >= 0.05; CscanCompressionRatio -= 0.05) {
-            int numAScansPerBScan = static_cast<int>(NumAScansPerBScanReference * BscanCompressionRatio);
-            int numBScansPerVolume = static_cast<int>(NumBScansPerVolumeReference * CscanCompressionRatio);
-
-            RawDataHandle RawVolume = createRawData();
-            DataHandle Volume = createData();
-            DataHandle Surface = createData();
-            ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, numAScansPerBScan, WidthOfVolume, numBScansPerVolume, ScanPattern_ApoOneForAll, ScanPattern_AcqOrderAll);
-
-
-            // the apodization spectra are acquired now
-            //measureApodizationSpectra(Dev, Probe, Proc);
-
-            auto start = std::chrono::high_resolution_clock::now();
-            startMeasurement(Dev, Pattern, Acquisition_AsyncContinuous);
-            getRawData(Dev, RawVolume);
-            setProcessedDataOutput(Proc, Volume);
-            executeProcessing(Proc, RawVolume);
-            stopMeasurement(Dev);
-            auto stop = std::chrono::high_resolution_clock::now();
-
-
-            int numOfLostBScan = getRawDataPropertyInt(RawVolume, RawData_LostFrames);
-            std::chrono::duration<double> actualTimeDuration = stop - start;
-            double actualTime = actualTimeDuration.count();
-            double expectedTime = expectedAcquisitionTime_s(Pattern, Dev);
-
-            determineSurface(Volume, Surface);
-
-            ScanResult result;
-            result.surface = Surface;
-            result.actualTime = actualTimeDuration.count();
-            result.expectedTime = expectedTime;
-            result.numOfLostBScan = numOfLostBScan;
-            result.BscanCompressionRatio = BscanCompressionRatio;
-            result.CscanCompressionRatio = CscanCompressionRatio;
-
-            processScanData(result, folderLocation);  // Process the data from this iteration
-
-            // Clean up
-            clearScanPattern(Pattern);
-            clearData(Volume);
-            clearRawData(RawVolume);
-
-        }
-    }
-    clearProcessing(Proc);
-    closeProbe(Probe);
-    closeDevice(Dev);
-}
 
 void processScanData(const ScanResult& result, const std::string& folderLocation) {
 
     std::ostringstream oss;
     oss << std::fixed << std::setprecision(2);
-    oss << "CompressionRatio_BScan_" << result.BscanCompressionRatio
+    oss << "ScanNum_" <<result.count << "_CR_BScan_" << result.BscanCompressionRatio
         << "_CScan_" << result.CscanCompressionRatio;
     std::string fileName = oss.str();
 
@@ -151,6 +81,76 @@ void processScanData(const ScanResult& result, const std::string& folderLocation
     }
 }
 
+void getSurfaceFrom3DScan(const std::string& folderLocation, int NumAScansPerBScanReference, double LengthOfBScan, int NumBScansPerVolumeReference, double WidthOfVolume) {
+
+    char message[1024];
+    OCTDeviceHandle Dev = initDevice();
+    ProbeHandle Probe = initProbe(Dev, "Probe_Standard_OCTG_LSM04.ini");
+    ProcessingHandle Proc = createProcessingForDevice(Dev);
+
+    if (getError(message, 1024)) {
+        std::cout << "ERROR: " << message << std::endl;
+        _getch();
+    }
+
+    setDevicePreset(Dev, CATEGORY_SPEED_SENSITIVITY, Probe, Proc, PRESET_HIGH_SPEED_146kHz);
+    int AScanAveraging = 3;
+    setProbeParameterInt(Probe, Probe_Oversampling, AScanAveraging); // this results in a repetition of each scan point in the B-scan
+    setProcessingParameterInt(Proc, Processing_AScanAveraging, AScanAveraging);
+
+
+    int count = 1;
+    const double epsilon = 1e-9;
+    for (double BscanCompressionRatio = 1.0; BscanCompressionRatio >= 0.1 - epsilon; BscanCompressionRatio -= 0.1) {
+        for (double CscanCompressionRatio = 1.0; CscanCompressionRatio >= 0.1 - epsilon; CscanCompressionRatio -= 0.1) {
+
+            int numAScansPerBScan = static_cast<int>(NumAScansPerBScanReference * BscanCompressionRatio);
+            int numBScansPerVolume = static_cast<int>(NumBScansPerVolumeReference * CscanCompressionRatio);
+
+            RawDataHandle RawVolume = createRawData();
+            DataHandle Volume = createData();
+            DataHandle Surface = createData();
+            ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, numAScansPerBScan, WidthOfVolume, numBScansPerVolume, ScanPattern_ApoOneForAll, ScanPattern_AcqOrderAll);
+
+            auto start = std::chrono::high_resolution_clock::now();
+            startMeasurement(Dev, Pattern, Acquisition_AsyncContinuous);
+            getRawData(Dev, RawVolume);
+            setProcessedDataOutput(Proc, Volume);
+            executeProcessing(Proc, RawVolume);
+            stopMeasurement(Dev);
+            auto stop = std::chrono::high_resolution_clock::now();
+
+
+            int numOfLostBScan = getRawDataPropertyInt(RawVolume, RawData_LostFrames);
+            std::chrono::duration<double> actualTimeDuration = stop - start;
+            double actualTime = actualTimeDuration.count();
+            double expectedTime = expectedAcquisitionTime_s(Pattern, Dev);
+
+            determineSurface(Volume, Surface);
+
+            ScanResult result;
+            result.surface = Surface;
+            result.actualTime = actualTimeDuration.count();
+            result.expectedTime = expectedTime;
+            result.numOfLostBScan = numOfLostBScan;
+            result.BscanCompressionRatio = BscanCompressionRatio;
+            result.CscanCompressionRatio = CscanCompressionRatio;
+            result.count = count;
+
+            processScanData(result, folderLocation);  // Process the data from this iteration
+
+            // Clean up
+            clearScanPattern(Pattern);
+            clearRawData(RawVolume);
+            clearData(Volume);
+            clearData(Surface);
+            count++;
+        }
+    }
+    clearProcessing(Proc);
+    closeProbe(Probe);
+    closeDevice(Dev);
+}
 
 
 int main(int argc, char* argv[]) {
@@ -165,15 +165,11 @@ int main(int argc, char* argv[]) {
         fs::create_directories(folderLocation);
     }
 
-
     double LengthOfBScan = 10.0; // mm
     double WidthOfVolume = 10.0; // mm
     int NumAScansPerBScanReference = 256;
     int NumBScansPerVolumeReference = 100;
 
-
-    getSurfaceFrom3DScan(folderLocation, NumAScansPerBScanReference, NumBScansPerVolumeReference, LengthOfBScan, WidthOfVolume);
-
+    getSurfaceFrom3DScan(folderLocation, NumAScansPerBScanReference, LengthOfBScan, NumBScansPerVolumeReference, WidthOfVolume);
     return 0;
 }
-
