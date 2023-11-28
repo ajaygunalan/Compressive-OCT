@@ -1,4 +1,4 @@
-## Compressive OCT for Fast Depth Map in Laser Microsurgery
+## Compressive OCT for Fast Depth Measurement in Laser Microsurgery
 
 This document describes the use of 3D Optical Coherence Tomography (OCT) for acquiring and segmenting surface details in laser microsurgery. 
 The process utilizes ThorLabs' SpectralRadar SDK 5.2 for data capture, which is then exported to MATLAB as CSV files.
@@ -8,7 +8,8 @@ A Compressive Depth Map is reconstructed in MATLAB using TVAL3 and compared with
 
 #### MATLAB
 - Run `sparseOCTdepth.m`
-- The user should input the experimental trial number (trialNum) when prompted. Note: Avoid using 0 as the trial number, as this is the default directory reserved for C++ operations
+- The user should input the experimental trial number (`trialNum`) when prompted.
+- Note: **Avoid** using `0` as the trial number, as this is the default directory reserved for C++ operations
 - Data will be stored in `./data/getDepthFromSparse3Doct/<trialNum>`.
 
 #### C++ (Visual Studio)
