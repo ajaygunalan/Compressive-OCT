@@ -119,8 +119,12 @@ void getSurfaceFrom3DScan(const std::string& folderLocation, int NumAScansPerBSc
 }
 
 void processScanData(const ScanResult& result, const std::string& folderLocation) {
-    std::string fileName = "CompressionRatio_Bscan" + to_string(result.BscanCompressionRatio) +
-        "_AScan" + to_string(result.CscanCompressionRatio);
+
+    std::ostringstream oss;
+    oss << std::fixed << std::setprecision(2);
+    oss << "CompressionRatio_BScan_" << result.BscanCompressionRatio
+        << "_CScan_" << result.CscanCompressionRatio;
+    std::string fileName = oss.str();
 
     // Exporting surface data
     std::string surfaceFileName = folderLocation + fileName + "_surface.csv";
