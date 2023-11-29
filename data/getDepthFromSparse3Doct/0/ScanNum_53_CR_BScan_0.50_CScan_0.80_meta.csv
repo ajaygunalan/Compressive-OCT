@@ -1,5 +1,5 @@
-B-Scan Compression Ratio: 0.5
-C-Scan Compression Ratio: 0.8
-Actual Time: 2.32312
+Number of BScans Per Volume: 80
+Number of AScans Per BScan: 128
+Actual Time: 2.18017
 Expected Time: 0.371938
 Number of Lost B-Scans: 0

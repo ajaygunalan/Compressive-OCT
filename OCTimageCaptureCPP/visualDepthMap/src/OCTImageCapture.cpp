@@ -45,6 +45,8 @@ struct ScanResult {
     double BscanCompressionRatio;
     double CscanCompressionRatio;
     int count;
+    int numAScansPerBScan;
+    int numBScansPerVolume;
 };
 
 
@@ -69,8 +71,8 @@ void processScanData(const ScanResult& result, const std::string& folderLocation
     std::string metaFileName = folderLocation + fileName + "_meta.csv";
     std::ofstream metaFile(metaFileName);
     if (metaFile.is_open()) {
-        metaFile << "B-Scan Compression Ratio: " << result.BscanCompressionRatio << "\n";
-        metaFile << "C-Scan Compression Ratio: " << result.CscanCompressionRatio << "\n";
+        metaFile << "Number of BScans Per Volume: " << result.numBScansPerVolume << "\n";
+        metaFile << "Number of AScans Per BScan: " << result.numAScansPerBScan << "\n";
         metaFile << "Actual Time: " << result.actualTime << "\n";
         metaFile << "Expected Time: " << result.expectedTime << "\n";
         metaFile << "Number of Lost B-Scans: " << result.numOfLostBScan << "\n";
@@ -135,6 +137,8 @@ void getSurfaceFrom3DScan(const std::string& folderLocation, int NumAScansPerBSc
             result.numOfLostBScan = numOfLostBScan;
             result.BscanCompressionRatio = BscanCompressionRatio;
             result.CscanCompressionRatio = CscanCompressionRatio;
+            result.numAScansPerBScan = numAScansPerBScan;
+            result.numBScansPerVolume = numBScansPerVolume;
             result.count = count;
 
             processScanData(result, folderLocation);  // Process the data from this iteration
