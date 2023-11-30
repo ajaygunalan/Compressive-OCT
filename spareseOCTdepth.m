@@ -1,17 +1,17 @@
 clear all; clc; close all;
-%% Perform Imagaing
-% Prompt the user for the trial number
-trialNum = input('Enter the trial number: ', 's');
-commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum];
-[status, cmdout] = system(commandStr);
-% Check the status and display the output or error message
-if status == 0
-    disp('Command executed successfully');
-    disp(cmdout);
-else
-    disp('Error in executing command');
-    disp(cmdout);
-end
+% %% Perform Imagaing
+% % Prompt the user for the trial number
+% trialNum = input('Enter the trial number: ', 's');
+% commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum];
+% [status, cmdout] = system(commandStr);
+% % Check the status and display the output or error message
+% if status == 0
+%     disp('Command executed successfully');
+%     disp(cmdout);
+% else
+%     disp('Error in executing command');
+%     disp(cmdout);
+% end
 %% 
 trialNum = '0';
 % Intialize Variable
@@ -54,11 +54,12 @@ for BscanCR = 1.0:-0.1:0.1
             TruthData(:, end) = [];
 
             % Assigning values to TruthMeta structure
-            TruthMeta.BScansPerVolume = TruthMetaData(1);
-            TruthMeta.AScansPerBScan = TruthMetaData(2);
-            TruthMeta.ActualScanningTimeSec = TruthMetaData(3);
-            TruthMeta.ExpectedAcquisitionTimeSec = TruthMetaData(4);
-            TruthMeta.NumOfLostBScan = TruthMetaData(8);
+            TruthMeta.BScansPerVolume = TruthMetaData(1, 2);
+            TruthMeta.AScansPerBScan = TruthMetaData(2, 2);
+            TruthMeta.ActualScanningTimeSec = TruthMetaData(3, 2);
+            TruthMeta.ExpectedAcquisitionTimeSec = TruthMetaData(4, 2);
+            TruthMeta.NumOfLostBScan = TruthMetaData(5, 2);
+
             ScanTime(BscanCR*10, CscanCR*10) = TruthMeta.ActualScanningTimeSec;
 
             % Create the figure and plot the data
@@ -91,22 +92,38 @@ for BscanCR = 1.0:-0.1:0.1
             CompressiveMeta = struct();
 
             % Assigning values to CompressiveMeta structure
-            CompressiveMeta.BScansPerVolume = CompressiveMetaData(1);
-            CompressiveMeta.AScansPerBScan = CompressiveMetaData(2);
-            CompressiveMeta.ActualScanningTimeSec = CompressiveMetaData(3);
-            CompressiveMeta.ExpectedAcquisitionTimeSec = CompressiveMetaData(4);
-            CompressiveMeta.NumOfLostBScan = CompressiveMetaData(5);
+            CompressiveMeta.BScansPerVolume = CompressiveMetaData(1, 2);  
+            CompressiveMeta.AScansPerBScan = CompressiveMetaData(2, 2);   
+            CompressiveMeta.ActualScanningTimeSec = CompressiveMetaData(3, 2); 
+            CompressiveMeta.ExpectedAcquisitionTimeSec = CompressiveMetaData(4, 2); 
+            CompressiveMeta.NumOfLostBScan = CompressiveMetaData(5, 2);  
+
 
             % Remove the last column from each data matrix
             CompressiveData(:, end) = [];
             % Normalize it
             maxCompressiveData = max(max(CompressiveData));
-            Compressive_norm = CompressiveData ./ maxCompressiveData;
+            CompressiveNorm = CompressiveData ./ maxCompressiveData;
 
             % Upsampling rows
-            rowUpsampleFactor = 1 / CscanCR; 
-            CompressiveUpsampledRows = zeros(size(CompressiveData, 1) * rowUpsampleFactor, size(CompressiveData, 2));
-            CompressiveUpsampledRows(1:rowUpsampleFactor:end, :) = CompressiveData;
+            % Calculate the interval for insertion and the number of zero rows
+            interval = CompressiveMeta.BScansPerVolume / 10;
+            numZeroRows = 10 - interval;
+            % Initialize a temporary matrix to store the updates
+            tempMatrix = [];
+            for i = 1:interval:CompressiveMeta.BScansPerVolume
+                % Append the original rows to tempMatrix
+                endIdx = min(i + interval - 1, CompressiveMeta.BScansPerVolume);
+                tempMatrix = [tempMatrix; CompressiveNorm(i:endIdx, :)];
+            
+                % Append zero rows
+                if endIdx < CompressiveMeta.BScansPerVolume
+                    tempMatrix = [tempMatrix; zeros(numZeroRows, size(CompressiveNorm, 2))];
+                end
+            end
+            
+            % Update CompressiveNorm with the modified matrix
+            CompressiveNorm = tempMatrix;
 
             % Upsampling columns
             colUpsampleFactor = 1 / BscanCR; 
