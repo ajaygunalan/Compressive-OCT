@@ -115,11 +115,7 @@ for BscanCR = 1.0:-0.1:0.1
                 % Append the original rows to tempMatrix
                 endIdx = min(i + interval - 1, CompressiveMeta.BScansPerVolume);
                 tempMatrix = [tempMatrix; CompressiveNorm(i:endIdx, :)];
-            
-                % Append zero rows
-                if endIdx < CompressiveMeta.BScansPerVolume
-                    tempMatrix = [tempMatrix; zeros(numZeroRows, size(CompressiveNorm, 2))];
-                end
+                tempMatrix = [tempMatrix; zeros(numZeroRows, size(CompressiveNorm, 2))];
             end
             
             % Update CompressiveNorm with the modified matrix
