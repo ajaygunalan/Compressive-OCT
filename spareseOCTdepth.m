@@ -104,36 +104,43 @@ for BscanCR = 1.0:-0.1:0.1
             % Normalize it
             maxCompressiveData = max(max(CompressiveData));
             CompressiveNorm = CompressiveData ./ maxCompressiveData;
+            CompressiveUpsampled = CompressiveNorm;
 
-            % Upsampling rows
-            % Calculate the interval for insertion and the number of zero rows
-            interval = CompressiveMeta.BScansPerVolume / 10;
-            numZeroRows = 10 - interval;
-            % Initialize a temporary matrix to store the updates
-            tempMatrix = [];
-            for i = 1:interval:CompressiveMeta.BScansPerVolume
-                % Append the original rows to tempMatrix
-                endIdx = min(i + interval - 1, CompressiveMeta.BScansPerVolume);
-                tempMatrix = [tempMatrix; CompressiveNorm(i:endIdx, :)];
-                tempMatrix = [tempMatrix; zeros(numZeroRows, size(CompressiveNorm, 2))];
+            % Upsampling Rows
+            if CscanCR ~= 1.0
+                chunkSize =  TruthMeta.BScansPerVolume - CompressiveMeta.BScansPerVolume;
+                interval = CompressiveMeta.BScansPerVolume / chunkSize;
+                numZeroRows = (TruthMeta.BScansPerVolume/chunkSize) - interval;
+                tempMatrix = [];
+                for i = 1:interval:CompressiveMeta.BScansPerVolume
+                    endIdx = min(i + interval - 1, CompressiveMeta.BScansPerVolume);
+                    tempMatrix = [tempMatrix; CompressiveUpsampled(i:endIdx, :)];
+                    tempMatrix = [tempMatrix; zeros(numZeroRows, size(CompressiveUpsampled, 2))];
+                end
+                
+                CompressiveUpsampled = tempMatrix;
+            end
+
+            % Upsampling Cols
+            if BscanCR ~= 1.0
+                chunkSize = 10;
+                interval = CompressiveMeta.AScansPerBScan / chunkSize;
+                numZeroRows = (TruthMeta.AScansPerBScan/chunkSize) - interval;
+                tempMatrix = [];
+                for i = 1:interval:CompressiveMeta.BScansPerVolume
+                    endIdx = min(i + interval - 1, CompressiveMeta.AScansPerBScan);
+                    tempMatrix = [tempMatrix; CompressiveUpsampled(i:endIdx, :)];
+                    tempMatrix = [tempMatrix; zeros(numZeroRows, size(CompressiveUpsampled, 2))];
+                end
+                CompressiveUpsampled = tempMatrix;
             end
             
-            % Update CompressiveNorm with the modified matrix
-            CompressiveNorm = tempMatrix;
-
-            % Upsampling columns
-            colUpsampleFactor = 1 / BscanCR; 
-            CompressiveUpsampled = zeros(size(CompressiveUpsampledRows, 1), size(CompressiveUpsampledRows, 2) * colUpsampleFactor);
-            CompressiveUpsampled(:, 1:colUpsampleFactor:end) = CompressiveUpsampledRows;
-
             % Get Mask, Y 
             A_2dMask = CompressiveUpsampled ~= 0;
             % Linearise A
             A_1dMask = reshape(A_2dMask, [], 1);
             A_LinearIdx = find(A_1dMask == 1);
-
-            
-            
+            % Get x and y
             x = reshape(CompressiveUpsampled, [], 1);
             y = x(A_LinearIdx);
             %% Reconstruct and Compute the Error 
@@ -141,23 +148,23 @@ for BscanCR = 1.0:-0.1:0.1
             reconstruction_error = RelErr(TruthData, Estimation);
             value = (TruthMeta.ActualScanningTimeSec - (reconstruction_time + CompressiveMeta.ActualScanningTimeSec))/TruthMeta.ActualScanningTimeSec;
         
-            NetReductionFactor(BscanCR*10, CscanCR*10) = value;
-            ReconstructionTime(BscanCR*10, CscanCR*10) = reconstruction_time;
-            ScanTime(BscanCR*10, CscanCR*10) = CompressiveMeta.ActualScanningTimeSec;
-            ReconstructionError(BscanCR*10, CscanCR*10) = reconstruction_error;
+            NetReductionFactor(round(BscanCR*10), round(CscanCR*10)) = value;
+            ReconstructionTime(round(BscanCR*10), round(CscanCR*10)) = reconstruction_time;
+            ScanTime(round(BscanCR*10), round(CscanCR*10)) = CompressiveMeta.ActualScanningTimeSec;
+            ReconstructionError(round(BscanCR*10), round(CscanCR*10)) = reconstruction_error;
 
             % Scale back the values
-            TruthData = TruthData .* maxTruthData; 
-            Compressive_norm = Compressive_norm*maxCompressiveData;
-            CompressiveUpsampled = CompressiveUpsampled*maxCompressiveData;
-            Estimation = Estimation .* maxCompressiveData;
+%             TruthData = TruthData * maxTruthData; 
+%             CompressiveNorm = CompressiveNorm * maxCompressiveData;
+%             CompressiveUpsampled = CompressiveUpsampled * maxCompressiveData;
+%             Estimation = Estimation * maxCompressiveData;
 
             % Save Compressive_norm data as a figure
             fig1 = figure('Visible', 'off'); 
-            imagesc(Compressive_norm); axis equal; axis tight; 
+            imagesc(CompressiveNorm); axis equal; axis tight; 
             % Create the colorbar and set its limits
-            minData = min(Compressive_norm(:)); 
-            maxData = max(Compressive_norm(:));
+            minData = min(CompressiveNorm(:)); 
+            maxData = max(CompressiveNorm(:));
             cb = colorbar; 
             set(cb, 'Limits', [minData, maxData]);
             % Define new ticks (for example, 5 evenly spaced ticks)

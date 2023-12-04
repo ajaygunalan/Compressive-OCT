@@ -1,5 +1,5 @@
-Number of BScans Per Volume: 80
-Number of AScans Per BScan: 256
-Actual Time: 3.4444
-Expected Time: 0.582272
+Number of BScans Per Volume: 240
+Number of AScans Per BScan: 300
+Actual Time: 11.1495
+Expected Time: 1.9476
 Number of Lost B-Scans: 0
