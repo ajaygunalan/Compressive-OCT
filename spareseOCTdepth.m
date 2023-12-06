@@ -33,15 +33,15 @@ values = {
     [7, 3],  
     [3, 2],  
     [1, 1],     
-                    [2, 3],  
-                    [3, 7],  
-                    [1, 4],  
-                    [1, 9]   
+    [2, 3],  
+    [3, 7],  
+    [1, 4],  
+    [1, 9]   
 };              
-up              Sa              mplingParam = containers.Map(keys, values);
-%%              
-%               Se              t base folder and trial number
-base                Folder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
+upSamplingParam = containers.Map(keys, values);
+             
+%  Set base folder and trial number
+baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
 folderLocation = fullfile(baseFolder, trialNum);
 
 % Parameters for file naming
@@ -120,11 +120,11 @@ for BscanCR = 1.0:-0.1:0.1
             CompressiveNorm = CompressiveData ./ maxCompressiveData;
             CompressiveUpsampled = CompressiveNorm;
 
-            % Up Sampling Columns
-            value = upSamplingParam(BscanCR);
-            intervalSize = value(1);
-            padSize = value(2);
+            % Up Sampling ColumnS
             if BscanCR ~= 1.0
+                val = upSamplingParam(round(BscanCR, 1));
+                intervalSize = val(1);
+                padSize = val(2);
                 tempMatrix = [];
                 for startIdx = 1:intervalSize:size(CompressiveUpsampled, 2)
                     % Intervals 
@@ -132,16 +132,17 @@ for BscanCR = 1.0:-0.1:0.1
                     selectedColumns = CompressiveUpsampled(:, startIdx:endIdx);
                     tempMatrix = [tempMatrix, selectedColumns];
                     % Pad Zeros
-                    zeroColumns = zeros(rows, padSize);
+                    zeroColumns = zeros(size(CompressiveUpsampled, 1), padSize);
                     tempMatrix = [tempMatrix, zeroColumns];
                 end
+                CompressiveUpsampled = tempMatrix;
             end
 
             % Up Sampling Rows
-            value = upSamplingParam(CscanCR);
-            intervalSize = value(1);
-            padSize = value(2);
             if CscanCR ~= 1.0
+                val = upSamplingParam(round(CscanCR, 1));
+                intervalSize = val(1);
+                padSize = val(2);
                 tempMatrix = [];
                 for startIdx = 1:intervalSize:size(CompressiveUpsampled, 1)  
                     % Intervals
@@ -152,6 +153,7 @@ for BscanCR = 1.0:-0.1:0.1
                     zeroRows = zeros(padSize, size(CompressiveUpsampled, 2));  
                     tempMatrix = [tempMatrix; zeroRows]; 
                 end
+                CompressiveUpsampled = tempMatrix;
             end
                 
             % Get Mask, Y 
