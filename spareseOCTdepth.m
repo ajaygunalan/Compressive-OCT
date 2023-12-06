@@ -24,9 +24,24 @@ TruthData = -1 *ones(100, 256);
 TruthMetaData = [];
 maxTruthData= 0;
 TruthMeta = struct();
-%%
-% Set base folder and trial number
-baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
+
+
+keys = {0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1};
+values = {
+    [9, 1],  
+    [4, 1],  
+    [7, 3],  
+    [3, 2],  
+    [1, 1],     
+                    [2, 3],  
+                    [3, 7],  
+                    [1, 4],  
+                    [1, 9]   
+};              
+up              Sa              mplingParam = containers.Map(keys, values);
+%%              
+%               Se              t base folder and trial number
+base                Folder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
 folderLocation = fullfile(baseFolder, trialNum);
 
 % Parameters for file naming
@@ -98,7 +113,6 @@ for BscanCR = 1.0:-0.1:0.1
             CompressiveMeta.ExpectedAcquisitionTimeSec = CompressiveMetaData(4, 2); 
             CompressiveMeta.NumOfLostBScan = CompressiveMetaData(5, 2);  
 
-
             % Remove the last column from each data matrix
             CompressiveData(:, end) = [];
             % Normalize it
@@ -106,35 +120,40 @@ for BscanCR = 1.0:-0.1:0.1
             CompressiveNorm = CompressiveData ./ maxCompressiveData;
             CompressiveUpsampled = CompressiveNorm;
 
-            % Upsampling Rows
-            if CscanCR ~= 1.0
-                chunkSize =  TruthMeta.BScansPerVolume - CompressiveMeta.BScansPerVolume;
-                interval = CompressiveMeta.BScansPerVolume / chunkSize;
-                numZeroRows = (TruthMeta.BScansPerVolume/chunkSize) - interval;
+            % Up Sampling Columns
+            value = upSamplingParam(BscanCR);
+            intervalSize = value(1);
+            padSize = value(2);
+            if BscanCR ~= 1.0
                 tempMatrix = [];
-                for i = 1:interval:CompressiveMeta.BScansPerVolume
-                    endIdx = min(i + interval - 1, CompressiveMeta.BScansPerVolume);
-                    tempMatrix = [tempMatrix; CompressiveUpsampled(i:endIdx, :)];
-                    tempMatrix = [tempMatrix; zeros(numZeroRows, size(CompressiveUpsampled, 2))];
+                for startIdx = 1:intervalSize:size(CompressiveUpsampled, 2)
+                    % Intervals 
+                    endIdx = startIdx + intervalSize - 1;
+                    selectedColumns = CompressiveUpsampled(:, startIdx:endIdx);
+                    tempMatrix = [tempMatrix, selectedColumns];
+                    % Pad Zeros
+                    zeroColumns = zeros(rows, padSize);
+                    tempMatrix = [tempMatrix, zeroColumns];
                 end
-                
-                CompressiveUpsampled = tempMatrix;
             end
 
-            % Upsampling Cols
-            if BscanCR ~= 1.0
-                chunkSize = 10;
-                interval = CompressiveMeta.AScansPerBScan / chunkSize;
-                numZeroRows = (TruthMeta.AScansPerBScan/chunkSize) - interval;
+            % Up Sampling Rows
+            value = upSamplingParam(CscanCR);
+            intervalSize = value(1);
+            padSize = value(2);
+            if CscanCR ~= 1.0
                 tempMatrix = [];
-                for i = 1:interval:CompressiveMeta.BScansPerVolume
-                    endIdx = min(i + interval - 1, CompressiveMeta.AScansPerBScan);
-                    tempMatrix = [tempMatrix; CompressiveUpsampled(i:endIdx, :)];
-                    tempMatrix = [tempMatrix; zeros(numZeroRows, size(CompressiveUpsampled, 2))];
+                for startIdx = 1:intervalSize:size(CompressiveUpsampled, 1)  
+                    % Intervals
+                    endIdx = startIdx + intervalSize - 1;
+                    selectedRows = CompressiveUpsampled(startIdx:endIdx, :);
+                    tempMatrix = [tempMatrix; selectedRows];  
+                    % Pad Zeros
+                    zeroRows = zeros(padSize, size(CompressiveUpsampled, 2));  
+                    tempMatrix = [tempMatrix; zeroRows]; 
                 end
-                CompressiveUpsampled = tempMatrix;
             end
-            
+                
             % Get Mask, Y 
             A_2dMask = CompressiveUpsampled ~= 0;
             % Linearise A
@@ -154,10 +173,10 @@ for BscanCR = 1.0:-0.1:0.1
             ReconstructionError(round(BscanCR*10), round(CscanCR*10)) = reconstruction_error;
 
             % Scale back the values
-%             TruthData = TruthData * maxTruthData; 
-%             CompressiveNorm = CompressiveNorm * maxCompressiveData;
-%             CompressiveUpsampled = CompressiveUpsampled * maxCompressiveData;
-%             Estimation = Estimation * maxCompressiveData;
+            TruthData = TruthData * maxTruthData; 
+            CompressiveNorm = CompressiveNorm * maxCompressiveData;
+            CompressiveUpsampled = CompressiveUpsampled * maxCompressiveData;
+            Estimation = Estimation * maxCompressiveData;
 
             % Save Compressive_norm data as a figure
             fig1 = figure('Visible', 'off'); 

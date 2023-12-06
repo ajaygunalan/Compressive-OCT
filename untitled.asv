@@ -1,0 +1,24 @@
+clear all; clc; close all;
+
+% Example values for the size of the matrix, numOfInterval, and padSize
+rows = 10; 
+cols = 210;
+intervalSize = 7;
+padSize = 3;
+
+% Create an n by m random matrix
+M = rand(rows, cols);
+% Initialize the new matrix
+newMatrix = [];
+
+% Loop through the matrix starting from an index
+for startIdx = 1:intervalSize:size(M, 2)
+    % Determine the end index for the current interval
+    endIdx = startIdx + intervalSize - 1;
+    % Select columns from ith to jth
+    selectedColumns = M(:, startIdx:endIdx);
+    % Add the selected columns to newMatrix
+    newMatrix = [newMatrix, selectedColumns];
+    zeroColumns = zeros(rows, padSize);
+    newMatrix = [newMatrix, zeroColumns];
+end
