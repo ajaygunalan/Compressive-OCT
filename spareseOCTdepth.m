@@ -44,17 +44,16 @@ upSamplingParam = containers.Map(keys, values);
 baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
 folderLocation = fullfile(baseFolder, trialNum);
 
-% Parameters for file naming
-NumAScansPerBScanReference = 256;
-NumBScansPerVolumeReference = 100;
+% NumAScansPerBScanReference = 256;
+% NumBScansPerVolumeReference = 100;
 
 % Initialize counter
 count = 1;
 % Loop through the range of compression ratios
 for BscanCR = 1.0:-0.1:0.1
     for CscanCR = 1.0:-0.1:0.1
-        numAScansPerBScan = round(NumAScansPerBScanReference * BscanCR);
-        numBScansPerVolume = round(NumBScansPerVolumeReference * CscanCR);
+%         numAScansPerBScan = round(NumAScansPerBScanReference * BscanCR);
+%         numBScansPerVolume = round(NumBScansPerVolumeReference * CscanCR);
 
         % Construct filename
         fileName = sprintf('ScanNum_%d_CR_BScan_%0.2f_CScan_%0.2f', count, BscanCR, CscanCR);
@@ -120,7 +119,7 @@ for BscanCR = 1.0:-0.1:0.1
             CompressiveNorm = CompressiveData ./ maxCompressiveData;
             CompressiveUpsampled = CompressiveNorm;
 
-            % Up Sampling ColumnS
+            % Upsampling Columns
             if BscanCR ~= 1.0
                 val = upSamplingParam(round(BscanCR, 1));
                 intervalSize = val(1);
@@ -138,7 +137,7 @@ for BscanCR = 1.0:-0.1:0.1
                 CompressiveUpsampled = tempMatrix;
             end
 
-            % Up Sampling Rows
+            % Upsampling Rows
             if CscanCR ~= 1.0
                 val = upSamplingParam(round(CscanCR, 1));
                 intervalSize = val(1);
