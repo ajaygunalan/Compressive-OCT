@@ -20,7 +20,7 @@ ReconstructionTime = -1 * ones(10, 10);
 ScanTime = -1 * ones(10, 10);
 NetReductionFactor = -1 * ones(10, 10);
 
-TruthData = -1 *ones(100, 256);
+TruthData = -1 *ones(300, 300);
 TruthMetaData = [];
 maxTruthData= 0;
 TruthMeta = struct();
@@ -49,13 +49,27 @@ folderLocation = fullfile(baseFolder, trialNum);
 
 % Initialize counter
 count = 1;
-% Loop through the range of compression ratios
-for BscanCR = 1.0:-0.1:0.1
-    for CscanCR = 1.0:-0.1:0.1
-%         numAScansPerBScan = round(NumAScansPerBScanReference * BscanCR);
-%         numBScansPerVolume = round(NumBScansPerVolumeReference * CscanCR);
+% Define the list of tuples (pairs) for BscanCR and CscanCR
+compressionPairs = {
+    [1.0, 1.0], [0.5, 0.5], ...
+                [1.0, 0.9], [1.0, 0.8], [1.0, 0.7], [1.0, 0.6], [1.0, 0.5], ...
+    [0.9, 1.0], [0.9, 0.9], [0.9, 0.8], [0.9, 0.7], [0.9, 0.6], [0.9, 0.5], ...
+    [0.8, 1.0], [0.8, 0.9], [0.8, 0.8], [0.8, 0.7], [0.8, 0.6], [0.8, 0.5], ...
+    [0.7, 1.0], [0.7, 0.9], [0.7, 0.8], [0.7, 0.7], [0.7, 0.6], [0.7, 0.5], ...
+    [0.6, 1.0], [0.6, 0.9], [0.6, 0.8], [0.6, 0.7], [0.6, 0.6], [0.6, 0.5], ...
+    [0.5, 1.0], [0.5, 0.9], [0.5, 0.8], [0.5, 0.7], [0.5, 0.6]
+};
 
-        % Construct filename
+% Initialize count
+count = 0;
+
+% Iterate over each pair
+for idx = 1:length(compressionPairs)
+    pair = compressionPairs{idx};
+    BscanCR = pair(1);
+    CscanCR = pair(2);
+
+            % Construct filename
         fileName = sprintf('ScanNum_%d_CR_BScan_%0.2f_CScan_%0.2f', count, BscanCR, CscanCR);
         surfaceFileName = fullfile(folderLocation, [fileName, '_surface.csv']);
         metaFileName = fullfile(folderLocation, [fileName, '_meta.csv']);
@@ -235,6 +249,15 @@ for BscanCR = 1.0:-0.1:0.1
             imageFilename3 = [prefix, 'Estimation.svg'];
             fullImagePath3 = fullfile(folderLocation, imageFilename3); 
             saveas(fig3, fullImagePath3, 'svg');
+
+
+    count = count + 1;
+end
+
+% Loop through the range of compression ratios
+for BscanCR = 1.0:-0.1:0.1
+    for CscanCR = 1.0:-0.1:0.1
+
         end
         count = count + 1;
     end
