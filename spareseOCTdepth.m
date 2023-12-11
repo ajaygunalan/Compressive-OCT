@@ -5,26 +5,26 @@ trialNum = input('Enter the trial number: ', 's');
 commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum];
 [status, cmdout] = system(commandStr);
 % Check the status and display the output or error message
+% Check the status and display the output or error message
 if status == 0
-    disp('Command executed successfully');
-    disp(cmdout);
+    disp(['Command executed successfully: ', cmdout]);
 else
-    disp('Error in executing command');
-    disp(cmdout);
+    disp(['Error in executing command: ', cmdout]);
 end
 %% 
 %trialNum = '0';
 % Intialize Variable
-ReconstructionError = -143 * ones(10, 10);
-ReconstructionTime = -143 * ones(10, 10);
-ScanTime = -143 * ones(10, 10);
-NetReductionFactor = -143 * ones(10, 10);
+defaultVal = -143;
+matrixSize = [10, 10];
+ReconstructionError = defaultVal * ones(matrixSize);
+ReconstructionTime = defaultVal * ones(matrixSize);
+ScanTime = defaultVal * ones(matrixSize);
+NetReductionFactor = defaultVal * ones(matrixSize);
 
-TruthData = -143 *ones(300, 300);
-TruthMetaData = [];
-maxTruthData= 0;
+TruthDataSize = [300, 300];
+TruthData = defaultVal * ones(TruthDataSize);
+maxTruthData = 0;
 TruthMeta = struct();
-
 
 keys = {0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1};
 values = {
