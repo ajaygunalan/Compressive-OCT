@@ -102,54 +102,59 @@ void getSurfaceFrom3DScan(const std::string& folderLocation, int NumAScansPerBSc
 
 
     int count = 1;
-    const double epsilon = 1e-9;
-    for (double BscanCompressionRatio = 1.0; BscanCompressionRatio >= 0.1 - epsilon; BscanCompressionRatio -= 0.1) {
-        for (double CscanCompressionRatio = 1.0; CscanCompressionRatio >= 0.1 - epsilon; CscanCompressionRatio -= 0.1) {
+    std::vector<std::tuple<double, double>> compressionPairs = {
+    {1.0, 1.0}, {0.5, 0.5}, 
+                {1.0, 0.9}, {1.0, 0.8}, {1.0, 0.7}, {1.0, 0.6}, {1.0, 0.5},
+    {0.9, 1.0}, {0.9, 0.9}, {0.9, 0.8}, {0.9, 0.7}, {0.9, 0.6}, {0.9, 0.5},
+    {0.8, 1.0}, {0.8, 0.9}, {0.8, 0.8}, {0.8, 0.7}, {0.8, 0.6}, {0.8, 0.5},
+    {0.7, 1.0}, {0.7, 0.9}, {0.7, 0.8}, {0.7, 0.7}, {0.7, 0.6}, {0.7, 0.5},
+    {0.6, 1.0}, {0.6, 0.9}, {0.6, 0.8}, {0.6, 0.7}, {0.6, 0.6}, {0.6, 0.5},
+    {0.5, 1.0}, {0.5, 0.9}, {0.5, 0.8}, {0.5, 0.7}, {0.5, 0.6}};
 
-            int numAScansPerBScan = static_cast<int>(NumAScansPerBScanReference * BscanCompressionRatio);
-            int numBScansPerVolume = static_cast<int>(NumBScansPerVolumeReference * CscanCompressionRatio);
+    for (const auto& [BscanCompressionRatio, CscanCompressionRatio] : compressionPairs) {
+        int numAScansPerBScan = static_cast<int>(NumAScansPerBScanReference * BscanCompressionRatio);
+        int numBScansPerVolume = static_cast<int>(NumBScansPerVolumeReference * CscanCompressionRatio);
 
-            RawDataHandle RawVolume = createRawData();
-            DataHandle Volume = createData();
-            DataHandle Surface = createData();
-            ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, numAScansPerBScan, WidthOfVolume, numBScansPerVolume, ScanPattern_ApoOneForAll, ScanPattern_AcqOrderAll);
+        RawDataHandle RawVolume = createRawData();
+        DataHandle Volume = createData();
+        DataHandle Surface = createData();
+        ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, numAScansPerBScan, WidthOfVolume, numBScansPerVolume, ScanPattern_ApoOneForAll, ScanPattern_AcqOrderAll);
 
-            auto start = std::chrono::high_resolution_clock::now();
-            startMeasurement(Dev, Pattern, Acquisition_AsyncContinuous);
-            getRawData(Dev, RawVolume);
-            setProcessedDataOutput(Proc, Volume);
-            executeProcessing(Proc, RawVolume);
-            stopMeasurement(Dev);
-            auto stop = std::chrono::high_resolution_clock::now();
+        auto start = std::chrono::high_resolution_clock::now();
+        startMeasurement(Dev, Pattern, Acquisition_AsyncContinuous);
+        getRawData(Dev, RawVolume);
+        setProcessedDataOutput(Proc, Volume);
+        executeProcessing(Proc, RawVolume);
+        stopMeasurement(Dev);
+        auto stop = std::chrono::high_resolution_clock::now();
 
 
-            int numOfLostBScan = getRawDataPropertyInt(RawVolume, RawData_LostFrames);
-            std::chrono::duration<double> actualTimeDuration = stop - start;
-            double actualTime = actualTimeDuration.count();
-            double expectedTime = expectedAcquisitionTime_s(Pattern, Dev);
+        int numOfLostBScan = getRawDataPropertyInt(RawVolume, RawData_LostFrames);
+        std::chrono::duration<double> actualTimeDuration = stop - start;
+        double actualTime = actualTimeDuration.count();
+        double expectedTime = expectedAcquisitionTime_s(Pattern, Dev);
 
-            determineSurface(Volume, Surface);
+        determineSurface(Volume, Surface);
 
-            ScanResult result;
-            result.surface = Surface;
-            result.actualTime = actualTimeDuration.count();
-            result.expectedTime = expectedTime;
-            result.numOfLostBScan = numOfLostBScan;
-            result.BscanCompressionRatio = BscanCompressionRatio;
-            result.CscanCompressionRatio = CscanCompressionRatio;
-            result.numAScansPerBScan = numAScansPerBScan;
-            result.numBScansPerVolume = numBScansPerVolume;
-            result.count = count;
+        ScanResult result;
+        result.surface = Surface;
+        result.actualTime = actualTimeDuration.count();
+        result.expectedTime = expectedTime;
+        result.numOfLostBScan = numOfLostBScan;
+        result.BscanCompressionRatio = BscanCompressionRatio;
+        result.CscanCompressionRatio = CscanCompressionRatio;
+        result.numAScansPerBScan = numAScansPerBScan;
+        result.numBScansPerVolume = numBScansPerVolume;
+        result.count = count;
 
-            processScanData(result, folderLocation);  // Process the data from this iteration
+        processScanData(result, folderLocation);  // Process the data from this iteration
 
-            // Clean up
-            clearScanPattern(Pattern);
-            clearRawData(RawVolume);
-            clearData(Volume);
-            clearData(Surface);
-            count++;
-        }
+        // Clean up
+        clearScanPattern(Pattern);
+        clearRawData(RawVolume);
+        clearData(Volume);
+        clearData(Surface);
+        count++;
     }
     clearProcessing(Proc);
     closeProbe(Probe);
