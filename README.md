@@ -21,9 +21,7 @@ A Compressive Depth Map is reconstructed in MATLAB using TVAL3 and compared with
 3. [Static Linking of ThorLabs API](https://www.youtube.com/watch?v=or1dAmUO8k0) (Static linking is preferred for speed).
    - ThorLabs API can be found [here](https://gitlab.advr.iit.it/BRL/laser/thorlabs-api).
 4. Ensure to build for x64 architecture.
-    
-
-<!-- 
+     
 
 Will be updated in the future!
 
@@ -55,4 +53,3 @@ Will be updated in the future!
 2. [LSM04](https://www.thorlabs.com/thorproduct.cfm?partnumber=LSM04)
 
 <img src="OCTLens.JPG"  width="800" height="400">
--->

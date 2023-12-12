@@ -1,8 +1,10 @@
+clear all; clc; close all;
+%%
 % Set base folder
 baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
 
 % Number of trials
-numTrials = 25;
+numTrials = 2;
 
 % Initialize arrays to store results
 allNetReductionFactors = zeros(10, 10, numTrials);
@@ -42,20 +44,3 @@ stdDevScanTimes = std(allScanTimes, 0, 3);
 
 meanReconstructionErrors = mean(allReconstructionErrors, 3);
 stdDevReconstructionErrors = std(allReconstructionErrors, 0, 3);
-
-% Display the calculated mean and standard deviation for each metric
-disp('Mean and Standard Deviation of Net Reduction Factors:');
-disp(meanNetReductionFactors);
-disp(stdDevNetReductionFactors);
-
-disp('Mean and Standard Deviation of Reconstruction Times:');
-disp(meanReconstructionTimes);
-disp(stdDevReconstructionTimes);
-
-disp('Mean and Standard Deviation of Scan Times:');
-disp(meanScanTimes);
-disp(stdDevScanTimes);
-
-disp('Mean and Standard Deviation of Reconstruction Errors:');
-disp(meanReconstructionErrors);
-disp(stdDevReconstructionErrors);
