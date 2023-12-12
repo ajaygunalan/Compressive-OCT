@@ -38,13 +38,14 @@ Will be updated in the future!
 
 
 ### Auto-CALM Notes
-1. Go to `/home/sli/calm/catkinWs`  and `source /devel/setup.bash`
-2. run `rosrun python_pkg final.py`
-3. Draw the circle starting from bottom.
-4. Go in clockwise driection
-5. Make sure feature is clear and backgound is neat.
-6. open light
-7. density of red spot
+1. `roscore`
+2. Go to `/home/sli/calm/catkinWs`  and `source /devel/setup.bash`
+3. run `rosrun python_pkg final.py`
+4. Draw the circle starting from bottom.
+5. Go in clockwise driection
+6. Make sure feature is clear and backgound is neat.
+7. open light
+8. density of red spot
 6. first turn on calm then connect with usb and check it is moving with pen. if not, it will **vibrate**.
 
 
