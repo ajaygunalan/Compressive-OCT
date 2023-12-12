@@ -39,13 +39,18 @@ Will be updated in the future!
 
 ### Auto-CALM Notes
 1. `roscore`
-2. Go to `/home/sli/calm/catkinWs`  and `source /devel/setup.bash`
-3. run `rosrun python_pkg final.py`
-4. Draw the circle starting from bottom.
-5. Go in clockwise driection
-6. Make sure feature is clear and backgound is neat.
-7. open light
-8. density of red spot
+2. Make sure black-wire USB cable from CALM control box is connected to laptop.
+3. Check the USB devices by running [this script](https://gist.github.com/ajaygunalan/0c7afbe4a931fb4fb3f9de0dd223f763#file-findusbdev-sh) and you should see
+ `/dev/ttyACM0 - Teensyduino_USB_Serial_6311670`
+4. Integrate CALM with ROS netwrok by
+ `rosrun rosserial_python serial_node.py /dev/ttyACM0 _baud =115200`
+6. Go to `/home/sli/calm/catkinWs`  and `source /devel/setup.bash`
+7. run `rosrun python_pkg final.py`
+8. Draw the circle starting from bottom.
+9. Go in clockwise driection
+10. Make sure feature is clear and backgound is neat.
+11. open light
+12. density of red spot
 6. first turn on calm then connect with usb and check it is moving with pen. if not, it will **vibrate**.
 
 
