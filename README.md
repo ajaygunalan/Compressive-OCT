@@ -37,53 +37,56 @@ Will be updated in the future!
 2. `OCTImageCapture.exe` doesn't generate `scanPatternX.jpg` properly. The X varies each time.
 
 
-### Auto-CALM Notes
+### Auto-CALM
 
-### Part 1
-1. `roscore`
-2. Make sure black-wire USB cable from CALM control box is connected to laptop.
-3. Check the USB devices by running [this script](https://gist.github.com/ajaygunalan/0c7afbe4a931fb4fb3f9de0dd223f763#file-findusbdev-sh) and you should see
- `/dev/ttyACM0 - Teensyduino_USB_Serial_6311670`
-4. Go to `home/sli/calm/catkinWs` and `source devel/setup.bash`
-4. Then, Integrate CALM with ROS netwrok by
- `rosrun rosserial_python serial_node.py /dev/ttyACM0 _baud =115200`.
-You should see this:
-```
-(base) sli@iitadvrlw009u:~/calm/catkinWs$ rosrun rosserial_python serial_node.py /dev/ttyACM0 _baud:=115200
-[INFO] [1702387249.376261]: ROS Serial Python Node
-[INFO] [1702387249.380185]: Connecting to /dev/ttyACM0 at 115200 baud
-[INFO] [1702387251.486989]: Requesting topics...
-[INFO] [1702387251.739470]: Note: subscribe buffer size is 512 bytes
-[INFO] [1702387251.740479]: Setup subscriber on /ralp_msgs/teensy_input [ralp_msgs/teensy_input]
-```
-### Part 2  verify CALM motion and brakes.
-1. Go to `/home/sli/OCTAssistedSurgicalLaserWS` and `source devel/setup.bash`
-2. To move calm `rostopic pub /ralp_msgs/teensy_input ralp_msgs/teensy_input "{buttons: 1, deltax: 0.1, deltay: 0.1}"`
-3. To stop `rosrun draw_pkg calmStop.py`
-4. 
-### Part 3 verifty CALM Camera
-1. Make sure video USB is connected by `/dev/video2 - TerraTec_Electronic_GmbH_TerraTec_Grabby`
-2. Go to `/home/sli/OCTAssistedSurgicalLaserWS/src/draw_pkg/scripts/PrelimFunctions` and  run `python3 liveCALMcamera.py`
-3. Make sure `conda deactivate` and Feel free to adjust WB and other setting of Leica Camera for good quality images.
+**For a successful operation, first turn on CALM and then connect it via USB. Verify that it moves smoothly with the pen; if not, it may exhibit vibration.**
 
-### Part 4 Burning
-1. Make sure CALM on/off USB is connected by `/dev/ttyACM1 - Arduino__www.arduino.cc__0043_55731323636351500152`
-2. Run `python3 laseronoff.py` from `/home/sli/OCTAssistedSurgicalLaserWS/src/draw_pkg/scripts/PrelimFunctions`
-3. Press the footpedal to actiavte the CO2 laser.
-4. Ask Leo on how to use Deka Laser. Smart Pulse gives good cut and Continuous laser gives bad cut.
+### Part 1: Setting Up CALM with ROS
+1. Start the ROS core with the command `roscore`.
+2. Ensure that the black-wire USB cable from the CALM control box is connected to your laptop.
+3. Check the available USB devices by running [this script](https://gist.github.com/ajaygunalan/0c7afbe4a931fb4fb3f9de0dd223f763#file-findusbdev-sh), and you should see `/dev/ttyACM0 - Teensyduino_USB_Serial_6311670`.
+4. Navigate to `home/sli/calm/catkinWs` and execute `source devel/setup.bash`.
+5. Integrate CALM with the ROS network using the command:
+   ```
+   rosrun rosserial_python serial_node.py /dev/ttyACM0 _baud:=115200
+   ```
+   You should see the following output:
+   ```
+   (base) sli@iitadvrlw009u:~/calm/catkinWs$ rosrun rosserial_python serial_node.py /dev/ttyACM0 _baud:=115200
+   [INFO] [1702387249.376261]: ROS Serial Python Node
+   [INFO] [1702387249.380185]: Connecting to /dev/ttyACM0 at 115200 baud
+   [INFO] [1702387251.486989]: Requesting topics...
+   [INFO] [1702387251.739470]: Note: subscribe buffer size is 512 bytes
+   [INFO] [1702387251.740479]: Setup subscriber on /ralp_msgs/teensy_input [ralp_msgs/teensy_input]
+   ```
 
+### Part 2: Verifying CALM Motion
+1. Navigate to `/home/sli/OCTAssistedSurgicalLaserWS` and execute `source devel/setup.bash`.
+2. To move CALM, use the command:
+   ```
+   rostopic pub /ralp_msgs/teensy_input ralp_msgs/teensy_input "{buttons: 1, deltax: 0.1, deltay: 0.1}"
+   ```
+3. To stop CALM, run `rosrun draw_pkg calmStop.py`.
 
-## Auto CALM
+### Part 3: Verifying CALM Camera
+1. Ensure that the video USB is connected and recognized as `/dev/video2 - TerraTec_Electronic_GmbH_TerraTec_Grabby`.
+2. Navigate to `/home/sli/OCTAssistedSurgicalLaserWS/src/draw_pkg/scripts/PrelimFunctions` and execute `python3 liveCALMcamera.py`.
+3. Ensure that you deactivate any active `conda` environment, and feel free to adjust the white balance (WB) and other camera settings for optimal image quality.
 
+### Part 4: CALM Laser Activation
+1. Confirm that the CALM on/off USB is connected and recognized as `/dev/ttyACM1 - Arduino__www.arduino.cc__0043_55731323636351500152`.
+2. Run `python3 laseronoff.py` from `/home/sli/OCTAssistedSurgicalLaserWS/src/draw_pkg/scripts/PrelimFunctions`.
+3. Activate the CO2 laser by pressing the foot pedal.
+4. If you need guidance on using the Deka Laser, consult Leo. Smart Pulse mode is suitable for clean cuts, while Continuous Laser mode may result in less precise cuts.
 
-6. Go to `/home/sli/calm/catkinWs`  and `source /devel/setup.bash`
-7. run `rosrun python_pkg final.py`
-8. Draw the circle starting from bottom.
-9. Go in clockwise driection
-10. Make sure feature is clear and backgound is neat.
-11. open light
-12. density of red spot
-6. first turn on calm then connect with usb and check it is moving with pen. if not, it will **vibrate**.
+### Part 5: Auto CALM Operation
+1. Navigate to `/home/sli/calm/catkinWs` and execute `source devel/setup.bash`.
+2. Run the script `rosrun python_pkg final.py`.
+3. Draw a circle starting from the bottom.
+4. Move in a clockwise direction.
+5. Ensure that the feature is clear, and the background is clean.
+6. Turn on the light source.
+7. Monitor the density of the red spot.
 
 
 ### OCT Lenses
