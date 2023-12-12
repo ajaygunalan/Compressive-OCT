@@ -62,11 +62,18 @@ You should see this:
 3. To stop `rosrun draw_pkg calmStop.py`
 4. 
 ### Part 3 verifty CALM Camera
+1. Make sure video USB is connected by `/dev/video2 - TerraTec_Electronic_GmbH_TerraTec_Grabby`
+2. Go to `/home/sli/OCTAssistedSurgicalLaserWS/src/draw_pkg/scripts/PrelimFunctions` and  run `python3 liveCALMcamera.py`
+3. Make sure `conda deactivate` and Feel free to adjust WB and other setting of Leica Camera for good quality images.
 
 ### Part 4 Burning
+1. Make sure CALM on/off USB is connected by `/dev/ttyACM1 - Arduino__www.arduino.cc__0043_55731323636351500152`
+2. Run `python3 laseronoff.py` from `/home/sli/OCTAssistedSurgicalLaserWS/src/draw_pkg/scripts/PrelimFunctions`
+3. Press the footpedal to actiavte the CO2 laser.
+4. Ask Leo on how to use Deka Laser. Smart Pulse gives good cut and Continuous laser gives bad cut.
 
 
-
+## Auto CALM
 
 
 6. Go to `/home/sli/calm/catkinWs`  and `source /devel/setup.bash`
