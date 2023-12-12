@@ -38,12 +38,37 @@ Will be updated in the future!
 
 
 ### Auto-CALM Notes
+
+### Part 1
 1. `roscore`
 2. Make sure black-wire USB cable from CALM control box is connected to laptop.
 3. Check the USB devices by running [this script](https://gist.github.com/ajaygunalan/0c7afbe4a931fb4fb3f9de0dd223f763#file-findusbdev-sh) and you should see
  `/dev/ttyACM0 - Teensyduino_USB_Serial_6311670`
-4. Integrate CALM with ROS netwrok by
- `rosrun rosserial_python serial_node.py /dev/ttyACM0 _baud =115200`
+4. Go to `home/sli/calm/catkinWs` and `source devel/setup.bash`
+4. Then, Integrate CALM with ROS netwrok by
+ `rosrun rosserial_python serial_node.py /dev/ttyACM0 _baud =115200`.
+You should see this:
+```
+(base) sli@iitadvrlw009u:~/calm/catkinWs$ rosrun rosserial_python serial_node.py /dev/ttyACM0 _baud:=115200
+[INFO] [1702387249.376261]: ROS Serial Python Node
+[INFO] [1702387249.380185]: Connecting to /dev/ttyACM0 at 115200 baud
+[INFO] [1702387251.486989]: Requesting topics...
+[INFO] [1702387251.739470]: Note: subscribe buffer size is 512 bytes
+[INFO] [1702387251.740479]: Setup subscriber on /ralp_msgs/teensy_input [ralp_msgs/teensy_input]
+```
+### Part 2  verify CALM motion and brakes.
+1. Go to `/home/sli/OCTAssistedSurgicalLaserWS` and `source devel/setup.bash`
+2. To move calm `rostopic pub /ralp_msgs/teensy_input ralp_msgs/teensy_input "{buttons: 1, deltax: 0.1, deltay: 0.1}"`
+3. To stop `rosrun draw_pkg calmStop.py`
+4. 
+### Part 3 verifty CALM Camera
+
+### Part 4 Burning
+
+
+
+
+
 6. Go to `/home/sli/calm/catkinWs`  and `source /devel/setup.bash`
 7. run `rosrun python_pkg final.py`
 8. Draw the circle starting from bottom.
