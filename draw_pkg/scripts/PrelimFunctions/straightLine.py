@@ -13,12 +13,12 @@ def shutdown_hook():
 
 # Clean cut at 2 watts, 100 freq, smart pulse
 def rectangle():
-    pause = 3
-    step = 0.5
+    pause = 4
+    step = 0.6
     shortStep = step/10
     shortPause = pause/8
 
-    for i in range(0, 20):
+    for i in range(0, 40):
         longLine(step, pause)
         shortLine(shortStep, shortPause)
         longLine(-step, pause)
