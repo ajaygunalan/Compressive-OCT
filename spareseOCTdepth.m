@@ -12,7 +12,7 @@ else
     disp(['Error in executing command: ', cmdout]);
 end
 %% 
-trialNum = '2';
+%trialNum = '1';
 % Intialize Variable
 defaultVal = -143;
 matrixSize = [10, 10];
