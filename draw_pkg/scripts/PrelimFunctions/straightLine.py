@@ -11,13 +11,14 @@ def shutdown_hook():
     subprocess.run(["rosrun", "draw_pkg", "calmStop.py"])
 
 
+# Clean cut at 2 watts, 100 freq, smart pulse
 def rectangle():
-    pause = 4
-    step = 0.4
-    shortStep = step/8
+    pause = 3
+    step = 0.5
+    shortStep = step/10
     shortPause = pause/8
 
-    for i in range(0, 10):
+    for i in range(0, 20):
         longLine(step, pause)
         shortLine(shortStep, shortPause)
         longLine(-step, pause)
