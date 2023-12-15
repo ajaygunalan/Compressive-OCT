@@ -2,9 +2,9 @@ import serial
 import time
 
 # Change the COM port to match your configuration
-port = "/dev/ttyACM0"
+port = "/dev/ttyACM1"
 baud_rate = 115200
-time_on = 3 # Duration for laser ON
+time_on = 100000 # Duration for laser ON
 time_off = 3 # Duration for laser OFF
 
 def send_continuous_command(ser, command, duration):
