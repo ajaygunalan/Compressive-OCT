@@ -1,18 +1,18 @@
 clear all; clc; close all;
-%% Perform Imagaing
-% Prompt the user for the trial number
-trialNum = input('Enter the trial number: ', 's');
-commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum];
-[status, cmdout] = system(commandStr);
-% Check the status and display the output or error message
-% Check the status and display the output or error message
-if status == 0
-    disp(['Command executed successfully: ', cmdout]);
-else
-    disp(['Error in executing command: ', cmdout]);
-end
+% %% Perform Imagaing
+% % Prompt the user for the trial number
+% trialNum = input('Enter the trial number: ', 's');
+% commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum];
+% [status, cmdout] = system(commandStr);
+% % Check the status and display the output or error message
+% % Check the status and display the output or error message
+% if status == 0
+%     disp(['Command executed successfully: ', cmdout]);
+% else
+%     disp(['Error in executing command: ', cmdout]);
+% end
 %% 
-%trialNum = '1';
+trialNum = '5';
 % Intialize Variable
 defaultVal = -143;
 matrixSize = [10, 10];
@@ -43,9 +43,6 @@ upSamplingParam = containers.Map(keys, values);
 %  Set base folder and trial number
 baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
 folderLocation = fullfile(baseFolder, trialNum);
-
-% NumAScansPerBScanReference = 256;
-% NumBScansPerVolumeReference = 100;
 
 % Initialize counter
 count = 1;
@@ -84,8 +81,8 @@ for idx = 1:length(compressionPairs)
         TruthMeta.ActualScanningTimeSec = TruthMetaData(3, 2);
         TruthMeta.ExpectedAcquisitionTimeSec = TruthMetaData(4, 2);
         TruthMeta.NumOfLostBScan = TruthMetaData(5, 2);
-
         ScanTime(BscanCR*10, CscanCR*10) = TruthMeta.ActualScanningTimeSec;
+
 
         % Create the figure and plot the data
         minData = min(TruthData(:)); 
@@ -103,10 +100,67 @@ for idx = 1:length(compressionPairs)
         TL = arrayfun(@(x) sprintf('%.2f', x), T, 'UniformOutput', false); 
         % Assign these formatted labels to the colorbar
         set(cb, 'TickLabels', TL);
+
+        % Save the figure as a MATLAB figure file
+        imageFilename = [prefix, 'TrueDataNoisy.svg'];
+        fullImagePath = fullfile(folderLocation, imageFilename); 
+        saveas(fig1, fullImagePath, 'svg');
+         % Save Compressive_norm data as a text file
+        textFilename = [prefix, 'TrueDataNoisy.csv'];
+        fullTextPath = fullfile(folderLocation, textFilename);
+        writematrix(TruthData, fullTextPath);
+
+        % Define the nfilter
+        neighborhoodSize = 5; 
+        % Apply the filter to remove outlier
+        TruthData = conservativeSmoothingFilter(TruthData, neighborhoodSize);
+        % Define the standard deviation for the Gaussian filter
+        sigma = 0.6; 
+        % Apply the Gaussian filter to the TruthData
+        TruthData = imgaussfilt(TruthData, sigma);
+        
+%         % Display the original TruthData
+%         figure;
+%         subplot(1, 2, 1);
+%         imagesc(TruthData);
+%         title('Original TruthData');
+%         colorbar;
+%         axis equal;
+%         axis tight;
+%         
+%         % Display the filtered data
+%         subplot(1, 2, 2);
+%         imagesc(filteredData);
+%         title('Filtered Data with Median Filter');
+%         colorbar;
+%         axis equal;
+%         axis tight;
+
+        % Create the figure and plot the data
+        minData = min(TruthData(:)); 
+        maxData = max(TruthData(:));
+        fig1 = figure('Visible', 'off'); 
+        imagesc(TruthData); axis equal; axis tight; 
+        % Create the colorbar and set its limits
+        cb = colorbar; 
+        set(cb, 'Limits', [minData, maxData]);
+        % Define new ticks (for example, 5 evenly spaced ticks)
+        T = linspace(minData, maxData, 5); 
+        % Set these new ticks on the colorbar
+        set(cb, 'Ticks', T); 
+        % Format each tick label to two decimal places
+        TL = arrayfun(@(x) sprintf('%.2f', x), T, 'UniformOutput', false); 
+        % Assign these formatted labels to the colorbar
+        set(cb, 'TickLabels', TL);
+
         % Save the figure as a MATLAB figure file
         imageFilename = [prefix, 'TrueData.svg'];
         fullImagePath = fullfile(folderLocation, imageFilename); 
         saveas(fig1, fullImagePath, 'svg');
+         % Save Compressive_norm data as a text file
+        textFilename = [prefix, 'TrueData.csv'];
+        fullTextPath = fullfile(folderLocation, textFilename);
+        writematrix(TruthData, fullTextPath);
 
         % Normalize each matrix to the range [0, 1]
         maxTruthData = max(max(TruthData));
@@ -190,6 +244,22 @@ for idx = 1:length(compressionPairs)
         CompressiveNorm = CompressiveNorm * maxCompressiveData;
         CompressiveUpsampled = CompressiveUpsampled * maxCompressiveData;
         Estimation = Estimation * maxCompressiveData;
+
+        % Save Compressive_norm data as a text file
+        textFilename = [prefix, 'SparseData.csv'];
+        fullTextPath = fullfile(folderLocation, textFilename);
+        writematrix(CompressiveNorm, fullTextPath);
+
+        % Save CompressiveUpsampled data as a text file
+        textFilename2 = [prefix, 'UpsampledSparseData.csv'];
+        fullTextPath2 = fullfile(folderLocation, textFilename2);
+        writematrix(CompressiveUpsampled, fullTextPath2);
+
+        % Save Estimation data as a text file
+        textFilename3 = [prefix, 'Estimation.csv'];
+        fullTextPath3 = fullfile(folderLocation, textFilename3);
+        writematrix(Estimation, fullTextPath3);
+
 
         % Save Compressive_norm data as a figure
         fig1 = figure('Visible', 'off'); 
