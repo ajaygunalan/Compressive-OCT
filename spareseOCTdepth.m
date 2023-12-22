@@ -1,18 +1,17 @@
 clear all; clc; close all;
-% %% Perform Imagaing
-% % Prompt the user for the trial number
-% trialNum = input('Enter the trial number: ', 's');
-% commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum];
-% [status, cmdout] = system(commandStr);
-% % Check the status and display the output or error message
-% % Check the status and display the output or error message
-% if status == 0
-%     disp(['Command executed successfully: ', cmdout]);
-% else
-%     disp(['Error in executing command: ', cmdout]);
-% end
+%% Perform Imagaing
+% Prompt the user for the trial number
+trialNum = input('Enter the trial number: ', 's');
+commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum];
+[status, cmdout] = system(commandStr);
+% Check the status and display the output or error message
+if status == 0
+    disp(['Command executed successfully: ', cmdout]);
+else
+    disp(['Error in executing command: ', cmdout]);
+end
 %% 
-trialNum = '5';
+%trialNum = '5';
 % Intialize Variable
 defaultVal = -143;
 matrixSize = [10, 10];
@@ -119,23 +118,6 @@ for idx = 1:length(compressionPairs)
         % Apply the Gaussian filter to the TruthData
         TruthData = imgaussfilt(TruthData, sigma);
         
-%         % Display the original TruthData
-%         figure;
-%         subplot(1, 2, 1);
-%         imagesc(TruthData);
-%         title('Original TruthData');
-%         colorbar;
-%         axis equal;
-%         axis tight;
-%         
-%         % Display the filtered data
-%         subplot(1, 2, 2);
-%         imagesc(filteredData);
-%         title('Filtered Data with Median Filter');
-%         colorbar;
-%         axis equal;
-%         axis tight;
-
         % Create the figure and plot the data
         minData = min(TruthData(:)); 
         maxData = max(TruthData(:));
