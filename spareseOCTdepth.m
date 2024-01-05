@@ -82,7 +82,6 @@ for idx = 1:length(compressionPairs)
         TruthMeta.NumOfLostBScan = TruthMetaData(5, 2);
         ScanTime(BscanCR*10, CscanCR*10) = TruthMeta.ActualScanningTimeSec;
 
-
         % Create the figure and plot the data
         minData = min(TruthData(:)); 
         maxData = max(TruthData(:));
@@ -101,9 +100,9 @@ for idx = 1:length(compressionPairs)
         set(cb, 'TickLabels', TL);
 
         % Save the figure as a MATLAB figure file
-        imageFilename = [prefix, 'TrueDataNoisy.svg'];
+        imageFilename = [prefix, 'TrueDataNoisy.png'];
         fullImagePath = fullfile(folderLocation, imageFilename); 
-        saveas(fig1, fullImagePath, 'svg');
+        saveas(fig1, fullImagePath, 'png');
          % Save Compressive_norm data as a text file
         textFilename = [prefix, 'TrueDataNoisy.csv'];
         fullTextPath = fullfile(folderLocation, textFilename);
@@ -117,10 +116,16 @@ for idx = 1:length(compressionPairs)
         sigma = 0.6; 
         % Apply the Gaussian filter to the TruthData
         TruthData = imgaussfilt(TruthData, sigma);
+
+        % Normalize each matrix to the range [0, 1]
+        maxTruthData = max(max(TruthData));
+        TruthData = TruthData ./ maxTruthData;
         
         % Create the figure and plot the data
         minData = min(TruthData(:)); 
         maxData = max(TruthData(:));
+        fixedMinData = minData;
+        fixedMaxData = maxData;
         fig1 = figure('Visible', 'off'); 
         imagesc(TruthData); axis equal; axis tight; 
         % Create the colorbar and set its limits
@@ -136,17 +141,13 @@ for idx = 1:length(compressionPairs)
         set(cb, 'TickLabels', TL);
 
         % Save the figure as a MATLAB figure file
-        imageFilename = [prefix, 'TrueData.svg'];
+        imageFilename = [prefix, 'TrueData.png'];
         fullImagePath = fullfile(folderLocation, imageFilename); 
-        saveas(fig1, fullImagePath, 'svg');
+        saveas(fig1, fullImagePath, 'png');
          % Save Compressive_norm data as a text file
         textFilename = [prefix, 'TrueData.csv'];
         fullTextPath = fullfile(folderLocation, textFilename);
         writematrix(TruthData, fullTextPath);
-
-        % Normalize each matrix to the range [0, 1]
-        maxTruthData = max(max(TruthData));
-        TruthData = TruthData ./ maxTruthData;
     else
         CompressiveData = readmatrix(surfaceFileName);
         CompressiveMetaData = readmatrix(metaFileName);
@@ -222,10 +223,10 @@ for idx = 1:length(compressionPairs)
         ReconstructionError(round(BscanCR*10), round(CscanCR*10)) = reconstruction_error;
 
         % Scale back the values
-        TruthData = TruthData * maxTruthData; 
-        CompressiveNorm = CompressiveNorm * maxCompressiveData;
-        CompressiveUpsampled = CompressiveUpsampled * maxCompressiveData;
-        Estimation = Estimation * maxCompressiveData;
+%         TruthData = TruthData * maxTruthData; 
+%         CompressiveNorm = CompressiveNorm * maxTruthData;
+%         CompressiveUpsampled = CompressiveUpsampled * maxTruthData;
+%         Estimation = Estimation * maxTruthData;
 
         % Save Compressive_norm data as a text file
         textFilename = [prefix, 'SparseData.csv'];
@@ -247,8 +248,8 @@ for idx = 1:length(compressionPairs)
         fig1 = figure('Visible', 'off'); 
         imagesc(CompressiveNorm); axis equal; axis tight; 
         % Create the colorbar and set its limits
-        minData = min(CompressiveNorm(:)); 
-        maxData = max(CompressiveNorm(:));
+        minData = fixedMinData; 
+        maxData = fixedMaxData;
         cb = colorbar; 
         set(cb, 'Limits', [minData, maxData]);
         % Define new ticks (for example, 5 evenly spaced ticks)
@@ -260,16 +261,16 @@ for idx = 1:length(compressionPairs)
         % Assign these formatted labels to the colorbar
         set(cb, 'TickLabels', TL);
         % Save the figure as a MATLAB figure file
-        imageFilename = [prefix, 'SparseData.svg'];
+        imageFilename = [prefix, 'SparseData.png'];
         fullImagePath = fullfile(folderLocation, imageFilename); 
-        saveas(fig1, fullImagePath, 'svg');
+        saveas(fig1, fullImagePath, 'png');
 
         % Save CompressiveUpsampled data as a figure with detailed colorbar settings
         fig2 = figure('Visible', 'off'); 
         imagesc(CompressiveUpsampled); axis equal; axis tight; 
         % Create the colorbar and set its limits
-        minDataUpsampled = min(CompressiveUpsampled(:)); 
-        maxDataUpsampled = max(CompressiveUpsampled(:));
+        minDataUpsampled = fixedMinData;
+        maxDataUpsampled = fixedMaxData;
         cb2 = colorbar; 
         set(cb2, 'Limits', [minDataUpsampled, maxDataUpsampled]);
         % Define new ticks for CompressiveUpsampled
@@ -278,16 +279,16 @@ for idx = 1:length(compressionPairs)
         TL2 = arrayfun(@(x) sprintf('%.2f', x), T2, 'UniformOutput', false); 
         set(cb2, 'TickLabels', TL2);
         % Save the figure as a MATLAB figure file
-        imageFilename2 = [prefix, 'UpsampledSparseData.svg'];
+        imageFilename2 = [prefix, 'UpsampledSparseData.png'];
         fullImagePath2 = fullfile(folderLocation, imageFilename2); 
-        saveas(fig2, fullImagePath2, 'svg');
+        saveas(fig2, fullImagePath2, 'png');
 
         % Save Estimation data as a figure with detailed colorbar settings
         fig3 = figure('Visible', 'off'); 
         imagesc(Estimation); axis equal; axis tight; 
         % Create the colorbar and set its limits
-        minDataEstimation = min(Estimation(:)); 
-        maxDataEstimation = max(Estimation(:));
+        minDataEstimation = fixedMinData;
+        maxDataEstimation = fixedMaxData;
         cb3 = colorbar; 
         set(cb3, 'Limits', [minDataEstimation, maxDataEstimation]);
         % Define new ticks for Estimation
@@ -296,9 +297,9 @@ for idx = 1:length(compressionPairs)
         TL3 = arrayfun(@(x) sprintf('%.2f', x), T3, 'UniformOutput', false); 
         set(cb3, 'TickLabels', TL3);
         % Save the figure as a MATLAB figure file
-        imageFilename3 = [prefix, 'Estimation.svg'];
+        imageFilename3 = [prefix, 'Estimation.png'];
         fullImagePath3 = fullfile(folderLocation, imageFilename3); 
-        saveas(fig3, fullImagePath3, 'svg');
+        saveas(fig3, fullImagePath3, 'png');
     end
     count = count + 1;
 end
