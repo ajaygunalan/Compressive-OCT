@@ -11,7 +11,7 @@ else
     disp(['Error in executing command: ', cmdout]);
 end
 %% 
-%trialNum = '5';
+%trialNum = '2';
 % Intialize Variable
 defaultVal = -143;
 matrixSize = [10, 10];
@@ -86,24 +86,17 @@ for idx = 1:length(compressionPairs)
         minData = min(TruthData(:)); 
         maxData = max(TruthData(:));
         fig1 = figure('Visible', 'off'); 
-        imagesc(TruthData); axis equal; axis tight; 
-        % Create the colorbar and set its limits
+        imagesc(TruthData); axis equal; axis tight;
         cb = colorbar; 
         set(cb, 'Limits', [minData, maxData]);
-        % Define new ticks (for example, 5 evenly spaced ticks)
+        ylabel(cb, 'mm');
         T = linspace(minData, maxData, 5); 
-        % Set these new ticks on the colorbar
         set(cb, 'Ticks', T); 
-        % Format each tick label to two decimal places
         TL = arrayfun(@(x) sprintf('%.2f', x), T, 'UniformOutput', false); 
-        % Assign these formatted labels to the colorbar
         set(cb, 'TickLabels', TL);
-
-        % Save the figure as a MATLAB figure file
         imageFilename = [prefix, 'TrueDataNoisy.png'];
         fullImagePath = fullfile(folderLocation, imageFilename); 
         saveas(fig1, fullImagePath, 'png');
-         % Save Compressive_norm data as a text file
         textFilename = [prefix, 'TrueDataNoisy.csv'];
         fullTextPath = fullfile(folderLocation, textFilename);
         writematrix(TruthData, fullTextPath);
@@ -116,10 +109,6 @@ for idx = 1:length(compressionPairs)
         sigma = 0.6; 
         % Apply the Gaussian filter to the TruthData
         TruthData = imgaussfilt(TruthData, sigma);
-
-        % Normalize each matrix to the range [0, 1]
-        maxTruthData = max(max(TruthData));
-        TruthData = TruthData ./ maxTruthData;
         
         % Create the figure and plot the data
         minData = min(TruthData(:)); 
@@ -127,28 +116,26 @@ for idx = 1:length(compressionPairs)
         fixedMinData = minData;
         fixedMaxData = maxData;
         fig1 = figure('Visible', 'off'); 
-        imagesc(TruthData); axis equal; axis tight; 
-        % Create the colorbar and set its limits
+        imagesc(TruthData); axis equal; axis tight;
         cb = colorbar; 
         set(cb, 'Limits', [minData, maxData]);
-        % Define new ticks (for example, 5 evenly spaced ticks)
+        ylabel(cb, 'mm');
         T = linspace(minData, maxData, 5); 
-        % Set these new ticks on the colorbar
         set(cb, 'Ticks', T); 
-        % Format each tick label to two decimal places
         TL = arrayfun(@(x) sprintf('%.2f', x), T, 'UniformOutput', false); 
-        % Assign these formatted labels to the colorbar
         set(cb, 'TickLabels', TL);
-
-        % Save the figure as a MATLAB figure file
         imageFilename = [prefix, 'TrueData.png'];
         fullImagePath = fullfile(folderLocation, imageFilename); 
         saveas(fig1, fullImagePath, 'png');
-         % Save Compressive_norm data as a text file
         textFilename = [prefix, 'TrueData.csv'];
         fullTextPath = fullfile(folderLocation, textFilename);
         writematrix(TruthData, fullTextPath);
+
+         % Normalize each matrix to the range [0, 1]
+        maxTruthData = max(max(TruthData));
+        TruthData = TruthData ./ maxTruthData;
     else
+
         CompressiveData = readmatrix(surfaceFileName);
         CompressiveMetaData = readmatrix(metaFileName);
         CompressiveMeta = struct();
@@ -223,10 +210,10 @@ for idx = 1:length(compressionPairs)
         ReconstructionError(round(BscanCR*10), round(CscanCR*10)) = reconstruction_error;
 
         % Scale back the values
-%         TruthData = TruthData * maxTruthData; 
-%         CompressiveNorm = CompressiveNorm * maxTruthData;
-%         CompressiveUpsampled = CompressiveUpsampled * maxTruthData;
-%         Estimation = Estimation * maxTruthData;
+        TruthData = TruthData * maxTruthData; 
+        CompressiveNorm = CompressiveNorm * maxTruthData;
+        CompressiveUpsampled = CompressiveUpsampled * maxTruthData;
+        Estimation = Estimation * maxTruthData;
 
         % Save Compressive_norm data as a text file
         textFilename = [prefix, 'SparseData.csv'];
@@ -246,54 +233,46 @@ for idx = 1:length(compressionPairs)
 
         % Save Compressive_norm data as a figure
         fig1 = figure('Visible', 'off'); 
-        imagesc(CompressiveNorm); axis equal; axis tight; 
-        % Create the colorbar and set its limits
+        imagesc(CompressiveNorm); axis equal; axis tight;
         minData = fixedMinData; 
         maxData = fixedMaxData;
         cb = colorbar; 
         set(cb, 'Limits', [minData, maxData]);
-        % Define new ticks (for example, 5 evenly spaced ticks)
         T = linspace(minData, maxData, 5); 
-        % Set these new ticks on the colorbar
         set(cb, 'Ticks', T); 
-        % Format each tick label to two decimal places
         TL = arrayfun(@(x) sprintf('%.2f', x), T, 'UniformOutput', false); 
-        % Assign these formatted labels to the colorbar
         set(cb, 'TickLabels', TL);
-        % Save the figure as a MATLAB figure file
+        ylabel(cb, 'mm');
         imageFilename = [prefix, 'SparseData.png'];
         fullImagePath = fullfile(folderLocation, imageFilename); 
         saveas(fig1, fullImagePath, 'png');
 
         % Save CompressiveUpsampled data as a figure with detailed colorbar settings
         fig2 = figure('Visible', 'off'); 
-        imagesc(CompressiveUpsampled); axis equal; axis tight; 
-        % Create the colorbar and set its limits
+        imagesc(CompressiveUpsampled); axis equal; axis tight;
         minDataUpsampled = fixedMinData;
         maxDataUpsampled = fixedMaxData;
         cb2 = colorbar; 
         set(cb2, 'Limits', [minDataUpsampled, maxDataUpsampled]);
-        % Define new ticks for CompressiveUpsampled
         T2 = linspace(minDataUpsampled, maxDataUpsampled, 5); 
         set(cb2, 'Ticks', T2); 
+        ylabel(cb2, 'mm');
         TL2 = arrayfun(@(x) sprintf('%.2f', x), T2, 'UniformOutput', false); 
         set(cb2, 'TickLabels', TL2);
-        % Save the figure as a MATLAB figure file
         imageFilename2 = [prefix, 'UpsampledSparseData.png'];
         fullImagePath2 = fullfile(folderLocation, imageFilename2); 
         saveas(fig2, fullImagePath2, 'png');
 
         % Save Estimation data as a figure with detailed colorbar settings
         fig3 = figure('Visible', 'off'); 
-        imagesc(Estimation); axis equal; axis tight; 
-        % Create the colorbar and set its limits
+        imagesc(Estimation); axis equal; axis tight;
         minDataEstimation = fixedMinData;
         maxDataEstimation = fixedMaxData;
         cb3 = colorbar; 
         set(cb3, 'Limits', [minDataEstimation, maxDataEstimation]);
-        % Define new ticks for Estimation
         T3 = linspace(minDataEstimation, maxDataEstimation, 5); 
         set(cb3, 'Ticks', T3); 
+        ylabel(cb3, 'mm');
         TL3 = arrayfun(@(x) sprintf('%.2f', x), T3, 'UniformOutput', false); 
         set(cb3, 'TickLabels', TL3);
         % Save the figure as a MATLAB figure file

@@ -4,7 +4,7 @@ clear all; clc; close all;
 baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
 
 % Number of trials
-numTrials = 3;
+numTrials = 5;
 
 % Initialize arrays to store results
 allNetReductionFactors = zeros(10, 10, numTrials);
