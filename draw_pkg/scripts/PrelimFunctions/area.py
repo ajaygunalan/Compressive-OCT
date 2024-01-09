@@ -1,33 +1,53 @@
 #!/usr/bin/env python
 import time
 import rospy
-import numpy as np
-import subprocess
 import serial
+import subprocess
+import threading
 from ralp_msgs.msg import teensy_input
 
-def send_continuous_command(ser, command, duration):
-    start_time = time.time()
-    while time.time() - start_time < duration:
+# Initialize serial communication for laser control
+port = "/dev/ttyACM0"  
+baud_rate = 115200
+laser_serial = serial.Serial(port, baud_rate)
+
+# Global variable to control laser state
+laser_on = False
+
+def send_continuous_command(ser, command):
+    global laser_on
+    while laser_on:
         ser.write(command)
-        time.sleep(0.01) # You can adjust this to control how often the command is sent
+        time.sleep(0.01)
+
+def start_laser():
+    global laser_on
+    laser_on = True
+    threading.Thread(target=send_continuous_command, args=(laser_serial, bytes([1]))).start()
+
+def stop_laser():
+    global laser_on
+    laser_on = False
+    time.sleep(0.02)  # Allow some time for the thread to finish
 
 def shutdown_hook():
     print("Inside Shutdown Hook - Interrupted by Ctrl+C, shutting down.")
+    stop_laser()
+    laser_serial.close()
     subprocess.run(["rosrun", "draw_pkg", "calmStop.py"])
 
 def rectangle():
-    turn_laser_on()  
-    pause = 1
+    start_laser()
+    pause = 1.5
     step = 1.0
     shortStep = step/10
     shortPause = pause/8
-    for i in range(0, 40):
+    for i in range(0, 42):
         longLine(step, pause)
         shortLine(shortStep, shortPause)
         longLine(-step, pause)
         shortLine(shortStep, shortPause)
-    turn_laser_off()  
+    stop_laser()
     stop()
 
 if __name__ == '__main__':
@@ -47,7 +67,6 @@ if __name__ == '__main__':
         pub.publish(msg)
         time.sleep(pause)
         
-
     # 0 degree
     def longLine(step, pause):
         msg.buttons = 0 
@@ -57,7 +76,6 @@ if __name__ == '__main__':
         rospy.loginfo(msg)
         pub.publish(msg)
         time.sleep(pause)
-
 
     def stop():
         msg.buttons = 0
