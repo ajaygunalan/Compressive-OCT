@@ -169,6 +169,7 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
    scripts/PrelimFunctions/calmStop.py 
+   scripts/PrelimFunctions/area.py
    scripts/PrelimFunctions/straightLine.py 
    scripts/PrelimFunctions/rosClient.py 
    scripts/PrelimFunctions/1dScanOnOff.py 

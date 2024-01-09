@@ -3,46 +3,39 @@ import time
 import rospy
 import numpy as np
 import subprocess
+import serial
 from ralp_msgs.msg import teensy_input
 
+def send_continuous_command(ser, command, duration):
+    start_time = time.time()
+    while time.time() - start_time < duration:
+        ser.write(command)
+        time.sleep(0.01) # You can adjust this to control how often the command is sent
 
 def shutdown_hook():
     print("Inside Shutdown Hook - Interrupted by Ctrl+C, shutting down.")
     subprocess.run(["rosrun", "draw_pkg", "calmStop.py"])
 
-
-# Clean cut at 2 watts, 100 freq, smart pulse
 def rectangle():
-    pause = 2
-    step = 3.0
+    turn_laser_on()  
+    pause = 1
+    step = 1.0
     shortStep = step/10
     shortPause = pause/8
-
     for i in range(0, 40):
         longLine(step, pause)
         shortLine(shortStep, shortPause)
         longLine(-step, pause)
         shortLine(shortStep, shortPause)
+    turn_laser_off()  
     stop()
 
 if __name__ == '__main__':
-    max_velocity = 10
-    scan_time_ms = 10
-    scan_time = scan_time_ms / 1000
     pub = rospy.Publisher('ralp_msgs/teensy_input', teensy_input, queue_size=10)
-    rospy.init_node('sinusoidal_publisher', anonymous=True)
+    rospy.init_node('laser_ablation', anonymous=True)
     rospy.on_shutdown(shutdown_hook)
-    # singleScan(scan_time, max_velocity)
-
-    numberOfPass = 2  # 1 Pass is equal to fornt and back to the same point
-    pause = 2
-    step = 0.8
-    shortStep = 0.4
-    shortPause = 0.1
 
     msg = teensy_input()
-    msg.buttons = 0
-    msg.deltay = 0
     
     # 90 degree
     def shortLine(step, pause):
@@ -67,7 +60,7 @@ if __name__ == '__main__':
 
 
     def stop():
-        msg.buttons = 1
+        msg.buttons = 0
         msg.deltax = 0
         msg.deltay = 0
             
