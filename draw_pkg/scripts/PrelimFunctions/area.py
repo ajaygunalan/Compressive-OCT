@@ -38,15 +38,15 @@ def shutdown_hook():
 
 def rectangle():
     start_laser()
-    pause = 1.5
-    step = 1.0
-    shortStep = step/10
-    shortPause = pause/8
-    for i in range(0, 42):
-        longLine(step, pause)
-        shortLine(shortStep, shortPause)
-        longLine(-step, pause)
-        shortLine(shortStep, shortPause)
+    time = 1.2
+    vel = 1.0
+    shortvel = vel/10
+    shorttime = time/8
+    for i in range(0, 40):
+        longLine(vel, time)
+        shortLine(shortvel, shorttime)
+        longLine(-vel, time)
+        shortLine(shortvel, shorttime)
     stop_laser()
     stop()
 
@@ -58,24 +58,24 @@ if __name__ == '__main__':
     msg = teensy_input()
     
     # 90 degree
-    def shortLine(step, pause):
+    def shortLine(vel, time):
         msg.buttons = 0 
-        msg.deltax = -step
-        msg.deltay = step
+        msg.deltax = -vel
+        msg.deltay = vel
             
         rospy.loginfo(msg)
         pub.publish(msg)
-        time.sleep(pause)
+        time.sleep(time)
         
     # 0 degree
-    def longLine(step, pause):
+    def longLine(vel, time):
         msg.buttons = 0 
-        msg.deltax = step
-        msg.deltay = step
+        msg.deltax = vel
+        msg.deltay = vel
             
         rospy.loginfo(msg)
         pub.publish(msg)
-        time.sleep(pause)
+        time.sleep(time)
 
     def stop():
         msg.buttons = 0
