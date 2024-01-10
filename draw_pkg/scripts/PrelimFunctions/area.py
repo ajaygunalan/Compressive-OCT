@@ -40,13 +40,13 @@ def rectangle():
     start_laser()
     duration = 1.0
     vel = 2.0
-    shortVel = 0.05
-    shortDuration = 0.5
-    for i in range(0, 1):
+    shortVel = 0.03
+    shortDuration = 0.8
+    for i in range(0, 5):
         longLine(vel, duration)
-        shortLine(vel, duration)
-        # longLine(-vel, duration)
-        # shortLine(shortVel, shortDuration)
+        shortLine(shortVel, shortDuration)
+        longLine(-vel, duration)
+        shortLine(shortVel, shortDuration)
     stop_laser()
     stop()
 
