@@ -173,8 +173,8 @@ int main(int argc, char* argv[]) {
         fs::create_directories(folderLocation);
     }
 
-    double LengthOfBScan = 10.0; // mm
-    double WidthOfVolume = 10.0; // mm
+    double LengthOfBScan = 5.0; // mm
+    double WidthOfVolume = 5.0; // mm
     int NumAScansPerBScanReference = 300;
     int NumBScansPerVolumeReference = 300;
 

@@ -11,7 +11,7 @@ else
     disp(['Error in executing command: ', cmdout]);
 end
 %% 
-%trialNum = '2';
+%trialNum = '4';
 % Intialize Variable
 defaultVal = -143;
 matrixSize = [10, 10];
@@ -86,7 +86,9 @@ for idx = 1:length(compressionPairs)
         minData = min(TruthData(:)); 
         maxData = max(TruthData(:));
         fig1 = figure('Visible', 'off'); 
-        imagesc(TruthData); axis equal; axis tight;
+        imagesc(TruthData); 
+        axis equal; 
+        axis tight;
         cb = colorbar; 
         set(cb, 'Limits', [minData, maxData]);
         ylabel(cb, 'mm');
@@ -116,7 +118,9 @@ for idx = 1:length(compressionPairs)
         fixedMinData = minData;
         fixedMaxData = maxData;
         fig1 = figure('Visible', 'off'); 
-        imagesc(TruthData); axis equal; axis tight;
+        imagesc(TruthData);
+        axis equal; 
+        axis tight;
         cb = colorbar; 
         set(cb, 'Limits', [minData, maxData]);
         ylabel(cb, 'mm');
@@ -233,7 +237,8 @@ for idx = 1:length(compressionPairs)
 
         % Save Compressive_norm data as a figure
         fig1 = figure('Visible', 'off'); 
-        imagesc(CompressiveNorm); axis equal; axis tight;
+        imagesc(CompressiveNorm); 
+        axis equal;
         minData = fixedMinData; 
         maxData = fixedMaxData;
         cb = colorbar; 
@@ -249,7 +254,9 @@ for idx = 1:length(compressionPairs)
 
         % Save CompressiveUpsampled data as a figure with detailed colorbar settings
         fig2 = figure('Visible', 'off'); 
-        imagesc(CompressiveUpsampled); axis equal; axis tight;
+        imagesc(CompressiveUpsampled);
+        axis equal;
+        axis tight;
         minDataUpsampled = fixedMinData;
         maxDataUpsampled = fixedMaxData;
         cb2 = colorbar; 
@@ -265,7 +272,9 @@ for idx = 1:length(compressionPairs)
 
         % Save Estimation data as a figure with detailed colorbar settings
         fig3 = figure('Visible', 'off'); 
-        imagesc(Estimation); axis equal; axis tight;
+        imagesc(Estimation);
+        axis equal;
+        axis tight;
         minDataEstimation = fixedMinData;
         maxDataEstimation = fixedMaxData;
         cb3 = colorbar; 
