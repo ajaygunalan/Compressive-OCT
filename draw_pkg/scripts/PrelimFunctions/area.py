@@ -37,17 +37,17 @@ def shutdown_hook():
     subprocess.run(["rosrun", "draw_pkg", "calmStop.py"])
 
 def rectangle():
-    start_laser()
     duration = 1.0
     vel = 2.0
     shortVel = 0.03
     shortDuration = 0.8
-    for i in range(0, 5):
+    for i in range(0, 10):
         longLine(vel, duration)
-        shortLine(shortVel, shortDuration)
+        stop()
+        # shortLine(shortVel, shortDuration)
         longLine(-vel, duration)
-        shortLine(shortVel, shortDuration)
-    stop_laser()
+        stop()
+        # shortLine(shortVel, shortDuration)
     stop()
 
 if __name__ == '__main__':
@@ -69,13 +69,14 @@ if __name__ == '__main__':
         
     # 0 degree
     def longLine(vel, duration):
+        start_laser()
         msg.buttons = 0 
         msg.deltax = vel
-        msg.deltay = vel
-            
+        msg.deltay = 0
         rospy.loginfo(msg)
         pub.publish(msg)
         time.sleep(duration)
+        stop_laser()
 
     def stop():
         msg.buttons = 0
