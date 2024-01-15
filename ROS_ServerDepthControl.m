@@ -1,4 +1,4 @@
- rosshutdown; clear all; clc; close all;
+rosshutdown;  clear all; clc; close all;
 %%
 % Initialize ROS with a specific master IP
 rosinit('10.240.23.49');

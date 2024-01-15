@@ -101,7 +101,7 @@ void getSurfaceFrom3DScan(const std::string& folderLocation, const std::string& 
     setProcessingParameterInt(Proc, Processing_AScanAveraging, AScanAveraging);
 
 
-    int count = ScanNum;
+    string count = ScanNum;
     std::vector<std::tuple<double, double>> compressionPairs = {{0.5, 0.5}};
 
     for (const auto& [BscanCompressionRatio, CscanCompressionRatio] : compressionPairs) {
@@ -147,7 +147,6 @@ void getSurfaceFrom3DScan(const std::string& folderLocation, const std::string& 
         clearRawData(RawVolume);
         clearData(Volume);
         clearData(Surface);
-        count++;
     }
     clearProcessing(Proc);
     closeProbe(Probe);
@@ -156,14 +155,12 @@ void getSurfaceFrom3DScan(const std::string& folderLocation, const std::string& 
 
 
 int main(int argc, char* argv[]) {
-    if (argc < 4) {
+    if (argc < 3) {
         std::cerr << "Usage: " << argv[0] << " trialNum ScanNum\n";
-        return -1;
+        return -143;
     }
     std::string trialNum = argv[1];
-    std::string ScanNum = argv[2];  
-
-    std::string trialNum = argv[1];
+    std::string ScanNum = argv[2];
     std::string baseFolder = "C:\\Ajay_OCT\\OCT-Guided-AutoCALM\\data\\getDepthFromSparse3Doct\\";
     std::string folderLocation = baseFolder + trialNum + "\\";
     if (!fs::exists(folderLocation)) {

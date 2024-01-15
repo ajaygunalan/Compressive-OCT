@@ -2,7 +2,8 @@ clear all; clc; close all;
 %% Perform Imagaing
 % Prompt the user for the trial number
 trialNum = input('Enter the trial number: ', 's');
-commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum];
+scanNum = input('Enter the scan number: ', 's');
+commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum, ' ', scanNum];
 [status, cmdout] = system(commandStr);
 % Check the status and display the output or error message
 if status == 0
