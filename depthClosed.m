@@ -140,7 +140,8 @@ writematrix(Estimation, fullTextPath3);
 % Save Compressive_norm data as a figure
 fig1 = figure('Visible', 'off'); 
 imagesc(CompressiveNorm); 
-axis equal;
+pbaspect([1 1 1])
+axis tight;
 minData = fixedMinData; 
 maxData = fixedMaxData;
 cb = colorbar; 
@@ -157,7 +158,7 @@ saveas(fig1, fullImagePath, 'png');
 % Save CompressiveUpsampled data as a figure with detailed colorbar settings
 fig2 = figure('Visible', 'off'); 
 imagesc(CompressiveUpsampled);
-axis equal;
+pbaspect([1 1 1])
 axis tight;
 minDataUpsampled = fixedMinData;
 maxDataUpsampled = fixedMaxData;
@@ -175,7 +176,7 @@ saveas(fig2, fullImagePath2, 'png');
 % Save Estimation data as a figure with detailed colorbar settings
 fig3 = figure('Visible', 'off'); 
 imagesc(Estimation);
-axis equal;
+pbaspect([1 1 1])
 axis tight;
 minDataEstimation = fixedMinData;
 maxDataEstimation = fixedMaxData;
