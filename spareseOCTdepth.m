@@ -42,25 +42,11 @@ upSamplingParam = containers.Map(keys, values);
 %  Set base folder and trial number
 baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
 folderLocation = fullfile(baseFolder, trialNum);
+compressionPairs = {[0.5, 0.5]};
 
-% Initialize counter
-count = 1;
-% Define the list of tuples (pairs) for BscanCR and CscanCR
-compressionPairs = {
-    [1.0, 1.0], [0.5, 0.5], ...
-                [1.0, 0.9], [1.0, 0.8], [1.0, 0.5], ...
-    [0.9, 1.0], [0.9, 0.9], [0.9, 0.8], [0.9, 0.5], ...
-    [0.8, 1.0], [0.8, 0.9], [0.8, 0.8], [0.8, 0.5], ...
-    [0.5, 1.0], [0.5, 0.9], [0.5, 0.8]
-};
-
-% Initialize count
-count = 1;
-% Iterate over each pair
-for idx = 1:length(compressionPairs)
-    pair = compressionPairs{idx};
-    BscanCR = pair(1);
-    CscanCR = pair(2);
+pair = compressionPairs{1};
+BscanCR = pair(1);
+CscanCR = pair(2);
 
     % Construct filename
     fileName = sprintf('ScanNum_%d_CR_BScan_%0.2f_CScan_%0.2f', count, BscanCR, CscanCR);

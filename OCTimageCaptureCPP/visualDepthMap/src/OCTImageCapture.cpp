@@ -102,13 +102,7 @@ void getSurfaceFrom3DScan(const std::string& folderLocation, int NumAScansPerBSc
 
 
     int count = 1;
-    std::vector<std::tuple<double, double>> compressionPairs = {
-    {1.0, 1.0}, {0.5, 0.5},
-                {1.0, 0.9}, {1.0, 0.8}, {1.0, 0.5},
-    {0.9, 1.0}, {0.9, 0.9}, {0.9, 0.8}, {0.9, 0.5},
-    {0.8, 1.0}, {0.8, 0.9}, {0.8, 0.8}, {0.8, 0.5},
-    {0.5, 1.0}, {0.5, 0.9}, {0.5, 0.8}, 
-    };
+    std::vector<std::tuple<double, double>> compressionPairs = {{0.5, 0.5}};
 
     for (const auto& [BscanCompressionRatio, CscanCompressionRatio] : compressionPairs) {
         int numAScansPerBScan = static_cast<int>(NumAScansPerBScanReference * BscanCompressionRatio);
@@ -175,7 +169,7 @@ int main(int argc, char* argv[]) {
 
     double LengthOfBScan = 5.0; // mm
     double WidthOfVolume = 5.0; // mm
-    int NumAScansPerBScanReference = 300;
+    int NumAScansPerBScanReference = 600;
     int NumBScansPerVolumeReference = 300;
 
     getSurfaceFrom3DScan(folderLocation, NumAScansPerBScanReference, LengthOfBScan, NumBScansPerVolumeReference, WidthOfVolume);

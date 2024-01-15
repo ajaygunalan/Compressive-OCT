@@ -1,10 +1,12 @@
 clear all; clc; close all;
 %%
 % Set base folder
-baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
+baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\tissue\';
+%baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\coin\';
+%baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\tape\';
 
 % Number of trials
-numTrials = 5;
+numTrials = 12;
 
 % Initialize arrays to store results
 allNetReductionFactors = zeros(10, 10, numTrials);
