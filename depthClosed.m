@@ -1,6 +1,6 @@
 clear all; clc; close all;
 %% Perform Imagaing
-% Prompt the user for the trial number
+% Prompt the user for the trial numberstartIdx
 trialNum = input('Enter the trial number: ', 's');
 scanNum = input('Enter the scan number: ', 's');
 commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum, ' ', scanNum];
@@ -13,6 +13,8 @@ else
 end
 %% 
 trialNum = '1';
+scanNum = '2';
+
 keys = {0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1};
 values = {
     [9, 1],  
@@ -36,11 +38,10 @@ BscanCR = pair(1);
 CscanCR = pair(2);
 
 % Construct filename
-count = 1;
-fileName = sprintf('ScanNum_%d_CR_BScan_%0.2f_CScan_%0.2f', count, BscanCR, CscanCR);
+fileName = sprintf('ScanNum_%s_CR_BScan_%0.2f_CScan_%0.2f', scanNum, BscanCR, CscanCR);
 surfaceFileName = fullfile(folderLocation, [fileName, '_surface.csv']);
 metaFileName = fullfile(folderLocation, [fileName, '_meta.csv']);
-prefix = sprintf('ScanNum_%d_', count);
+prefix = sprintf('ScanNum_%s_', scanNum);
 
 
 CompressiveData = readmatrix(surfaceFileName);
