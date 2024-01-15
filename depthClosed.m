@@ -11,7 +11,7 @@ else
     disp(['Error in executing command: ', cmdout]);
 end
 %% 
-trialNum = '0';
+trialNum = '1';
 keys = {0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1};
 values = {
     [9, 1],  

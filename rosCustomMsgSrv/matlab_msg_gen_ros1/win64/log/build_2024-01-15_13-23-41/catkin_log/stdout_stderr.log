@@ -1,0 +1,255 @@
+**********************************************************************
+** Visual Studio 2019 Developer Command Prompt v16.10.2
+** Copyright (c) 2021 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: 'x86_x64'
+-- The C compiler identification is MSVC 19.29.30038.1
+-- The CXX compiler identification is MSVC 19.29.30038.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.29.30037/bin/Hostx86/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.29.30037/bin/Hostx86/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Using CATKIN_DEVEL_PREFIX: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel
+-- Using CMAKE_PREFIX_PATH: C:\Program Files\MATLAB\R2022b\sys\ros1\win64\ros1;C:/Program Files/MATLAB/R2022b/toolbox/ros/mlroscpp/custom_messages
+-- This workspace overlays: C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1;C:/Program Files/MATLAB/R2022b/toolbox/ros/mlroscpp/custom_messages
+-- Found PythonInterp: C:/Users/OCT/AppData/Roaming/MathWorks/MATLAB/R2022b/ros1/win64/venv/Scripts/python.exe (found suitable version "3.9", minimum required is "3") 
+-- Using PYTHON_EXECUTABLE: C:/Users/OCT/AppData/Roaming/MathWorks/MATLAB/R2022b/ros1/win64/venv/Scripts/python.exe
+-- Using default Python package layout
+-- Found PY_em: C:\Users\OCT\AppData\Roaming\MATHWO~1\MATLAB\R2022b\ros1\win64\venv\lib\site-packages\em.py  
+-- Using empy: C:/Users/OCT/AppData/Roaming/MATHWO~1/MATLAB/R2022b/ros1/win64/venv/lib/site-packages/em.py
+-- Using CATKIN_ENABLE_TESTING: off
+-- catkin 0.8.10
+-- BUILD_SHARED_LIBS is on
+The system cannot find the batch label specified - GenerateTempFilename
+-- BUILD_SHARED_LIBS is on
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~  traversing 2 packages in topological order:
+-- ~~  - oct_msgs
+-- ~~  - simple_msgs
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- +++ processing catkin package: 'oct_msgs'
+-- ==> add_subdirectory(oct_msgs)
+CMake Warning at C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsg-extras.cmake:49 (message):
+  Unknown message generator specified in ROS_LANG_DISABLE: geneus
+Call Stack (most recent call first):
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsgConfig.cmake:222 (include)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/gencpp/cmake/gencppConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/message_generation/cmake/message_generationConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/catkin/cmake/catkinConfig.cmake:76 (find_package)
+  oct_msgs/CMakeLists.txt:24 (find_package)
+
+
+CMake Warning at C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsg-extras.cmake:49 (message):
+  Unknown message generator specified in ROS_LANG_DISABLE: genlisp
+Call Stack (most recent call first):
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsgConfig.cmake:222 (include)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/gencpp/cmake/gencppConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/message_generation/cmake/message_generationConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/catkin/cmake/catkinConfig.cmake:76 (find_package)
+  oct_msgs/CMakeLists.txt:24 (find_package)
+
+
+CMake Warning at C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsg-extras.cmake:49 (message):
+  Unknown message generator specified in ROS_LANG_DISABLE: gennodejs
+Call Stack (most recent call first):
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsgConfig.cmake:222 (include)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/gencpp/cmake/gencppConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/message_generation/cmake/message_generationConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/catkin/cmake/catkinConfig.cmake:76 (find_package)
+  oct_msgs/CMakeLists.txt:24 (find_package)
+
+
+-- Using these message generators: gencpp;genpy
+-- oct_msgs: 0 messages, 1 services
+-- +++ processing catkin package: 'simple_msgs'
+-- ==> add_subdirectory(simple_msgs)
+CMake Warning at C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsg-extras.cmake:49 (message):
+  Unknown message generator specified in ROS_LANG_DISABLE: geneus
+Call Stack (most recent call first):
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsgConfig.cmake:222 (include)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/gencpp/cmake/gencppConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/message_generation/cmake/message_generationConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/catkin/cmake/catkinConfig.cmake:76 (find_package)
+  simple_msgs/CMakeLists.txt:24 (find_package)
+
+
+CMake Warning at C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsg-extras.cmake:49 (message):
+  Unknown message generator specified in ROS_LANG_DISABLE: genlisp
+Call Stack (most recent call first):
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsgConfig.cmake:222 (include)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/gencpp/cmake/gencppConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/message_generation/cmake/message_generationConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/catkin/cmake/catkinConfig.cmake:76 (find_package)
+  simple_msgs/CMakeLists.txt:24 (find_package)
+
+
+CMake Warning at C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsg-extras.cmake:49 (message):
+  Unknown message generator specified in ROS_LANG_DISABLE: gennodejs
+Call Stack (most recent call first):
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/genmsgConfig.cmake:222 (include)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/gencpp/cmake/gencppConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/message_generation/cmake/message_generationConfig.cmake:197 (find_package)
+  C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/catkin/cmake/catkinConfig.cmake:76 (find_package)
+  simple_msgs/CMakeLists.txt:24 (find_package)
+
+
+-- Using these message generators: gencpp;genpy
+-- simple_msgs: 1 messages, 1 services
+-- Configuring done
+-- Generating done
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    Boost_NAMESPACE
+
+
+-- Build files have been written to: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/build
+[1/20] cmd.exe /C "cd /D C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\build\simple_msgs && C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\build\catkin_generated\env_cached.bat C:/Users/OCT/AppData/Roaming/MathWorks/MATLAB/R2022b/ros1/win64/venv/Scripts/python.exe "C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py" simple_msgs C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/src/simple_msgs/msg/Num.msg "
+[2/20] cmd.exe /C "cd /D C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\build\simple_msgs && C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\build\catkin_generated\env_cached.bat C:/Users/OCT/AppData/Roaming/MathWorks/MATLAB/R2022b/ros1/win64/venv/Scripts/python.exe "C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py" simple_msgs C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/src/simple_msgs/srv/AddTwoInts.srv "
+[3/20] cmd.exe /C "cd /D C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\build\oct_msgs && C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\build\catkin_generated\env_cached.bat C:/Users/OCT/AppData/Roaming/MathWorks/MATLAB/R2022b/ros1/win64/venv/Scripts/python.exe "C:/Program Files/MATLAB/R2022b/sys/ros1/win64/ros1/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py" oct_msgs C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/src/oct_msgs/srv/Depth.srv std_msgs/Float64"
+[4/20] Generating C++ code from simple_msgs/Num.msg
+[5/20] Generating Python from MSG simple_msgs/Num
+[6/20] Generating Python code from SRV simple_msgs/AddTwoInts
+[7/20] Generating Python code from SRV oct_msgs/Depth
+[8/20] Generating C++ code from oct_msgs/Depth.srv
+[9/20] Generating C++ code from simple_msgs/AddTwoInts.srv
+[10/20] Generating Python srv __init__.py for simple_msgs
+[11/20] Generating Python msg __init__.py for simple_msgs
+[12/20] Generating Python srv __init__.py for oct_msgs
+[13/20] Building CXX object CMakeFiles\Project__setup_util.py_exec_install_python.dir\catkin_generated\add_python_executable\Project__setup_util.py_exec_install_python\_setup_util.cpp.obj
+[14/20] Linking CXX executable catkin_generated\windows_wrappers\Project__setup_util.py_exec_install_python\_setup_util.exe
+[15/20] Building CXX object simple_msgs\CMakeFiles\simple_msgs_matlab.dir\src\simple_msgs_Num_message.cpp.obj
+C:\Program Files\MATLAB\R2022b\sys\ros1\win64\ros1\boost\include\boost-1_75\boost/bind.hpp(77): note: The practice of declaring the Bind placeholders (_1, _2, ...) in the global namespace is deprecated. Please use <boost/bind/bind.hpp> + using namespace mwboost::placeholders, or define BOOST_BIND_GLOBAL_PLACEHOLDERS to retain the current behavior.
+[16/20] Building CXX object simple_msgs\CMakeFiles\simple_msgs_matlab.dir\src\simple_msgs_AddTwoInts_service.cpp.obj
+C:\Program Files\MATLAB\R2022b\sys\ros1\win64\ros1\boost\include\boost-1_75\boost/bind.hpp(77): note: The practice of declaring the Bind placeholders (_1, _2, ...) in the global namespace is deprecated. Please use <boost/bind/bind.hpp> + using namespace mwboost::placeholders, or define BOOST_BIND_GLOBAL_PLACEHOLDERS to retain the current behavior.
+[17/20] Building CXX object oct_msgs\CMakeFiles\oct_msgs_matlab.dir\src\oct_msgs_Depth_service.cpp.obj
+C:\Program Files\MATLAB\R2022b\sys\ros1\win64\ros1\boost\include\boost-1_75\boost/bind.hpp(77): note: The practice of declaring the Bind placeholders (_1, _2, ...) in the global namespace is deprecated. Please use <boost/bind/bind.hpp> + using namespace mwboost::placeholders, or define BOOST_BIND_GLOBAL_PLACEHOLDERS to retain the current behavior.
+[18/20] Linking CXX shared library C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\devel\bin\simple_msgs_matlab.dll
+   Creating library C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\devel\lib\simple_msgs_matlab.lib and object C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\devel\lib\simple_msgs_matlab.exp
+[19/20] Linking CXX shared library C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\devel\bin\oct_msgs_matlab.dll
+   Creating library C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\devel\lib\oct_msgs_matlab.lib and object C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\devel\lib\oct_msgs_matlab.exp
+[19/20] Install the project...
+-- Install configuration: "Release"
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/_setup_util.py
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/_setup_util.exe
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/env.bat
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/setup.bat
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/local_setup.bat
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/.rosinstall
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/oct_msgs/srv/Depth.srv
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/oct_msgs/cmake/oct_msgs-msg-paths.cmake
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/oct_msgs
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/oct_msgs/Depth.h
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/oct_msgs/DepthRequest.h
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/oct_msgs/DepthResponse.h
+Listing 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/oct_msgs'...
+Compiling 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/oct_msgs\\__init__.py'...
+Listing 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/oct_msgs\\srv'...
+Compiling 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/oct_msgs\\srv\\_Depth.py'...
+Compiling 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/oct_msgs\\srv\\__init__.py'...
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/oct_msgs
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/oct_msgs/srv
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/oct_msgs/srv/_Depth.py
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/oct_msgs/srv/__init__.py
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/oct_msgs/srv/__pycache__
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/oct_msgs/srv/__pycache__/_Depth.cpython-39.pyc
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/oct_msgs/srv/__pycache__/__init__.cpython-39.pyc
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/oct_msgs/__init__.py
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/oct_msgs/__pycache__
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/oct_msgs/__pycache__/__init__.cpython-39.pyc
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/pkgconfig/oct_msgs.pc
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/oct_msgs/cmake/oct_msgs-msg-extras.cmake
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/oct_msgs/cmake/oct_msgsConfig.cmake
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/oct_msgs/cmake/oct_msgsConfig-version.cmake
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/oct_msgs/package.xml
+-- Up-to-date: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include
+-- Up-to-date: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/oct_msgs
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/oct_msgs/visibility_control.h
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/oct_msgs_matlab.lib
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/bin/oct_msgs_matlab.dll
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m/
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal/+ros
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal/+ros/+custommessages
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal/+ros/+custommessages/+oct_msgs
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal/+ros/+custommessages/+oct_msgs/depthRequest.m
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal/+ros/+custommessages/+oct_msgs/depthResponse.m
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+msggen
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+msggen/+oct_msgs
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+msggen/+oct_msgs/DepthRequest.m
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+msggen/+oct_msgs/DepthResponse.m
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/simple_msgs/msg/Num.msg
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/simple_msgs/srv/AddTwoInts.srv
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/simple_msgs/cmake/simple_msgs-msg-paths.cmake
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/simple_msgs
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/simple_msgs/AddTwoInts.h
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/simple_msgs/AddTwoIntsRequest.h
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/simple_msgs/AddTwoIntsResponse.h
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/simple_msgs/Num.h
+Listing 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs'...
+Compiling 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs\\__init__.py'...
+Listing 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs\\msg'...
+Compiling 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs\\msg\\_Num.py'...
+Compiling 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs\\msg\\__init__.py'...
+Listing 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs\\srv'...
+Compiling 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs\\srv\\_AddTwoInts.py'...
+Compiling 'C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/devel/lib/site-packages/simple_msgs\\srv\\__init__.py'...
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/msg
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/msg/_Num.py
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/msg/__init__.py
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/msg/__pycache__
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/msg/__pycache__/_Num.cpython-39.pyc
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/msg/__pycache__/__init__.cpython-39.pyc
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/srv
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/srv/_AddTwoInts.py
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/srv/__init__.py
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/srv/__pycache__
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/srv/__pycache__/_AddTwoInts.cpython-39.pyc
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/srv/__pycache__/__init__.cpython-39.pyc
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/__init__.py
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/__pycache__
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/site-packages/simple_msgs/__pycache__/__init__.cpython-39.pyc
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/pkgconfig/simple_msgs.pc
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/simple_msgs/cmake/simple_msgs-msg-extras.cmake
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/simple_msgs/cmake/simple_msgsConfig.cmake
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/simple_msgs/cmake/simple_msgsConfig-version.cmake
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/share/simple_msgs/package.xml
+-- Up-to-date: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include
+-- Up-to-date: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/simple_msgs
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/include/simple_msgs/visibility_control.h
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/lib/simple_msgs_matlab.lib
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/bin/simple_msgs_matlab.dll
+-- Up-to-date: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m/
+-- Up-to-date: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros
+-- Up-to-date: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal
+-- Up-to-date: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal/+ros
+-- Up-to-date: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal/+ros/+custommessages
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal/+ros/+custommessages/+simple_msgs
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal/+ros/+custommessages/+simple_msgs/addTwoIntsRequest.m
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal/+ros/+custommessages/+simple_msgs/addTwoIntsResponse.m
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+internal/+ros/+custommessages/+simple_msgs/num.m
+-- Up-to-date: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+msggen
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+msggen/+simple_msgs
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+msggen/+simple_msgs/AddTwoIntsRequest.m
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+msggen/+simple_msgs/AddTwoIntsResponse.m
+-- Installing: C:/Ajay_OCT/OCT-Guided-AutoCALM/rosCustomMsgSrv/matlab_msg_gen_ros1/win64/install/m//+ros/+msggen/+simple_msgs/Num.m
+Base path: C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64
+Source space: C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\src
+Build space: C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\build
+Devel space: C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\devel
+Install space: C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\install
+Copying file from "C:\PROGRA~1\MATLAB\R2022b\sys\ros1\win64\ros1\share\catkin\cmake\toplevel.cmake" to "C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\src\CMakeLists.txt"
+####
+#### Running command: "cmake C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\src -DALIAS_ROS1_CLASS_LOADER=1 -DBoost_NAMESPACE=mwboost -DCATKIN_ENABLE_TESTING=off -DCMAKE_PREFIX_PATH=C:\Program Files\MATLAB\R2022b\sys\ros1\win64\ros1;C:/Program Files/MATLAB/R2022b/toolbox/ros/mlroscpp/custom_messages -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE=/MD /Od /Ob2 /DNDEBUG -DCATKIN_DEVEL_PREFIX=C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\devel -DCMAKE_INSTALL_PREFIX=C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\install -G Ninja" in "C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\build"
+####
+####
+#### Running command: "ninja install install -j8 -l8" in "C:\Ajay_OCT\OCT-Guided-AutoCALM\rosCustomMsgSrv\matlab_msg_gen_ros1\win64\build"
+####

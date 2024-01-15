@@ -44,7 +44,7 @@ struct ScanResult {
     int numOfLostBScan;
     double BscanCompressionRatio;
     double CscanCompressionRatio;
-    int count;
+    string count;
     int numAScansPerBScan;
     int numBScansPerVolume;
 };
@@ -83,7 +83,7 @@ void processScanData(const ScanResult& result, const std::string& folderLocation
     }
 }
 
-void getSurfaceFrom3DScan(const std::string& folderLocation, int NumAScansPerBScanReference, double LengthOfBScan, int NumBScansPerVolumeReference, double WidthOfVolume) {
+void getSurfaceFrom3DScan(const std::string& folderLocation, const std::string&  ScanNum,int NumAScansPerBScanReference, double LengthOfBScan, int NumBScansPerVolumeReference, double WidthOfVolume) {
 
     char message[1024];
     OCTDeviceHandle Dev = initDevice();
@@ -101,7 +101,7 @@ void getSurfaceFrom3DScan(const std::string& folderLocation, int NumAScansPerBSc
     setProcessingParameterInt(Proc, Processing_AScanAveraging, AScanAveraging);
 
 
-    int count = 1;
+    int count = ScanNum;
     std::vector<std::tuple<double, double>> compressionPairs = {{0.5, 0.5}};
 
     for (const auto& [BscanCompressionRatio, CscanCompressionRatio] : compressionPairs) {
@@ -156,10 +156,13 @@ void getSurfaceFrom3DScan(const std::string& folderLocation, int NumAScansPerBSc
 
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " trialNum\n";
+    if (argc < 4) {
+        std::cerr << "Usage: " << argv[0] << " trialNum ScanNum\n";
         return -1;
     }
+    std::string trialNum = argv[1];
+    std::string ScanNum = argv[2];  
+
     std::string trialNum = argv[1];
     std::string baseFolder = "C:\\Ajay_OCT\\OCT-Guided-AutoCALM\\data\\getDepthFromSparse3Doct\\";
     std::string folderLocation = baseFolder + trialNum + "\\";
@@ -172,6 +175,6 @@ int main(int argc, char* argv[]) {
     int NumAScansPerBScanReference = 600;
     int NumBScansPerVolumeReference = 300;
 
-    getSurfaceFrom3DScan(folderLocation, NumAScansPerBScanReference, LengthOfBScan, NumBScansPerVolumeReference, WidthOfVolume);
+    getSurfaceFrom3DScan(folderLocation, ScanNum, NumAScansPerBScanReference, LengthOfBScan, NumBScansPerVolumeReference, WidthOfVolume);
     return 0;
 }
