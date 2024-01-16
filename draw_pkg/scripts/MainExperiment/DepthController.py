@@ -19,37 +19,30 @@ def save_to_csv(filename, row):
         csvwriter.writerow(row)
 
 # Parameters
-port = "/dev/ttyACM0"
+port = "/dev/ttyACM1"
 baud_rate = 115200
-Kp = 1.0
+Kp = 0.5
 Kd = 0.5
-tolerance = 0.1 # mm
+tolerance = 0.05 # mm
 prev_error = 0.0
 max_time_on = 2.0
+desired_depth = 1.5
 
 initial_ablation_time = float(input("Enter initial ablation time (in seconds): "))
-desired_depth = float(input("Enter desired depth (in mm): "))
-laser_power = float(input("Enter laser power (in W): "))
-laser_frequency = float(input("Enter laser frequency (in Hz): "))
-
-# Ask user for date and experiment trial number
-experiment_date = "16oct2023"
 experiment_trial = input("Enter the experiment trial number: ")
-
-# Create unique filename with date and trial number
-filename = f'/home/sli/OCTAssistedSurgicalLaserWS/src/data/{experiment_date}/log_{experiment_trial}.csv'
-
+filename = f'/home/sli/OCTAssistedSurgicalLaserWS/src/data/log_{experiment_trial}.csv'
 proceed_experiment = input('Do you want to proceed with the experiment? (yes/no): ')
 
 if proceed_experiment.lower() != 'yes':
     print("Exiting as user did not grant permission for the experiment.")
     exit()
 
+
 # Initialize CSV
 with open(filename, 'w') as csvfile:
     csvwriter = csv.writer(csvfile)
-    csvwriter.writerow(['Desired Depth', 'Initial Ablation Time', 'Kp', 'Kd', 'Laser Power', 'Laser Frequency', 'Tolerance'])
-    csvwriter.writerow([desired_depth, initial_ablation_time, Kp, Kd, laser_power, laser_frequency, tolerance])
+    csvwriter.writerow(['Desired Depth', 'Initial Ablation Time', 'Kp', 'Kd', 'Tolerance'])
+    csvwriter.writerow([desired_depth, initial_ablation_time, Kp, Kd, tolerance])
     csvwriter.writerow([])
     csvwriter.writerow(['Timestamp', 'Current Depth', 'Error', 'Derivative Error', 'Calculated Time ON'])
 
@@ -80,10 +73,11 @@ try:
         error = desired_depth - current_depth
         derivative  = error - prev_error
 
+        print("Desired depth: ", desired_depth)
         print("Current depth: ", current_depth)
         print("Depth Error difference: ", error)
             
-        if abs(error) > tolerance:
+        if current_depth< desired_depth -tolerance:
             ser = serial.Serial(port, baud_rate)
 
             time_on = min(Kp * error + Kd * derivative, max_time_on)
@@ -103,7 +97,8 @@ try:
         
         else:
             print("Desired depth reached. Exiting.")
-            
+            if not (time_on):
+                time_on = initial_ablation_time
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
             save_to_csv(filename, [timestamp, current_depth, error, derivative, time_on])
 

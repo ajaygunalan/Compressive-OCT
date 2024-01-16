@@ -1,4 +1,3 @@
-# Import required packages
 import rospy
 from oct_msgs.srv import Depth
 

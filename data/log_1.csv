@@ -1,0 +1,6 @@
+Desired Depth,Initial Ablation Time,Kp,Kd,Tolerance
+1.5,5.0,0.5,0.5,0.05
+
+Timestamp,Current Depth,Error,Derivative Error,Calculated Time ON
+2024-01-16 15:58:42,0.59,0.91,0.91,0.91
+2024-01-16 15:59:45,0.59,0.91,0.0,0.455

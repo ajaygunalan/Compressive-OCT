@@ -1,5 +1,0 @@
-Desired Depth,Initial Ablation Time,Kp,Kd,Laser Power,Laser Frequency,Tolerance
-1.0,1.0,1.0,0.5,3.0,100.0,0.1
-
-Timestamp,Current Depth,Error,Derivative Error,Calculated Time ON
-2023-10-16 15:38:16,0.6273019165859893,0.3726980834140107,0.3726980834140107,0.5590471251210161

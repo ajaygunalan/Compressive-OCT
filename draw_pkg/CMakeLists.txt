@@ -174,7 +174,7 @@ catkin_install_python(PROGRAMS
    scripts/PrelimFunctions/rosClient.py 
    scripts/PrelimFunctions/1dScanOnOff.py 
    scripts/PrelimFunctions/liveCALMcamera.py 
-   scripts/MainExperiment/pointDepthControl.py
+   scripts/MainExperiment/DepthController.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
