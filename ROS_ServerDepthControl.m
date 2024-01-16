@@ -11,7 +11,7 @@ global scanNum;
 global baseFolder;
 trialNum = input('Enter the trial number: ', 's');
 scanNum = 1;
-global baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
+baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
 folderLocation = fullfile(baseFolder, trialNum);
 
 % Perform Imaging
@@ -50,7 +50,7 @@ function resp = serviceCallback(~,~,resp)
     % Estimate depth
     before = readmatrix(['data\getDepthFromSparse3Doct\1\ScanNum_', num2str(scanNum - 1), '_Estimation.csv']);
     after = readmatrix(['data\getDepthFromSparse3Doct\1\ScanNum_', num2str(scanNum), '_Estimation.csv']);
-    prefix = sprintf('%s_', scanNum);
+    prefix = sprintf('%d_', scanNum);
     folderLocation = fullfile(baseFolder, trialNum);
     estimatedDepth = depthEstimation(after, before, prefix, folderLocation);
 
