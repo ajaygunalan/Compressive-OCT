@@ -32,7 +32,7 @@ function resp = serviceCallback(~,~,resp)
     global trialNum;
     global scanNum;
     global baseFolder;
-
+    folderLocation = fullfile(baseFolder, trialNum);
     % Perform imaging
     scanNum = scanNum + 1;
     commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum, ' ', num2str(scanNum)];
@@ -48,8 +48,8 @@ function resp = serviceCallback(~,~,resp)
     reconstrcution(trialNum, num2str(scanNum))
 
     % Estimate depth
-    before = readmatrix(['data\getDepthFromSparse3Doct\1\ScanNum_', num2str(scanNum - 1), '_Estimation.csv']);
-    after = readmatrix(['data\getDepthFromSparse3Doct\1\ScanNum_', num2str(scanNum), '_Estimation.csv']);
+    before = readmatrix(fullfile(folderLocation, 'ScanNum_1_Estimation.csv'));
+    after = readmatrix(fullfile(folderLocation, ['ScanNum_', num2str(scanNum), '_Estimation.csv']));
     prefix = sprintf('%d_', scanNum);
     folderLocation = fullfile(baseFolder, trialNum);
     estimatedDepth = depthEstimation(after, before, prefix, folderLocation);

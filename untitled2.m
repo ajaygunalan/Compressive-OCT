@@ -1,10 +1,12 @@
 clear all; close all; clc;
 % Load data
-raw = readmatrix("data/getDepthFromSparse3Doct/1/ScanNum_1_Estimation.csv");
+raw = readmatrix("data/getDepthFromSparse3Doct/1/ScanNum_2_Estimation.csv");
 
 % Define common filter parameters
-fc = 300; % cutoff frequency
+fc = 450; % cutoff frequency
 fs = 1000; % sampling frequency
+neigbourSz = 5;
+sigma = 0.5;
 
 % Butterworth Filter
 [b, a] = butter(6, fc/(fs/2)); 
@@ -19,10 +21,10 @@ dataOutCheby = filter(b, a, raw);
 dataOutEllip = filter(b, a, raw); 
 
 % Custom1
-filtered1 = customFilter1(raw, 25);
+filtered1 = customFilter1(raw, neigbourSz, sigma);
 
 % Custom2
-filtered2 = customFilter2(raw, 25, 0.6); 
+filtered2 = customFilter2(raw, neigbourSz, sigma); 
 
 % Plotting
 figure;
@@ -59,9 +61,10 @@ colorbar;
 
 
 % Custom Low-Pass Filter Function
-function [nImg, mask] = customFilter1(img, r)
+function [nImg, mask] = customFilter1(img, neigbourSz, sigma)
+    r = sigma;
     F = fftshift(fft2(img));
-    mask = fspecial('gaussian', [3 3], r);
+    mask = fspecial('gaussian', [neigbourSz neigbourSz], r);
     M = fft2(mask, size(F,1), size(F,2));
     Filtered = M.*F;
     nImg = real(ifft2(ifftshift(Filtered)));

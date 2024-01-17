@@ -106,7 +106,7 @@ function result = reconstrcution(trialNum, scanNum)
         CompressiveNorm = CompressiveNorm * maxCompressiveData;
         CompressiveUpsampled = CompressiveUpsampled * maxCompressiveData;
         Estimation = Estimation * maxCompressiveData;
-
+        
         % Save Compressive_norm data as a text file
         textFilename = [prefix, 'SparseData.csv'];
         fullTextPath = fullfile(folderLocation, textFilename);
@@ -121,7 +121,6 @@ function result = reconstrcution(trialNum, scanNum)
         textFilename3 = [prefix, 'Estimation.csv'];
         fullTextPath3 = fullfile(folderLocation, textFilename3);
         writematrix(Estimation, fullTextPath3);
-
 
         % Save Compressive_norm data as a figure
         fig1 = figure('Visible', 'off'); 
@@ -177,4 +176,32 @@ function result = reconstrcution(trialNum, scanNum)
         imageFilename3 = [prefix, 'Estimation.png'];
         fullImagePath3 = fullfile(folderLocation, imageFilename3); 
         saveas(fig3, fullImagePath3, 'png');
+
+%         fig4 = figure('Visible', 'off'); 
+%         imagesc(EstimationFiltered);
+%         pbaspect([1 1 1])
+%         axis tight;
+%         minDataEstimation = fixedMinData;
+%         maxDataEstimation = fixedMaxData;
+%         cb3 = colorbar; 
+%         set(cb3, 'Limits', [minDataEstimation, maxDataEstimation]);
+%         T3 = linspace(minDataEstimation, maxDataEstimation, 5); 
+%         set(cb3, 'Ticks', T3); 
+%         ylabel(cb3, 'mm');
+%         TL3 = arrayfun(@(x) sprintf('%.2f', x), T3, 'UniformOutput', false); 
+%         set(cb3, 'TickLabels', TL3);
+%         % Save the figure as a MATLAB figure file
+%         imageFilename4 = [prefix, 'EstimationFiltered.png'];
+%         fullImagePath4 = fullfile(folderLocation, imageFilename4); 
+%         saveas(fig4, fullImagePath4, 'png');
+end
+
+% Custom Low-Pass Filter Function
+function [nImg, mask] = customFilter1(img, neigbourSz, sigma)
+    r = sigma;
+    F = fftshift(fft2(img));
+    mask = fspecial('gaussian', [neigbourSz neigbourSz], r);
+    M = fft2(mask, size(F,1), size(F,2));
+    Filtered = M.*F;
+    nImg = real(ifft2(ifftshift(Filtered)));
 end

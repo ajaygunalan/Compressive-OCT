@@ -6,7 +6,9 @@ cleanupObj = onCleanup(@()rosshutdown);
 disp('Service Server running. CTRL+C to exit.');
 
 % Prompt the user
-global trialNum;  
+global trialNum;
+global scanNum;
+global baseFolder;
 trialNum = input('Enter the trial number: ', 's');
 scanNum = 1;
 baseFolder = 'C:\Ajay_OCT\OCT-Guided-AutoCALM\data\getDepthFromSparse3Doct\';
@@ -27,7 +29,10 @@ reconstrcution(trialNum, num2str(scanNum))
 
 % Callback function
 function resp = serviceCallback(~,~,resp)
-    persistent before after scanNum;
+    global trialNum;
+    global scanNum;
+    global baseFolder;
+
     % Perform imaging
     scanNum = scanNum + 1;
     commandStr = ['.\\bin\\x64\\Release\\OCTImageCapture.exe ', trialNum, ' ', num2str(scanNum)];
@@ -43,15 +48,13 @@ function resp = serviceCallback(~,~,resp)
     reconstrcution(trialNum, num2str(scanNum))
 
     % Estimate depth
-    before = readmatrix(['data\getDepthFromSparse3Doct\1\ScanNum_', num2str(scanNum - 1), '_Estimation.csv']);
+    before = readmatrix(['data\getDepthFromSparse3Doct\1\ScanNum__Estimation.csv']);
     after = readmatrix(['data\getDepthFromSparse3Doct\1\ScanNum_', num2str(scanNum), '_Estimation.csv']);
-    prefix = sprintf('%s_', scanNum);
+    prefix = sprintf('%d_', scanNum);
+    folderLocation = fullfile(baseFolder, trialNum);
     estimatedDepth = depthEstimation(after, before, prefix, folderLocation);
 
     resp.Depth = rosmessage('std_msgs/Float64');
     resp.Depth.Data = estimatedDepth;
     disp("Depth estimated and sent: " + num2str(estimatedDepth));
 end
-
-
-
