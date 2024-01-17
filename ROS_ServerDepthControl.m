@@ -58,6 +58,3 @@ function resp = serviceCallback(~,~,resp)
     resp.Depth.Data = estimatedDepth;
     disp("Depth estimated and sent: " + num2str(estimatedDepth));
 end
-
-
-
