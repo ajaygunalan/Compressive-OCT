@@ -52,7 +52,8 @@ function resp = serviceCallback(~,~,resp)
     after = readmatrix(fullfile(folderLocation, ['ScanNum_', num2str(scanNum), '_Estimation.csv']));
     prefix = sprintf('%d_', scanNum);
     folderLocation = fullfile(baseFolder, trialNum);
-    estimatedDepth = depthEstimation(after, before, prefix, folderLocation);
+    %estimatedDepth = depthEstimation(after, before, prefix, folderLocation);
+    estimatedDepth = depthEstimation(after);
 
     resp.Depth = rosmessage('std_msgs/Float64');
     resp.Depth.Data = estimatedDepth;
