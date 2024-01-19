@@ -21,12 +21,12 @@ def save_to_csv(filename, row):
 # Parameters
 port = "/dev/ttyACM1"
 baud_rate = 115200
-Kp = 0.5
-Kd = 0.5
-tolerance = 0.05 # mm
+Kp = 5.0
+Kd = 2.0
 prev_error = 0.0
-max_time_on = 2.0
-desired_depth = 1.5
+desired_depth = 1.0
+
+
 
 initial_ablation_time = float(input("Enter initial ablation time (in seconds): "))
 experiment_trial = input("Enter the experiment trial number: ")
@@ -41,8 +41,8 @@ if proceed_experiment.lower() != 'yes':
 # Initialize CSV
 with open(filename, 'w') as csvfile:
     csvwriter = csv.writer(csvfile)
-    csvwriter.writerow(['Desired Depth', 'Initial Ablation Time', 'Kp', 'Kd', 'Tolerance'])
-    csvwriter.writerow([desired_depth, initial_ablation_time, Kp, Kd, tolerance])
+    csvwriter.writerow(['Desired Depth', 'Initial Ablation Time', 'Kp', 'Kd'])
+    csvwriter.writerow([desired_depth, initial_ablation_time, Kp, Kd])
     csvwriter.writerow([])
     csvwriter.writerow(['Timestamp', 'Current Depth', 'Error', 'Derivative Error', 'Calculated Time ON'])
 
@@ -69,21 +69,18 @@ try:
         # Check depth
         print("Requested depth from OCT Server")
         resp = estimate_depth()
-        current_depth = resp.depth.data
-        error = desired_depth - current_depth
-        derivative  = error - prev_error
-
-        print("Desired depth: ", desired_depth)
-        print("Current depth: ", current_depth)
-        print("Depth Error difference: ", error)
+        current_depth = round(resp.depth.data, 2)  
+        error = round(desired_depth - current_depth, 2)
+        derivative  = round(error - prev_error, 2)
+        print(f"Desired depth: {desired_depth:.2f}")
+        print(f"Current depth: {current_depth:.2f}")
+        print(f"Depth Error difference: {error:.2f}")
             
-        if current_depth< desired_depth -tolerance:
+        if current_depth < desired_depth:
             ser = serial.Serial(port, baud_rate)
-
-            time_on = min(Kp * error + Kd * derivative, max_time_on)
-            print("Calculated time_on: ", time_on)
+            time_on = round(max((Kp * error) + (Kd * derivative), 3.0), 2)  
+            print(f"Calculated time_on: {time_on:.2f}")
             proceed = input('Type "ok" to proceed: ')
-
             if proceed.lower() == "ok":
                 print("Laser ON")
                 send_continuous_command(ser, bytes([1]), time_on)
@@ -97,11 +94,9 @@ try:
         
         else:
             print("Desired depth reached. Exiting.")
-            if not (time_on):
-                time_on = initial_ablation_time
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+            time_on = -143
             save_to_csv(filename, [timestamp, current_depth, error, derivative, time_on])
-
             break
         
         prev_error = error
