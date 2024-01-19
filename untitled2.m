@@ -1,6 +1,6 @@
 clear all; close all; clc;
 % Load data
-raw = readmatrix("data/getDepthFromSparse3Doct/1/ScanNum_2_Estimation.csv");
+raw = readmatrix("data/getDepthFromSparse3Doct/1/ScanNum_3_Estimation.csv");
 
 % Define common filter parameters
 fc = 450; % cutoff frequency
@@ -30,34 +30,58 @@ filtered2 = customFilter2(raw, neigbourSz, sigma);
 figure;
 
 subplot(3, 2, 1);
-imagesc (raw);
+imagesc(raw);
 title('Original Data');
+axis equal;
 colorbar;
+hold on;
+rectangle('Position', [250, 125, 100, 50], 'EdgeColor', 'r', 'LineWidth', 2);
+hold off;
 
 subplot(3, 2, 2);
 imagesc(dataOutButter);
 title('Butterworth Filter');
+axis equal;
 colorbar;
+hold on;
+rectangle('Position', [250, 125, 100, 50], 'EdgeColor', 'r', 'LineWidth', 2);
+hold off;
 
 subplot(3, 2, 3);
 imagesc(dataOutCheby);
 title('Chebyshev Type I Filter');
+axis equal;
 colorbar;
+hold on;
+rectangle('Position', [250, 125, 100, 50], 'EdgeColor', 'r', 'LineWidth', 2);
+hold off;
 
 subplot(3, 2, 4);
 imagesc(dataOutEllip);
 title('Elliptic Filter');
+axis equal;
 colorbar;
+hold on;
+rectangle('Position', [250, 125, 100, 50], 'EdgeColor', 'r', 'LineWidth', 2);
+hold off;
 
 subplot(3, 2, 5);
 imagesc(filtered1);
 title('Custom Low-Pass Filter');
+axis equal;
 colorbar;
+hold on;
+rectangle('Position', [250, 125, 100, 50], 'EdgeColor', 'r', 'LineWidth', 2);
+hold off;
 
 subplot(3, 2, 6);
 imagesc(filtered2);
 title('Conservative Smoothing and Gaussian Filter');
+axis equal;
 colorbar;
+hold on;
+rectangle('Position', [250, 125, 100, 50], 'EdgeColor', 'r', 'LineWidth', 2);
+hold off;
 
 
 % Custom Low-Pass Filter Function
