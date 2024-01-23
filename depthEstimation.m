@@ -1,5 +1,5 @@
 function result = depthEstimation(after, before)
-    threshold = 0.65;
+    threshold = 0.9;
     % Define the ROI boundaries for the center
     roi_rows = 125:175;    
     roi_cols = 250:350; 

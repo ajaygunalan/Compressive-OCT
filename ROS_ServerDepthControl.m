@@ -1,6 +1,6 @@
 rosshutdown;  clear all; clc; close all;
 %%
-rosinit('10.240.23.49');
+rosinit('10.240.23.84');
 service = rossvcserver('/estimate_depth', 'oct_msgs/Depth', @serviceCallback);
 cleanupObj = onCleanup(@()rosshutdown);
 disp('Service Server running. CTRL+C to exit.');
