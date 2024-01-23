@@ -78,7 +78,7 @@ try:
             
         if current_depth < desired_depth:
             ser = serial.Serial(port, baud_rate)
-            time_on = round(max((Kp * error) + (Kd * derivative), 3.0), 2)  
+            time_on = round(max((Kp * error) + (Kd * derivative), 1.0), 2)  
             print(f"Calculated time_on: {time_on:.2f}")
             proceed = input('Type "ok" to proceed: ')
             if proceed.lower() == "ok":
