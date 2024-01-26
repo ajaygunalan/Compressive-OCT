@@ -175,7 +175,7 @@ int main(int argc, char* argv[]) {
 
     double LengthOfBScan = 5.0; // mm
     double WidthOfVolume = 5.0; // mm
-    int NumAScansPerBScanReference = 300;
+    int NumAScansPerBScanReference = 600;
     int NumBScansPerVolumeReference = 300;
 
     getSurfaceFrom3DScan(folderLocation, NumAScansPerBScanReference, LengthOfBScan, NumBScansPerVolumeReference, WidthOfVolume);

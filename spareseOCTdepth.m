@@ -20,7 +20,7 @@ ReconstructionTime = defaultVal * ones(matrixSize);
 ScanTime = defaultVal * ones(matrixSize);
 NetReductionFactor = defaultVal * ones(matrixSize);
 
-TruthDataSize = [300, 300];
+TruthDataSize = [600, 300];
 TruthData = defaultVal * ones(TruthDataSize);
 maxTruthData = 0;
 TruthMeta = struct();
@@ -87,7 +87,7 @@ for idx = 1:length(compressionPairs)
         maxData = max(TruthData(:));
         fig1 = figure('Visible', 'off'); 
         imagesc(TruthData); 
-        axis equal; 
+        pbaspect([1 1 1]) 
         axis tight;
         cb = colorbar; 
         set(cb, 'Limits', [minData, maxData]);
@@ -119,7 +119,7 @@ for idx = 1:length(compressionPairs)
         fixedMaxData = maxData;
         fig1 = figure('Visible', 'off'); 
         imagesc(TruthData);
-        axis equal; 
+        pbaspect([1 1 1])
         axis tight;
         cb = colorbar; 
         set(cb, 'Limits', [minData, maxData]);
@@ -238,7 +238,8 @@ for idx = 1:length(compressionPairs)
         % Save Compressive_norm data as a figure
         fig1 = figure('Visible', 'off'); 
         imagesc(CompressiveNorm); 
-        axis equal;
+        pbaspect([1 1 1]);
+        axis tight;
         minData = fixedMinData; 
         maxData = fixedMaxData;
         cb = colorbar; 
@@ -255,7 +256,7 @@ for idx = 1:length(compressionPairs)
         % Save CompressiveUpsampled data as a figure with detailed colorbar settings
         fig2 = figure('Visible', 'off'); 
         imagesc(CompressiveUpsampled);
-        axis equal;
+        pbaspect([1 1 1]);
         axis tight;
         minDataUpsampled = fixedMinData;
         maxDataUpsampled = fixedMaxData;
@@ -273,7 +274,7 @@ for idx = 1:length(compressionPairs)
         % Save Estimation data as a figure with detailed colorbar settings
         fig3 = figure('Visible', 'off'); 
         imagesc(Estimation);
-        axis equal;
+        pbaspect([1 1 1]);
         axis tight;
         minDataEstimation = fixedMinData;
         maxDataEstimation = fixedMaxData;
