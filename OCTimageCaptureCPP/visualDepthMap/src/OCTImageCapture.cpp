@@ -111,7 +111,8 @@ void getSurfaceFrom3DScan(const std::string& folderLocation, const std::string& 
         RawDataHandle RawVolume = createRawData();
         DataHandle Volume = createData();
         DataHandle Surface = createData();
-        ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, numAScansPerBScan, WidthOfVolume, numBScansPerVolume, ScanPattern_ApoOneForAll, ScanPattern_AcqOrderAll);
+        //ScanPatternHandle Pattern = createVolumePattern(Probe, LengthOfBScan, numAScansPerBScan, WidthOfVolume, numBScansPerVolume, ScanPattern_ApoOneForAll, ScanPattern_AcqOrderAll);
+        ScanPatternHandle Pattern = createVolumePatternEx(Probe, LengthOfBScan, numAScansPerBScan, WidthOfVolume, numBScansPerVolume, 5.0, 0.0, 0.0, ScanPattern_ApoOneForAll, ScanPattern_AcqOrderAll);
 
         auto start = std::chrono::high_resolution_clock::now();
         startMeasurement(Dev, Pattern, Acquisition_AsyncContinuous);
