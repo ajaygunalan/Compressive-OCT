@@ -7,10 +7,10 @@ from datetime import datetime
 
 # Function to send continuous command
 def send_continuous_command(ser, command, duration):
-    start_time = time.perf_counter()
-    while time.perf_counter() - start_time < duration:
+    start_time = time.time()
+    while time.time() - start_time < duration:
         ser.write(command)
-        time.sleep(0.01)
+        time.sleep(0.01) # You can adjust this to control how often the command is sent
 
 # Function to save data to CSV
 def save_to_csv(filename, row):
@@ -28,9 +28,10 @@ desired_depth = 0.5
 initial_ablation_time = 0.2  # sec
 mini_ablation_time = 0.2  # sec
 round_off_precision = 2
+default_time_off = 2.0
 
 
-initial_ablation_time = float(input("Enter initial ablation time (in seconds): "))
+# initial_ablation_time = float(input("Enter initial ablation time (in seconds): "))
 experiment_trial = input("Enter the experiment trial number: ")
 filename = f'/home/sli/OCTAssistedSurgicalLaserWS/src/data/log_{experiment_trial}.csv'
 proceed_experiment = input('Do you want to proceed with the experiment? (yes/no): ')
@@ -61,11 +62,9 @@ try:
         # Perform initial ablation without checking depth
         print("Performing Initial ablation...")
         send_continuous_command(ser, bytes([1]), initial_ablation_time)
-        ser.write(bytes([0]))
-
         # Turn off laser
         print("Laser OFF")
-        ser.write(bytes([0]))
+
 
     while not rospy.is_shutdown():
         # Check depth
@@ -88,8 +87,7 @@ try:
                 send_continuous_command(ser, bytes([1]), time_on)
 
             print("Laser OFF")
-            ser.write(bytes([0]))
-            ser.close()
+            send_continuous_command(ser, bytes([0]), default_time_off)
 
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
             save_to_csv(filename, [timestamp, current_depth, error, derivative, time_on])
