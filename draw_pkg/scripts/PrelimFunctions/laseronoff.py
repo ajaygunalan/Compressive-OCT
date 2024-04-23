@@ -4,8 +4,8 @@ import time
 # Change the COM port to match your configuration
 port = "/dev/ttyACM1"
 baud_rate = 115200
-time_on = 15 # Duration for laser ON
-time_off = 3 # Duration for laser OFF
+time_on = 0.2 # Duration for laser ON
+time_off = 3.0 # Duration for laser OFF
 
 def send_continuous_command(ser, command, duration):
     start_time = time.time()
@@ -17,7 +17,7 @@ try:
     with serial.Serial(port, baud_rate) as ser:
         print(ser.name)  # check which port was really used
         print("Press Ctrl+C to stop execution and turn off the laser.")
-        for i in range(0,1):
+        for i in range(0,10000):
             print("Laser ON")
             send_continuous_command(ser, bytes([1]), time_on) # Turn laser on for time_on seconds
 
