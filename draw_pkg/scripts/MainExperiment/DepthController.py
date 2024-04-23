@@ -25,7 +25,7 @@ Kp = 2.0
 Kd = 1.0
 prev_error = 0.0
 desired_depth = 0.5
-initial_ablation_time = 0.2  # sec
+initial_ablation_time = 0.6  # sec why it doesnt work with 0.5 or less
 mini_ablation_time = 0.2  # sec
 round_off_precision = 2
 default_time_off = 2.0
@@ -34,12 +34,21 @@ default_time_off = 2.0
 # initial_ablation_time = float(input("Enter initial ablation time (in seconds): "))
 experiment_trial = input("Enter the experiment trial number: ")
 filename = f'/home/sli/OCTAssistedSurgicalLaserWS/src/data/log_{experiment_trial}.csv'
-proceed_experiment = input('Do you want to proceed with the experiment? (yes/no): ')
+proceed_experiment = input('Do you want to proceed with the experiment? (ok): ')
 
-if proceed_experiment.lower() != 'yes':
+if proceed_experiment.lower() == 'ok':
+	with serial.Serial(port, baud_rate) as ser:
+		print(ser.name)
+		print("Press Ctrl+C to stop execution and turn off the laser.")
+		# Perform initial ablation without checking depth
+		print("Performing Initial ablation...")
+		send_continuous_command(ser, bytes([1]), initial_ablation_time)
+		# Turn off laser
+		print("Laser OFF")
+else:
     print("Exiting as user did not grant permission for the experiment.")
     exit()
-
+    
 
 # Initialize CSV
 with open(filename, 'w') as csvfile:
@@ -57,14 +66,7 @@ estimate_depth = rospy.ServiceProxy('/estimate_depth', Depth)
 try:
     with serial.Serial(port, baud_rate) as ser:
         print(ser.name)
-        print("Press Ctrl+C to stop execution and turn off the laser.")
-        
-        # Perform initial ablation without checking depth
-        print("Performing Initial ablation...")
-        send_continuous_command(ser, bytes([1]), initial_ablation_time)
-        # Turn off laser
-        print("Laser OFF")
-
+        print("Serial Port is activated")
 
     while not rospy.is_shutdown():
         # Check depth
