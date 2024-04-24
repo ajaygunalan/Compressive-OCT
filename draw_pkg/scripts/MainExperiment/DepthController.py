@@ -22,7 +22,7 @@ def save_to_csv(filename, row):
 port = "/dev/ttyACM1"
 baud_rate = 115200
 Kp = 2.0
-Kd = 1.0
+Kd = 2.0
 prev_error = 0.0
 desired_depth = 0.5
 initial_ablation_time = 0.6  # sec why it doesnt work with 0.5 or less
