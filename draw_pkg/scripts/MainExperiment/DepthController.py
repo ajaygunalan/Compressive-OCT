@@ -69,14 +69,14 @@ try:
         current_depth = round(resp.depth.data, round_off_precision)  
         error = round(desired_depth - current_depth, round_off_precision)
         derivative  = round(error - prev_error, round_off_precision)
-        print(f"Desired depth: {desired_depth:.2f}")
-        print(f"Current depth: {current_depth:.2f}")
-        print(f"Depth Error difference: {error:.2f}")
+        print(f"Desired depth: {desired_depth:.4f}")
+        print(f"Current depth: {current_depth:.4f}")
+        print(f"Depth Error difference: {error:.4f}")
             
         if current_depth < desired_depth:
             ser = serial.Serial(port, baud_rate)
             time_on = round(max((Kp * error) + (Kd * derivative), mini_ablation_time), round_off_precision)  
-            print(f"Calculated time_on: {time_on:.2f}")
+            print(f"Calculated time_on: {time_on:.4f}")
             proceed = input('Type "ok" to proceed: ')
             if proceed.lower() == "ok":
                 print("Laser ON")
