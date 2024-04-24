@@ -2,7 +2,3 @@ Desired Depth,Initial Ablation Time,Kp,Kd
 0.5,0.6,2.0,1.0
 
 Timestamp,Current Depth,Error,Derivative Error,Calculated Time ON
-2024-04-23 17:17:17,0.07,0.43,0.43,1.29
-2024-04-23 17:18:48,0.39,0.11,-0.32,0.2
-2024-04-23 17:20:41,0.45,0.05,-0.06,0.2
-2024-04-23 17:21:30,0.5,0.0,-0.05,-143

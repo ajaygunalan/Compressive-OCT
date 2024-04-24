@@ -27,7 +27,7 @@ prev_error = 0.0
 desired_depth = 0.5
 initial_ablation_time = 0.6  # sec why it doesnt work with 0.5 or less
 mini_ablation_time = 0.2  # sec
-round_off_precision = 2
+round_off_precision = 4
 default_time_off = 2.0
 
 
@@ -36,17 +36,7 @@ experiment_trial = input("Enter the experiment trial number: ")
 filename = f'/home/sli/OCTAssistedSurgicalLaserWS/src/data/log_{experiment_trial}.csv'
 proceed_experiment = input('Do you want to proceed with the experiment? (ok): ')
 
-if proceed_experiment.lower() == 'ok':
-	with serial.Serial(port, baud_rate) as ser:
-		print(ser.name)
-		print("Press Ctrl+C to stop execution and turn off the laser.")
-		# Perform initial ablation without checking depth
-		print("Performing Initial ablation...")
-		send_continuous_command(ser, bytes([1]), initial_ablation_time)
-		# Turn off laser
-		print("Laser OFF")
-else:
-    print("Exiting as user did not grant permission for the experiment.")
+if proceed_experiment.lower() != 'ok':
     exit()
     
 
@@ -67,7 +57,11 @@ try:
     with serial.Serial(port, baud_rate) as ser:
         print(ser.name)
         print("Serial Port is activated")
-
+        print("Press Ctrl+C to stop execution and turn off the laser.")
+        print("Performing Initial ablation...")
+        send_continuous_command(ser, bytes([1]), initial_ablation_time)
+        print("Laser OFF")
+    
     while not rospy.is_shutdown():
         # Check depth
         print("Requested depth from OCT Server")
