@@ -21,7 +21,7 @@ def save_to_csv(filename, row):
 # Parameters
 port = "/dev/ttyACM1"
 baud_rate = 115200
-Kp = 2.0
+Kp = 4.0
 Kd = 2.0
 prev_error = 0.0
 desired_depth = 0.5
