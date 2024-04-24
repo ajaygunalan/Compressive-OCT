@@ -29,6 +29,7 @@ initial_ablation_time = 0.6  # sec why it doesnt work with 0.5 or less
 mini_ablation_time = 0.2  # sec
 round_off_precision = 4
 default_time_off = 2.0
+tolerance = 0.01
 
 
 # initial_ablation_time = float(input("Enter initial ablation time (in seconds): "))
@@ -68,12 +69,14 @@ try:
         resp = estimate_depth()
         current_depth = round(resp.depth.data, round_off_precision)  
         error = round(desired_depth - current_depth, round_off_precision)
-        derivative  = round(error - prev_error, round_off_precision)
+        derivative = round(abs(error - prev_error), round_off_precision)
         print(f"Desired depth: {desired_depth:.4f}")
         print(f"Current depth: {current_depth:.4f}")
-        print(f"Depth Error difference: {error:.4f}")
+        print(f"Depth Error: {error:.4f}")
+        print(f"Previous Error: {prev_error:.4f}")
+        print(f"Derivate Error: {derivative:.4f}")
             
-        if current_depth < desired_depth:
+        if current_depth < (desired_depth-tolerance):
             ser = serial.Serial(port, baud_rate)
             time_on = round(max((Kp * error) + (Kd * derivative), mini_ablation_time), round_off_precision)  
             print(f"Calculated time_on: {time_on:.4f}")
