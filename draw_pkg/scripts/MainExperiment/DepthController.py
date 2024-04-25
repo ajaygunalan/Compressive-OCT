@@ -21,11 +21,11 @@ def save_to_csv(filename, row):
 # Parameters
 port = "/dev/ttyACM1"
 baud_rate = 115200
-Kp = 4.0
-Kd = 2.0
+Kp = 3.0
+Kd = 1.0
 prev_error = 0.0
 desired_depth = 0.5
-initial_ablation_time = 0.6  # sec why it doesnt work with 0.5 or less
+initial_ablation_time = 1.0  # sec why it doesnt work with 0.5 or less
 mini_ablation_time = 0.2  # sec
 round_off_precision = 4
 default_time_off = 2.0
@@ -69,7 +69,7 @@ try:
         resp = estimate_depth()
         current_depth = round(resp.depth.data, round_off_precision)  
         error = round(desired_depth - current_depth, round_off_precision)
-        derivative = round(abs(error - prev_error), round_off_precision)
+        derivative = round((error - prev_error), round_off_precision)
         print(f"Desired depth: {desired_depth:.4f}")
         print(f"Current depth: {current_depth:.4f}")
         print(f"Depth Error: {error:.4f}")
