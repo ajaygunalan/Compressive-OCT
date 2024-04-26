@@ -29,7 +29,7 @@ initial_ablation_time = 1.0  # sec why it doesnt work with 0.5 or less
 mini_ablation_time = 0.2  # sec
 round_off_precision = 4
 default_time_off = 2.0
-tolerance = 0.01
+tolerance = 0.02
 
 
 # initial_ablation_time = float(input("Enter initial ablation time (in seconds): "))
